@@ -1,4 +1,4 @@
-﻿namespace Purchasely.Runtime
+﻿namespace Purchasely
 {
 	public class Purchasely
 	{

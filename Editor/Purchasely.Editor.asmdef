@@ -1,0 +1,17 @@
+{
+    "name": "Purchasely.Editor",
+    "references": [
+        "GUID:67b006dd2bb4dbd48b8e249a5e5c80b9"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

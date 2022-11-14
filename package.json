@@ -1,25 +1,26 @@
 {
-    "name": "com.purchasely.unity",
-    "version": "1.0.0",
-    "displayName": "Purchasely",
-    "description": "Subscription optimization made easy",
-    "unity": "2019.4",
-    "keywords": [
-        "purchasely",
-        "in-app-purchase",
-        "subscription",
-        "paywall"
-    ],
-    "samples": [
-        {
-            "displayName": "Purchasely Demo",
-            "description": "Contains a sample Unity project for testing Purchasely plugin.",
-            "path": "Samples~/purchasely-demo"
-        }
-    ],
-    "author": {
-        "name": "Purchasely",
-        "email": "support@purchasely.com",
-        "url": "https://www.purchasely.com/"
+  "name": "com.purchasely.unity",
+  "version": "1.0.0",
+  "displayName": "Purchasely",
+  "description": "Subscription optimization made easy",
+  "unity": "2019.4",
+  "keywords": [
+    "purchasely",
+    "in-app-purchase",
+    "subscription",
+    "paywall"
+  ],
+  "samples": [
+    {
+      "displayName": "Purchasely Demo",
+      "description": "Contains a sample Unity project for testing Purchasely plugin.",
+      "path": "Samples~/purchasely-demo"
     }
+  ],
+  "author": {
+    "name": "Purchasely",
+    "email": "support@purchasely.com",
+    "url": "https://www.purchasely.com/"
+  },
+  "type": "library"
 }

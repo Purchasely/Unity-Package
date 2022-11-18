@@ -21,5 +21,23 @@ namespace Purchasely
 				new StartProxy(onStartCompleted),
 				new EventProxy(onEventReceived));
 		}
+
+		public void UserLogin(string userId, Action<bool> onCompleted)
+		{
+			_javaBridge?.Call("userLogin", userId, new UserLoginProxy(onCompleted));
+		}
+
+		public void SetIsReadyToPurchase(bool ready)
+		{
+			_javaBridge?.Call("setIsReadyToPurchase", ready);
+		}
+
+		public void PresentContentForPlacement(string placementId, bool displayCloseButton,
+			Action<ProductViewResult, PurchaselyPlan> onResult, Action<bool> onContentLoaded,
+			Action onCloseButtonClicked, string presentationId, string productId, string planId, string contentId)
+		{
+			_javaBridge?.Call("showContentForPlacement", AndroidUtils.Activity, placementId, displayCloseButton, 
+				new PlacementContentProxy(onContentLoaded, onCloseButtonClicked, onResult), presentationId, productId, planId, contentId);
+		}
 	}
 }

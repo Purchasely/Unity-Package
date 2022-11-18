@@ -26,4 +26,11 @@ namespace Purchasely
 		TransactionOnly = 3,
 		Full = 4
 	}
+
+	public enum ProductViewResult
+	{
+		Purchased = 0,
+		Restored = 1,
+		Cancelled = 2
+	}
 }

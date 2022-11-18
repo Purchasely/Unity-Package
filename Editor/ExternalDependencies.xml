@@ -1,0 +1,24 @@
+<dependencies>
+
+  <!-- Android dependencies are specified under the "androidPackages" element.
+       Each "androidPackage" element contains the attributes of an Android
+       dependency (e.g AAR, JAR reference). -->
+  <androidPackages>
+    <!-- Global set of repositories to search for packages.
+         These repos will be searched for all packages specified by
+         androidPackage. -->
+    <repositories>
+      <repository>https://repo.maven.apache.org/maven2</repository>
+      <repository>https://maven.google.com</repository>
+      <repository>https://developer.huawei.com/repo/</repository>
+    </repositories>
+    <androidPackage spec="io.purchasely:core:3.4.1">
+    </androidPackage>
+    <androidPackage spec="io.purchasely:google-play:3.4.1">
+    </androidPackage>
+    <androidPackage spec="io.purchasely:amazon:3.4.1">
+    </androidPackage>
+    <androidPackage spec="io.purchasely:huawei-services:3.4.1">
+    </androidPackage>
+  </androidPackages>
+</dependencies>

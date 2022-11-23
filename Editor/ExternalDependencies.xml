@@ -15,4 +15,8 @@
     <androidPackage spec="io.purchasely:player:3.4.1"> </androidPackage>
     <androidPackage spec="io.purchasely:google-play:3.4.1"> </androidPackage>
   </androidPackages>
+
+  <iosPods>
+    <iosPod name="Purchasely"/>
+  </iosPods>
 </dependencies>

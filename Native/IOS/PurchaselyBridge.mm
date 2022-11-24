@@ -10,7 +10,7 @@ typedef void(PurchaselyBoolCallbackDelegate)(void *actionPtr, bool refreshRequir
 
 typedef void(PurchaselyVoidCallbackDelegate)(void *actionPtr);
 
-typedef void(PurchaselyPresentationResultCallbackDelegate)(void *actionPtr, int result, PLYPlan* plan);
+typedef void(PurchaselyPresentationResultCallbackDelegate)(void *actionPtr, int result, void* plan);
 
 // Bridge methods
 extern "C" {
@@ -88,33 +88,52 @@ extern "C" {
 		}];
 	}
 
-//[UnityGetGLView() addSubview:mapView];
-
 	void _purchaselyUserLogin(const char* userId, PurchaselyBoolCallbackDelegate onUserLogin, void* onUserLoginPtr) {
 		[Purchasely userLoginWith:createNSStringFrom(userId) shouldRefresh:^(BOOL shouldRefresh) {
 			onUserLogin(onUserLoginPtr, shouldRefresh);
 		}];
 	}
 
-void _purchaselySetIsReadyToPurchase(bool ready) {
-	[Purchasely isReadyToPurchase:ready];
-}
+	void _purchaselySetIsReadyToPurchase(bool ready) {
+		[Purchasely isReadyToPurchase:ready];
+	}
+	
+	int parseProductViewResult(PLYProductViewControllerResult result) {
+		if (result == PLYProductViewControllerResultPurchased)
+			return 0;
+		if (result == PLYProductViewControllerResultRestored)
+			return 1;
+		
+		return 2;
+	}
 
 	void _purchaselyShowContentForPlacement(const char* placementId, const char* contentId, bool displayCloseButton, PurchaselyBoolCallbackDelegate 	loadCallback, void* loadCallbackPtr, PurchaselyVoidCallbackDelegate closeCallback, void* closeCallbackPtr, 	PurchaselyPresentationResultCallbackDelegate presentationResultCallback, void* presentationResultCallbackPtr) {
 		NSString* contentIdString = createNSStringFrom(placementId);
+		
+		UIViewController * presentationView;
 	
 		if (contentIdString.length < 1) {
-			[Purchasely presentationControllerFor:createNSStringFrom(placementId) contentId:contentIdString loaded:^(PLYPresentationViewController 	* _Nullable, BOOL, NSError * _Nullable) {
-	
-				} completion:^(enum PLYProductViewControllerResult, PLYPlan * _Nullable) {
-	
+			presentationView = [Purchasely presentationControllerFor:createNSStringFrom(placementId) contentId:contentIdString loaded:^(PLYPresentationViewController * _Nullable constroller, BOOL loaded, NSError * _Nullable error) {
+					if (error != nil) {
+						NSLog(@"%@", [error localizedDescription]);
+					}
+					
+					loadCallback(loadCallbackPtr, loaded);
+				} completion:^(enum PLYProductViewControllerResult result, PLYPlan * _Nullable plan) {
+					presentationResultCallback(presentationResultCallbackPtr, parseProductViewResult(result), (void *) CFBridgingRetain(plan));
 			}];
 		} else {
-			[Purchasely presentationControllerFor:createNSStringFrom(placementId) loaded:^(PLYPresentationViewController * _Nullable, BOOL, NSError 	* _Nullable) {
-	
-				} completion:^(enum PLYProductViewControllerResult, PLYPlan * _Nullable) {
-	
+			presentationView = [Purchasely presentationControllerFor:createNSStringFrom(placementId) loaded:^(PLYPresentationViewController * _Nullable constroller, BOOL loaded, NSError * _Nullable error) {
+				if (error != nil) {
+					   NSLog(@"%@", [error localizedDescription]);
+				   }
+				   
+				   loadCallback(loadCallbackPtr, loaded);
+			   } completion:^(enum PLYProductViewControllerResult result, PLYPlan * _Nullable plan) {
+				   presentationResultCallback(presentationResultCallbackPtr, parseProductViewResult(result), (void *) CFBridgingRetain(plan));
 			}];
 		}
+		
+		[UnityGetGLViewController() presentViewController:presentationView animated:false completion:nil];
 	}
 }

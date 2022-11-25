@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Purchasely
+namespace PurchaselyRuntime
 {
 	public class Purchasely
 	{

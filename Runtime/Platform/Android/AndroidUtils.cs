@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Purchasely
+namespace PurchaselyRuntime
 {
 	internal static class AndroidUtils
 	{

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Purchasely
+﻿namespace PurchaselyRuntime
 {
 	public class PurchaselyEvent
 	{

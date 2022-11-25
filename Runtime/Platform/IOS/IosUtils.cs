@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using AOT;
 using UnityEngine;
 
-namespace Purchasely
+namespace PurchaselyRuntime
 {
 	internal static class IosUtils
 	{

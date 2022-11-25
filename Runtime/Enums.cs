@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Purchasely
+namespace PurchaselyRuntime
 {
 	[Flags]
 	public enum Store

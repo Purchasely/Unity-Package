@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Purchasely
+namespace PurchaselyRuntime
 {
 	internal interface IPurchasely
 	{

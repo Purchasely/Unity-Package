@@ -1,13 +1,16 @@
 ﻿using System;
 using UnityEngine;
 
-public class PurchaselyPlan
+namespace PurchaselyRuntime
 {
-	internal PurchaselyPlan(AndroidJavaObject javaPlan)
+	public class PurchaselyPlan
 	{
-	}
+		internal PurchaselyPlan(AndroidJavaObject javaPlan)
+		{
+		}
 
-	internal PurchaselyPlan(IntPtr iosPlan)
-	{
+		internal PurchaselyPlan(IntPtr iosPlan)
+		{
+		}
 	}
 }

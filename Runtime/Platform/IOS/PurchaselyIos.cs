@@ -3,7 +3,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace Purchasely
+namespace PurchaselyRuntime
 {
 	public class PurchaselyIos : IPurchasely
 	{

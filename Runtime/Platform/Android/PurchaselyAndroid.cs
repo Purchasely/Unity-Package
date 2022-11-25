@@ -3,7 +3,7 @@
 using System;
 using UnityEngine;
 
-namespace Purchasely
+namespace PurchaselyRuntime
 {
 	internal class PurchaselyAndroid : IPurchasely
 	{

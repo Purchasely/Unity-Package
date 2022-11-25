@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Purchasely
+namespace PurchaselyRuntime
 {
 	internal class StartProxy : AndroidJavaProxy
 	{

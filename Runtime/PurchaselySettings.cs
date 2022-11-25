@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Purchasely
+namespace PurchaselyRuntime
 {
 	public class PurchaselySettings : ScriptableObject
 	{

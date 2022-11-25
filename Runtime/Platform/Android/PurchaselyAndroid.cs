@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Purchasely
 {
-	public class PurchaselyAndroid : IPurchasely
+	internal class PurchaselyAndroid : IPurchasely
 	{
 		private AndroidJavaObject _javaBridge;
 

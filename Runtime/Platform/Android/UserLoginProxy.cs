@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Purchasely
 {
-	public class UserLoginProxy : AndroidJavaProxy
+	internal class UserLoginProxy : AndroidJavaProxy
 	{
 		private readonly Action<bool> _onUserLoginCompleted;
 

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Purchasely
 {
-	public class PlacementContentProxy : AndroidJavaProxy
+	internal class PlacementContentProxy : AndroidJavaProxy
 	{
 		private readonly Action<bool> _onContentLoaded;
 		private readonly Action _onContentClosed;

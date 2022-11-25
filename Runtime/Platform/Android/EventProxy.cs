@@ -1,18 +1,20 @@
 ﻿using System;
-using Purchasely;
 using UnityEngine;
 
-internal class EventProxy : AndroidJavaProxy
+namespace Purchasely
 {
-	private readonly Action<PurchaselyEvent> _onEvent;
-
-	internal EventProxy(Action<PurchaselyEvent> onEvent) : base("com.purchasely.unity.proxy.EventProxy")
+	internal class EventProxy : AndroidJavaProxy
 	{
-		_onEvent = onEvent;
-	}
+		private readonly Action<PurchaselyEvent> _onEvent;
 
-	public void onEventReceived(string id, string name, string propertiesJson)
-	{
-		AsyncCallbackHelper.Instance.Queue(() => _onEvent(new PurchaselyEvent(id, name, propertiesJson)));
+		internal EventProxy(Action<PurchaselyEvent> onEvent) : base("com.purchasely.unity.proxy.EventProxy")
+		{
+			_onEvent = onEvent;
+		}
+
+		public void onEventReceived(string name, string propertiesJson)
+		{
+			AsyncCallbackHelper.Instance.Queue(() => _onEvent(new PurchaselyEvent(name, propertiesJson)));
+		}
 	}
 }

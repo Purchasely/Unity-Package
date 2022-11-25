@@ -1,17 +1,20 @@
 ﻿using System;
 using UnityEngine;
 
-internal class StartProxy : AndroidJavaProxy
+namespace Purchasely
 {
-	private readonly Action<bool, string> _onStartCompleted;
-
-	internal StartProxy(Action<bool, string> onStartCompleted) : base("com.purchasely.unity.proxy.StartProxy")
+	internal class StartProxy : AndroidJavaProxy
 	{
-		_onStartCompleted = onStartCompleted;
-	}
+		private readonly Action<bool, string> _onStartCompleted;
 
-	public void onStartCompleted(bool success, string error)
-	{
-		AsyncCallbackHelper.Instance.Queue(() => _onStartCompleted(success, error));
+		internal StartProxy(Action<bool, string> onStartCompleted) : base("com.purchasely.unity.proxy.StartProxy")
+		{
+			_onStartCompleted = onStartCompleted;
+		}
+
+		public void onStartCompleted(bool success, string error)
+		{
+			AsyncCallbackHelper.Instance.Queue(() => _onStartCompleted(success, error));
+		}
 	}
 }

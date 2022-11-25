@@ -57,10 +57,15 @@ namespace PurchaselyRuntime
 
 			var contentLoadCallback = new Action<bool>(isLoaded =>
 			{
-				AsyncCallbackHelper.Instance.Queue(() => { onContentLoaded(isLoaded); });
+				if (onContentLoaded != null)
+					AsyncCallbackHelper.Instance.Queue(() => { onContentLoaded(isLoaded); });
 			});
 
-			var closeButtonCallback = new Action(() => { AsyncCallbackHelper.Instance.Queue(onCloseButtonClicked); });
+			var closeButtonCallback = new Action(() =>
+			{
+				if (onCloseButtonClicked != null)
+					AsyncCallbackHelper.Instance.Queue(onCloseButtonClicked);
+			});
 
 			if (contentId == null)
 				contentId = string.Empty;

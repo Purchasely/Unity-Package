@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using PurchaselyRuntime;
 using UnityEditor;
 using UnityEngine;
 
@@ -16,17 +17,17 @@ namespace Purchasely.Editor
 
 		private void OnGUI()
 		{
-			var purchaselySettings = Resources.Load<PurchaselySettings>(Purchasely.SettingsPath);
+			var purchaselySettings = Resources.Load<PurchaselySettings>(PurchaselyRuntime.Purchasely.SettingsPath);
 			if (purchaselySettings == null)
 			{
 				purchaselySettings = CreateInstance<PurchaselySettings>();
 
-				var parentDir = Directory.GetParent(Purchasely.SettingsFullPath);
+				var parentDir = Directory.GetParent(PurchaselyRuntime.Purchasely.SettingsFullPath);
 
 				if (!parentDir.Exists)
 					parentDir.Create();
 
-				AssetDatabase.CreateAsset(purchaselySettings, Purchasely.SettingsFullPath);
+				AssetDatabase.CreateAsset(purchaselySettings, PurchaselyRuntime.Purchasely.SettingsFullPath);
 			}
 
 			Selection.activeObject = purchaselySettings;

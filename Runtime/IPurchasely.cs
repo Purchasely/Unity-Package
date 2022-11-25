@@ -4,7 +4,7 @@ namespace Purchasely
 {
 	internal interface IPurchasely
 	{
-		void Init(string apiKey, string userId, bool readyToPurchase, int storeFlags, int logLevel, int runningMode,
+		void Init(string apiKey, string userId, bool readyToPurchase, int logLevel, int runningMode,
 			Action<bool, string> onStartCompleted, Action<PurchaselyEvent> onEventReceived);
 
 		void UserLogin(string userId, Action<bool> onCompleted);

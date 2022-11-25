@@ -9,7 +9,7 @@ namespace Purchasely
 		public const string SettingsFullPath = "Assets/Resources/" + SettingsPath + ".asset";
 
 #pragma warning disable 649
-		private IPurchasely _implementation;
+		private readonly IPurchasely _implementation;
 #pragma warning restore 649
 
 		/// <summary>
@@ -17,24 +17,25 @@ namespace Purchasely
 		/// </summary>
 		/// <param name="userId"> User ID. Pass empty string if you want the SDK to be bound to the device instead of user. </param>
 		/// <param name="readyToPurchase"> Whether the application is ready to display the pay-wall. You can later change it. </param>
-		/// <param name="stores"> The store/stores that are available for the user. </param>
 		/// <param name="logLevel"> Log level of the SDK. </param>
 		/// <param name="runningMode"> Allows you to use Purchasely with another In-App purchase system to prepare a migration. More details here: https://docs.purchasely.com/quick-start-1/sdk-configuration.</param>
 		/// <param name="onStartCompleted"> Callback received with the result of the SDK initialization. Boolean parameter represents the success status with an optional error.</param>
 		/// <param name="onEventReceived"> Callback to be invoked when any events happen in the SDK. You should implement it at least to know when the purchase is successful.</param>
 		/// <exception cref="ArgumentException"> Is thrown if the SDK is not configured in the Editor. In the Unity Editor go to Window->Purchasely, then provide your API key and other required data.</exception>
-		public Purchasely(string userId, bool readyToPurchase, Store stores, LogLevel logLevel, RunningMode runningMode, 
+		public Purchasely(string userId, bool readyToPurchase, LogLevel logLevel, RunningMode runningMode, 
 			Action<bool, string> onStartCompleted, Action<PurchaselyEvent> onEventReceived)
 		{
-#if UNITY_ANDROID
+#if UNITY_ANDROID && !UNITY_EDITOR
 			_implementation = new PurchaselyAndroid();
+#elif UNITY_IOS && !UNITY_EDITOR
+			_implementation = new PurchaselyIos();
 #endif
 			var settings = Resources.Load<PurchaselySettings>(SettingsFullPath);
 			if (settings == null)
 				throw new ArgumentException(
 					$"Purchasely settings were not found. Please, make sure that asset \'{SettingsFullPath}\' exists. In the Unity Editor go to Window->Purchasely, then provide your API key and other required data.");
 
-			_implementation?.Init(settings.ApiKey, userId, readyToPurchase, (int) stores, (int) logLevel,
+			_implementation?.Init(settings.ApiKey, userId, readyToPurchase, (int) logLevel,
 				(int) runningMode, onStartCompleted, onEventReceived);
 		}
 

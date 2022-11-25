@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if UNITY_IOS
+
+using System;
 using System.Runtime.InteropServices;
 using AOT;
 using UnityEngine;
@@ -12,7 +14,7 @@ namespace Purchasely
 			return obj == null ? IntPtr.Zero : GCHandle.ToIntPtr(GCHandle.Alloc(obj));
 		}
 
-		internal static T Cast<T>(this IntPtr instancePtr)
+		private static T Cast<T>(this IntPtr instancePtr)
 		{
 			var instanceHandle = GCHandle.FromIntPtr(instancePtr);
 			if (!(instanceHandle.Target is T))
@@ -100,3 +102,5 @@ namespace Purchasely
 		}
 	}
 }
+
+#endif

@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if UNITY_ANDROID && !UNITY_EDITOR
+
+using System;
 using UnityEngine;
 
 namespace Purchasely
@@ -7,7 +9,7 @@ namespace Purchasely
 	{
 		private AndroidJavaObject _javaBridge;
 
-		public void Init(string apiKey, string userId, bool readyToPurchase, int storeFlags, int logLevel,
+		public void Init(string apiKey, string userId, bool readyToPurchase, int logLevel,
 			int runningMode, Action<bool, string> onStartCompleted, Action<PurchaselyEvent> onEventReceived)
 		{
 			_javaBridge = new AndroidJavaObject("com.purchasely.unity.PurchaselyBridge",
@@ -15,7 +17,7 @@ namespace Purchasely
 				apiKey,
 				userId,
 				readyToPurchase,
-				storeFlags,
+				(int) Store.Google,
 				logLevel,
 				runningMode,
 				new StartProxy(onStartCompleted),
@@ -41,3 +43,5 @@ namespace Purchasely
 		}
 	}
 }
+
+#endif

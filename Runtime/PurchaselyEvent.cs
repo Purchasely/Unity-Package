@@ -1,4 +1,6 @@
-﻿namespace Purchasely
+﻿using System;
+
+namespace Purchasely
 {
 	public class PurchaselyEvent
 	{

@@ -70,16 +70,13 @@ namespace Purchasely
 		/// <param name="onResult"> Callback to be invoked after user action. </param>
 		/// <param name="onContentLoaded"> Optional: callback to be invoked when the placement content is loaded. </param>
 		/// <param name="onCloseButtonClicked"> Optional: callback to be invoked when the user taps the close button. </param>
-		/// <param name="presentationId"> Optional: presentation ID. </param>
-		/// <param name="productId"> Optional: product ID. </param>
-		/// <param name="planId"> Optional: plan ID. </param>
 		/// <param name="contentId"> Optional: content ID. </param>
 		public void PresentContentForPlacement(string placementId, bool displayCloseButton, 
 			Action<ProductViewResult, PurchaselyPlan> onResult, Action<bool> onContentLoaded = null, Action onCloseButtonClicked = null, 
-			string presentationId = "", string productId = "", string planId = "", string contentId = "")
+			string contentId = "")
 		{
 			_implementation?.PresentContentForPlacement(placementId, displayCloseButton, onResult, onContentLoaded, 
-				onCloseButtonClicked, presentationId, productId, planId, contentId);
+				onCloseButtonClicked, contentId);
 		}
 	}
 }

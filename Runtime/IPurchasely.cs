@@ -13,6 +13,6 @@ namespace Purchasely
 
 		void PresentContentForPlacement(string placementId, bool displayCloseButton,
 			Action<ProductViewResult, PurchaselyPlan> onResult, Action<bool> onContentLoaded,
-			Action onCloseButtonClicked, string presentationId, string productId, string planId, string contentId);
+			Action onCloseButtonClicked, string contentId);
 	}
 }

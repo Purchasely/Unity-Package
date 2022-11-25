@@ -34,10 +34,10 @@ namespace Purchasely
 
 		public void PresentContentForPlacement(string placementId, bool displayCloseButton,
 			Action<ProductViewResult, PurchaselyPlan> onResult, Action<bool> onContentLoaded,
-			Action onCloseButtonClicked, string presentationId, string productId, string planId, string contentId)
+			Action onCloseButtonClicked, string contentId)
 		{
 			_javaBridge?.Call("showContentForPlacement", AndroidUtils.Activity, placementId, displayCloseButton, 
-				new PlacementContentProxy(onContentLoaded, onCloseButtonClicked, onResult), presentationId, productId, planId, contentId);
+				new PlacementContentProxy(onContentLoaded, onCloseButtonClicked, onResult), contentId);
 		}
 	}
 }

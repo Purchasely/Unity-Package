@@ -12,6 +12,26 @@ typedef void(PurchaselyVoidCallbackDelegate)(void *actionPtr);
 
 typedef void(PurchaselyPresentationResultCallbackDelegate)(void *actionPtr, int result, void* plan);
 
+typedef void(PurchaselyEventCallbackDelegate)(void *actionPtr, const char *name, const char *propertiesJson);
+
+// Event Delegate
+@interface PurchaselyEventDelegate : NSObject <PLYEventDelegate>
+
+@property(nonatomic, copy) void (^eventCallback)(NSString* name, NSDictionary<NSString*, id>* properties);
+
+@end
+
+@implementation PurchaselyEventDelegate
+
+- (void)eventTriggered:(enum PLYEvent)event properties:(NSDictionary<NSString *, id> * _Nullable)properties {
+	if (_eventCallback == nil)
+		return;
+	
+	_eventCallback([NSString fromPLYEvent:event], properties);
+}
+
+@end
+
 // Bridge methods
 extern "C" {
 	// String converters
@@ -72,16 +92,24 @@ extern "C" {
 		
 		return LogLevelInfo;
 	}
+
+	PurchaselyEventDelegate* _eventDelegate;
 	
 	void _purchaselyStart(const char* apiKey, const char* userId, bool readyToPurchase, int logLevel, int runningMode,
-						  PurchaselyStartCallbackDelegate startCallback, void* startCallbackPtr) {
+						  PurchaselyStartCallbackDelegate startCallback, void* startCallbackPtr,
+						  PurchaselyEventCallbackDelegate eventCallback, void* eventCallbackPtr) {
+		_eventDelegate = [PurchaselyEventDelegate new];
+		_eventDelegate.eventCallback = ^(NSString* name, NSDictionary<NSString*, id>* properties) {
+			eventCallback(eventCallbackPtr, createCStringFrom(name), createCStringFrom(serializeDictionary(properties)));
+		};
+		
 		[Purchasely startWithAPIKey:createNSStringFrom(apiKey)
-						appUserId:createNSStringFrom(userId)
+						  appUserId:createNSStringFrom(userId)
 						runningMode:parseRunningMode(runningMode)
-					eventDelegate:nil
-						uiDelegate:nil
-		paywallActionsInterceptor:nil
-						logLevel:parseLogLevel(logLevel)
+					  eventDelegate:_eventDelegate
+						 uiDelegate:nil
+		  paywallActionsInterceptor:nil
+						   logLevel:parseLogLevel(logLevel)
 						initialized:^(BOOL success, NSError * _Nullable error) {
 			NSString* errorString = error == nil ? @"" : [error localizedDescription];
 			startCallback(startCallbackPtr, success, createCStringFrom(errorString));

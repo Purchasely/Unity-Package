@@ -1,8 +1,10 @@
-﻿using System.IO;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEditor.Callbacks;
+#if UNITY_IOS
+using System.IO;
 using UnityEditor.iOS.Xcode;
 using UnityEditor.iOS.Xcode.Extensions;
+#endif
 
 namespace Purchasely.Editor
 {
@@ -13,6 +15,7 @@ namespace Purchasely.Editor
 		{
 			if (buildTarget == BuildTarget.iOS)
 			{
+#if UNITY_IOS
 				var projPath = PBXProject.GetPBXProjectPath(buildPath);
 				var project = new PBXProject();
 				project.ReadFromFile(projPath);
@@ -32,6 +35,7 @@ namespace Purchasely.Editor
 				project.AddBuildProperty(targetGuid, "LD_DYLIB_INSTALL_NAME", "@executable_path/../Frameworks/$(EXECUTABLE_PATH)");
 
 				project.WriteToFile(projPath);
+#endif
 			}
 		}
 	}

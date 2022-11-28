@@ -30,7 +30,7 @@ namespace PurchaselyRuntime
 #elif UNITY_IOS && !UNITY_EDITOR
 			_implementation = new PurchaselyIos();
 #endif
-			var settings = Resources.Load<PurchaselySettings>(SettingsFullPath);
+			var settings = Resources.Load<PurchaselySettings>(SettingsPath);
 			if (settings == null)
 				throw new ArgumentException(
 					$"Purchasely settings were not found. Please, make sure that asset \'{SettingsFullPath}\' exists. In the Unity Editor go to Window->Purchasely, then provide your API key and other required data.");

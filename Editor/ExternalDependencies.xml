@@ -11,50 +11,11 @@
       <repository>https://repo.maven.apache.org/maven2</repository>
       <repository>https://maven.google.com</repository>
     </repositories>
-<!--    <androidPackage spec="io.purchasely:core:3.4.1"> </androidPackage>-->
-<!--    <androidPackage spec="io.purchasely:player:3.4.1"> </androidPackage>-->
-<!--    <androidPackage spec="io.purchasely:google-play:3.4.1"> </androidPackage>-->
 
-    <androidPackage spec="androidx.lifecycle:lifecycle-livedata-ktx:2.3.1"> </androidPackage>
-    <androidPackage spec="com.android.billingclient:billing-ktx:4.1.0"> </androidPackage>
-    <androidPackage spec="org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.4"> </androidPackage>
-    <androidPackage spec="com.google.android.exoplayer:extension-okhttp:2.18.1"> </androidPackage>
-    <androidPackage spec="com.squareup.okhttp3:okhttp:4.10.0"> </androidPackage>
-    <androidPackage spec="com.squareup.okio:okio-jvm:3.0.0"> </androidPackage>
-    <androidPackage spec="org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.21"> </androidPackage>
-    <androidPackage spec="org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.6.21"> </androidPackage>
-    <androidPackage spec="androidx.lifecycle:lifecycle-livedata-core-ktx:2.3.1"> </androidPackage>
-    <androidPackage spec="org.jetbrains.kotlin:kotlin-stdlib:1.6.21"> </androidPackage>
-    <androidPackage spec="org.jetbrains.kotlin:kotlin-stdlib-common:1.6.21"> </androidPackage>
-    <androidPackage spec="org.jetbrains:annotations:13.0"> </androidPackage>
-    <androidPackage spec="androidx.databinding:viewbinding:7.3.1"> </androidPackage>
-    <androidPackage spec="com.google.android.exoplayer:exoplayer-ui:2.18.1"> </androidPackage>
-    <androidPackage spec="com.google.android.exoplayer:extension-mediasession:2.18.1"> </androidPackage>
-    <androidPackage spec="androidx.media:media:1.4.3"> </androidPackage>
-    <androidPackage spec="androidx.core:core:1.7.0"> </androidPackage>
-    <androidPackage spec="androidx.lifecycle:lifecycle-livedata:2.3.1"> </androidPackage>
-    <androidPackage spec="androidx.arch.core:core-runtime:2.1.0"> </androidPackage>
-    <androidPackage spec="androidx.lifecycle:lifecycle-runtime:2.3.1"> </androidPackage>
-    <androidPackage spec="androidx.versionedparcelable:versionedparcelable:1.1.1"> </androidPackage>
-    <androidPackage spec="androidx.arch.core:core-common:2.1.0"> </androidPackage>
-    <androidPackage spec="androidx.lifecycle:lifecycle-livedata-core:2.3.1"> </androidPackage>
-    <androidPackage spec="androidx.lifecycle:lifecycle-common:2.3.1"> </androidPackage>
-    <androidPackage spec="androidx.collection:collection:1.1.0"> </androidPackage>
-    <androidPackage spec="androidx.annotation:annotation:1.3.0"> </androidPackage>
-    <androidPackage spec="androidx.annotation:annotation-experimental:1.1.0"> </androidPackage>
-    <androidPackage spec="com.google.android.exoplayer:exoplayer-core:2.18.1"> </androidPackage>
-    <androidPackage spec="com.google.android.exoplayer:exoplayer-common:2.18.1"> </androidPackage>
-    <androidPackage spec="com.google.guava:guava:31.0.1-android"> </androidPackage>
-    <androidPackage spec="com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava"> </androidPackage>
-    <androidPackage spec="com.google.guava:failureaccess:1.0.1"> </androidPackage>
-    <androidPackage spec="com.google.android.exoplayer:exoplayer-datasource:2.18.1"> </androidPackage>
-    <androidPackage spec="com.google.android.exoplayer:exoplayer-database:2.18.1"> </androidPackage>
-    <androidPackage spec="com.google.android.exoplayer:exoplayer-decoder:2.18.1"> </androidPackage>
-    <androidPackage spec="com.google.android.exoplayer:exoplayer-extractor:2.18.1"> </androidPackage>
-    <androidPackage spec="com.google.android.exoplayer:exoplayer-hls:2.18.1"> </androidPackage>
-    <androidPackage spec="com.android.billingclient:billing:4.1.0"> </androidPackage>
-  </androidPackages>
-
+    <androidPackage spec="io.purchasely:core:1.1.0-alpha02"> </androidPackage>
+    <androidPackage spec="io.purchasely:player:1.1.0-alpha02"> </androidPackage>
+    <androidPackage spec="io.purchasely:google-play:1.1.0-alpha02"> </androidPackage>
+  </androidPackages>  
 <!--  <iosPods>-->
 <!--    <iosPod name="Purchasely"/>-->
 <!--  </iosPods>-->

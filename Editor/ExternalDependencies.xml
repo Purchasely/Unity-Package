@@ -11,10 +11,9 @@
       <repository>https://repo.maven.apache.org/maven2</repository>
       <repository>https://maven.google.com</repository>
     </repositories>
-
-    <androidPackage spec="io.purchasely:core:1.1.0-alpha02"> </androidPackage>
-    <androidPackage spec="io.purchasely:player:1.1.0-alpha02"> </androidPackage>
-    <androidPackage spec="io.purchasely:google-play:1.1.0-alpha02"> </androidPackage>
+<!--    <androidPackage spec="io.purchasely:core:1.1.0-alpha02"> </androidPackage>-->
+<!--    <androidPackage spec="io.purchasely:player:1.1.0-alpha02"> </androidPackage>-->
+<!--    <androidPackage spec="io.purchasely:google-play:1.1.0-alpha02"> </androidPackage>-->
   </androidPackages>  
 <!--  <iosPods>-->
 <!--    <iosPod name="Purchasely"/>-->

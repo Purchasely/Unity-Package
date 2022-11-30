@@ -22,7 +22,7 @@ namespace PurchaselyRuntime
 		/// <param name="onStartCompleted"> Callback received with the result of the SDK initialization. Boolean parameter represents the success status with an optional error.</param>
 		/// <param name="onEventReceived"> Callback to be invoked when any events happen in the SDK. You should implement it at least to know when the purchase is successful.</param>
 		/// <exception cref="ArgumentException"> Is thrown if the SDK is not configured in the Editor. In the Unity Editor go to Window->Purchasely, then provide your API key and other required data.</exception>
-		public Purchasely(string userId, bool readyToPurchase, LogLevel logLevel, RunningMode runningMode, 
+		public Purchasely(string userId, bool readyToPurchase, LogLevel logLevel, RunningMode runningMode,
 			Action<bool, string> onStartCompleted, Action<PurchaselyEvent> onEventReceived)
 		{
 #if UNITY_ANDROID && !UNITY_EDITOR
@@ -72,11 +72,14 @@ namespace PurchaselyRuntime
 		/// <param name="onContentLoaded"> Optional: callback to be invoked when the placement content is loaded. </param>
 		/// <param name="onCloseButtonClicked"> Optional: callback to be invoked when the user taps the close button. </param>
 		/// <param name="contentId"> Optional: content ID. </param>
-		public void PresentContentForPlacement(string placementId, bool displayCloseButton, 
-			Action<ProductViewResult, PurchaselyPlan> onResult, Action<bool> onContentLoaded = null, Action onCloseButtonClicked = null, 
-			string contentId = "")
+		public void PresentContentForPlacement(string placementId, bool displayCloseButton,
+			Action<ProductViewResult, PurchaselyPlan> onResult, Action<bool> onContentLoaded = null,
+			Action onCloseButtonClicked = null, string contentId = "")
 		{
-			_implementation?.PresentContentForPlacement(placementId, displayCloseButton, onResult, onContentLoaded, 
+			if (string.IsNullOrEmpty(contentId))
+				contentId = string.Empty;
+
+			_implementation?.PresentContentForPlacement(placementId, displayCloseButton, onResult, onContentLoaded,
 				onCloseButtonClicked, contentId);
 		}
 	}

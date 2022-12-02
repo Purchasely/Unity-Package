@@ -135,7 +135,7 @@ extern "C" {
 		return 2;
 	}
 
-	void _purchaselyShowContentForPlacement(const char* placementId, const char* contentId, bool displayCloseButton, PurchaselyBoolCallbackDelegate 	loadCallback, void* loadCallbackPtr, PurchaselyVoidCallbackDelegate closeCallback, void* closeCallbackPtr, 	PurchaselyPresentationResultCallbackDelegate presentationResultCallback, void* presentationResultCallbackPtr) {
+	void _purchaselyShowContentForPlacement(const char* placementId, const char* contentId, PurchaselyBoolCallbackDelegate loadCallback, void* loadCallbackPtr, PurchaselyVoidCallbackDelegate closeCallback, void* closeCallbackPtr, 	PurchaselyPresentationResultCallbackDelegate presentationResultCallback, void* presentationResultCallbackPtr) {
 		NSString* contentIdString = createNSStringFrom(placementId);
 		
 		UIViewController * presentationView;

@@ -11,8 +11,7 @@ namespace PurchaselyRuntime
 
 		void SetIsReadyToPurchase(bool ready);
 
-		void PresentContentForPlacement(string placementId, bool displayCloseButton,
-			Action<ProductViewResult, PurchaselyPlan> onResult, Action<bool> onContentLoaded,
-			Action onCloseButtonClicked, string contentId);
+		void PresentContentForPlacement(string placementId, Action<ProductViewResult, PurchaselyPlan> onResult, 
+			Action<bool> onContentLoaded, Action onCloseButtonClicked, string contentId);
 	}
 }

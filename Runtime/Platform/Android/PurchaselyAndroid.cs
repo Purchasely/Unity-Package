@@ -34,11 +34,10 @@ namespace PurchaselyRuntime
 			_javaBridge?.Call("setIsReadyToPurchase", ready);
 		}
 
-		public void PresentContentForPlacement(string placementId, bool displayCloseButton,
-			Action<ProductViewResult, PurchaselyPlan> onResult, Action<bool> onContentLoaded,
-			Action onCloseButtonClicked, string contentId)
+		public void PresentContentForPlacement(string placementId, Action<ProductViewResult, PurchaselyPlan> onResult, 
+			Action<bool> onContentLoaded, Action onCloseButtonClicked, string contentId)
 		{
-			_javaBridge?.Call("showContentForPlacement", AndroidUtils.Activity, placementId, displayCloseButton, 
+			_javaBridge?.Call("showContentForPlacement", AndroidUtils.Activity, placementId, 
 				new PlacementContentProxy(onContentLoaded, onCloseButtonClicked, onResult), contentId);
 		}
 	}

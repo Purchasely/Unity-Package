@@ -72,15 +72,13 @@ namespace PurchaselyRuntime
 		/// <param name="onContentLoaded"> Optional: callback to be invoked when the placement content is loaded. </param>
 		/// <param name="onCloseButtonClicked"> Optional: callback to be invoked when the user taps the close button. </param>
 		/// <param name="contentId"> Optional: content ID. </param>
-		public void PresentContentForPlacement(string placementId, bool displayCloseButton,
-			Action<ProductViewResult, PurchaselyPlan> onResult, Action<bool> onContentLoaded = null,
-			Action onCloseButtonClicked = null, string contentId = "")
+		public void PresentContentForPlacement(string placementId, Action<ProductViewResult, PurchaselyPlan> onResult, 
+			Action<bool> onContentLoaded = null, Action onCloseButtonClicked = null, string contentId = "")
 		{
 			if (string.IsNullOrEmpty(contentId))
 				contentId = string.Empty;
 
-			_implementation?.PresentContentForPlacement(placementId, displayCloseButton, onResult, onContentLoaded,
-				onCloseButtonClicked, contentId);
+			_implementation?.PresentContentForPlacement(placementId, onResult, onContentLoaded, onCloseButtonClicked, contentId);
 		}
 	}
 }

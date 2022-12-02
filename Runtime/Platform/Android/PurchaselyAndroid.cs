@@ -1,4 +1,4 @@
-﻿#if UNITY_ANDROID && !UNITY_EDITOR
+﻿#if UNITY_ANDROID
 
 using System;
 using UnityEngine;
@@ -39,6 +39,16 @@ namespace PurchaselyRuntime
 		{
 			_javaBridge?.Call("showContentForPlacement", AndroidUtils.Activity, placementId, 
 				new PlacementContentProxy(onContentLoaded, onCloseButtonClicked, onResult), contentId);
+		}
+
+		public void SetPaywallActionInterceptor(Action<string> onActionJson)
+		{
+			_javaBridge?.Call("setPaywallActionInterceptor", new PaywallInterceptorProxy(onActionJson));
+		}
+
+		public void ProcessPaywallAction(bool process)
+		{
+			_javaBridge?.Call("processPaywallAction", AndroidUtils.Activity, process);
 		}
 	}
 }

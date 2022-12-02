@@ -13,5 +13,8 @@ namespace PurchaselyRuntime
 
 		void PresentContentForPlacement(string placementId, Action<ProductViewResult, PurchaselyPlan> onResult, 
 			Action<bool> onContentLoaded, Action onCloseButtonClicked, string contentId);
+
+		void SetPaywallActionInterceptor(Action<string> onActionJson);
+		void ProcessPaywallAction(bool process);
 	}
 }

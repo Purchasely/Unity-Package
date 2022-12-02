@@ -34,12 +34,12 @@ namespace PurchaselyRuntime
 			AsyncCallbackHelper.Instance.Queue(() => _onContentClosed());
 		}
 
-		public void onPresentationResult(int result, AndroidJavaObject plan)
+		public void onPresentationResult(int result, string planJson)
 		{
 			if (_onResult == null)
 				return;
 
-			AsyncCallbackHelper.Instance.Queue(() => _onResult((ProductViewResult) result, new PurchaselyPlan(plan)));
+			AsyncCallbackHelper.Instance.Queue(() => _onResult((ProductViewResult) result, new PurchaselyPlan(planJson)));
 		}
 	}
 }

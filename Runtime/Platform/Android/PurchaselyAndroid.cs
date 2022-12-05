@@ -127,8 +127,7 @@ namespace PurchaselyRuntime
 			_javaBridge?.Call("allProducts", new JsonErrorProxy(successAction, onError));
 		}
 
-		public void PurchaseWithPlanId(string planId, Action<Plan> onSuccess, Action<string> onError,
-			string contentId = "")
+		public void PurchaseWithPlanId(string planId, Action<Plan> onSuccess, Action<string> onError, string contentId)
 		{
 			var successAction = new Action<string>(json => { onSuccess(SerializationUtils.Deserialize<Plan>(json)); });
 

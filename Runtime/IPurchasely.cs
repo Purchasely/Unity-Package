@@ -44,7 +44,7 @@ namespace PurchaselyRuntime
 		void AllProducts(Action<List<Product>> onSuccess, Action<string> onError);
 
 		void PurchaseWithPlanId(string planId, Action<Plan> onSuccess, Action<string> onError,
-			string contentId = "");
+			string contentId);
 
 		void HandleDeepLinkUrl(string url);
 

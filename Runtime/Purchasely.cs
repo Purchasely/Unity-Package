@@ -258,7 +258,7 @@ namespace PurchaselyRuntime
 				return;
 			}
 
-			_implementation.PurchaseWithPlanId(planId, onSuccess, onError);
+			_implementation.PurchaseWithPlanId(planId, onSuccess, onError, contentId);
 		}
 
 		public void HandleDeepLinkUrl(string url)

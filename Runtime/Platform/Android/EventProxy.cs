@@ -14,10 +14,13 @@ namespace PurchaselyRuntime
 
 		public void onEventReceived(string eventJson)
 		{
-			if (Debug.isDebugBuild)
-				Debug.Log(eventJson);
+			AsyncCallbackHelper.Instance.Queue(() =>
+			{
+				if (Debug.isDebugBuild)
+					Debug.Log(eventJson);
 
-			AsyncCallbackHelper.Instance.Queue(() => _onEvent(SerializationUtils.Deserialize<Event>(eventJson)));
+				_onEvent(SerializationUtils.Deserialize<Event>(eventJson));
+			});
 		}
 	}
 }

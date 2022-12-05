@@ -17,10 +17,13 @@ namespace PurchaselyRuntime
 
 		public void onSuccess(string json)
 		{
-			if (Debug.isDebugBuild)
-				Debug.Log(json);
+			AsyncCallbackHelper.Instance.Queue(() =>
+			{
+				if (Debug.isDebugBuild)
+					Debug.Log(json);
 
-			AsyncCallbackHelper.Instance.Queue(() => _onSuccess(json));
+				_onSuccess(json);
+			});
 		}
 
 		public void onError(string error)

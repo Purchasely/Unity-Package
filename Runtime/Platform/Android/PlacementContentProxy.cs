@@ -39,10 +39,13 @@ namespace PurchaselyRuntime
 			if (_onResult == null)
 				return;
 
-			if (Debug.isDebugBuild)
-				Debug.Log(planJson);
+			AsyncCallbackHelper.Instance.Queue(() =>
+			{
+				if (Debug.isDebugBuild)
+					Debug.Log(planJson);
 
-			AsyncCallbackHelper.Instance.Queue(() => _onResult((ProductViewResult) result, SerializationUtils.Deserialize<Plan>(planJson)));
+				_onResult((ProductViewResult) result, SerializationUtils.Deserialize<Plan>(planJson));
+			});
 		}
 	}
 }

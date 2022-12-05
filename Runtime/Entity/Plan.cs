@@ -3,11 +3,11 @@
 	public class Plan
 	{
 		public string id;
-		public bool is_visible;
+		public bool isVisible;
 		public int level;
 		public string name;
-		public string store_product_id;
+		public string storeProductId;
 		public string type;
-		public string vendor_id;
+		public string vendorId;
 	}
 }

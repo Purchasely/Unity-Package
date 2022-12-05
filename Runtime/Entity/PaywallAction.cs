@@ -16,11 +16,11 @@ namespace PurchaselyRuntime
 
 		public class Info
 		{
-			public string contentId;
-			public string presentationId;
-			public string placementId;
-			public string abTestId;
-			public string abTestVariantId;
+			public string content_id;
+			public string presentation_id;
+			public string placement_id;
+			public string ab_test_id;
+			public string ab_test_variant_id;
 		}
 	}
 }

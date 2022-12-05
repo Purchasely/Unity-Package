@@ -6,7 +6,7 @@ namespace PurchaselyRuntime
 	{
 		public string id;
 		public string name;
-		public string vendorId;
+		public string vendor_id;
 		public List<Plan> plans;
 		public Conditions conditions;
 		public Image image;

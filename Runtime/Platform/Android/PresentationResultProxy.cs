@@ -5,9 +5,9 @@ namespace PurchaselyRuntime
 {
 	public class PresentationResultProxy : AndroidJavaProxy
 	{
-		private readonly Action<ProductViewResult, PurchaselyPlan> _onResult;
+		private readonly Action<ProductViewResult, Plan> _onResult;
 
-		internal PresentationResultProxy(Action<ProductViewResult, PurchaselyPlan> onResult) : base(
+		internal PresentationResultProxy(Action<ProductViewResult, Plan> onResult) : base(
 			"com.purchasely.unity.proxy.PresentationResultProxy")
 		{
 			_onResult = onResult;
@@ -19,7 +19,7 @@ namespace PurchaselyRuntime
 				return;
 
 			AsyncCallbackHelper.Instance.Queue(
-				() => _onResult((ProductViewResult) result, new PurchaselyPlan(planJson)));
+				() => _onResult((ProductViewResult) result, SerializationUtils.Deserialize<Plan>(planJson)));
 		}
 	}
 }

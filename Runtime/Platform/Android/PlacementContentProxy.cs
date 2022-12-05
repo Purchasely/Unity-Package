@@ -7,10 +7,10 @@ namespace PurchaselyRuntime
 	{
 		private readonly Action<bool> _onContentLoaded;
 		private readonly Action _onContentClosed;
-		private readonly Action<ProductViewResult, PurchaselyPlan> _onResult;
+		private readonly Action<ProductViewResult, Plan> _onResult;
 
 		internal PlacementContentProxy(Action<bool> onContentLoaded, Action onContentClosed,
-			Action<ProductViewResult, PurchaselyPlan> onResult) : base(
+			Action<ProductViewResult, Plan> onResult) : base(
 			"com.purchasely.unity.proxy.PlacementContentProxy")
 		{
 			_onContentLoaded = onContentLoaded;
@@ -39,7 +39,10 @@ namespace PurchaselyRuntime
 			if (_onResult == null)
 				return;
 
-			AsyncCallbackHelper.Instance.Queue(() => _onResult((ProductViewResult) result, new PurchaselyPlan(planJson)));
+			if (Debug.isDebugBuild)
+				Debug.Log(planJson);
+
+			AsyncCallbackHelper.Instance.Queue(() => _onResult((ProductViewResult) result, SerializationUtils.Deserialize<Plan>(planJson)));
 		}
 	}
 }

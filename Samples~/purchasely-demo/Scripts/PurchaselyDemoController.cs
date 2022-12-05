@@ -4,6 +4,7 @@ using System.Text;
 using PurchaselyRuntime;
 using UnityEngine;
 using UnityEngine.UI;
+using Event = PurchaselyRuntime.Event;
 
 public class PurchaselyDemoController : MonoBehaviour
 {
@@ -77,9 +78,9 @@ public class PurchaselyDemoController : MonoBehaviour
 		Log($"Purchasely Start Result. Success: {success}. Error: {error}.");
 	}
 
-	private void OnPurchaselyEvent(PurchaselyEvent purchaselyEvent)
+	private void OnPurchaselyEvent(Event @event)
 	{
-		Log($"Purchasely Event Received. Name: {purchaselyEvent.Name}. Properties: {purchaselyEvent.PropertiesJson}.");
+		Log($"Purchasely Event Received. Name: {@event.name}. Type: {@event.type}.");
 	}
 
 	private void OnUserLoginCompleted(bool needRefresh)
@@ -87,12 +88,12 @@ public class PurchaselyDemoController : MonoBehaviour
 		Log($"Purchasely User Login Completed. Need refresh: {needRefresh}.");
 	}
 
-	private void OnPaywallActionIntercepted(string actionJson)
+	private void OnPaywallActionIntercepted(PaywallAction action)
 	{
-		Log($"Purchasely Paywall Action Intercepted. Data: {actionJson}.");
+		Log($"Purchasely Paywall Action Intercepted. Action: {action.action}.");
 	}
 
-	private void OnPresentationResult(ProductViewResult result, PurchaselyPlan plan)
+	private void OnPresentationResult(ProductViewResult result, Plan plan)
 	{
 		Log($"Presentation Result: {result}.");
 	}

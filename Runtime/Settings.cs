@@ -2,7 +2,7 @@
 
 namespace PurchaselyRuntime
 {
-	public class PurchaselySettings : ScriptableObject
+	public class Settings : ScriptableObject
 	{
 		public string ApiKey;
 	}

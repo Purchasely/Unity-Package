@@ -17,10 +17,10 @@ namespace Purchasely.Editor
 
 		private void OnGUI()
 		{
-			var purchaselySettings = Resources.Load<PurchaselySettings>(PurchaselyRuntime.Purchasely.SettingsPath);
+			var purchaselySettings = Resources.Load<Settings>(PurchaselyRuntime.Purchasely.SettingsPath);
 			if (purchaselySettings == null)
 			{
-				purchaselySettings = CreateInstance<PurchaselySettings>();
+				purchaselySettings = CreateInstance<Settings>();
 
 				var parentDir = Directory.GetParent(PurchaselyRuntime.Purchasely.SettingsFullPath);
 

@@ -291,7 +291,7 @@ public class PurchaselyDemoController : MonoBehaviour
 		if (_logs.Count >= LAST_LOGS_COUNT)
 			_logs.Dequeue();
 
-		_logs.Enqueue($"{DateTime.Now:T:}: {log}");
+		_logs.Enqueue($"{DateTime.Now:T}: {log}");
 
 		var stringBuilder = new StringBuilder();
 		foreach (var logString in _logs)

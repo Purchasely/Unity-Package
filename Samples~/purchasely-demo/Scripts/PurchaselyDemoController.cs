@@ -267,12 +267,12 @@ public class PurchaselyDemoController : MonoBehaviour
 
 	private void LogPlan(Plan plan)
 	{
-		Log($"Plan ID: {plan.id}");
+		Log($"Plan name: {plan.name}. ID: {plan.vendorId}");
 	}
 
 	private void LogProduct(Product product)
 	{
-		Log($"Product ID: {product.id}");
+		Log($"Product name: {product.name}. ID: {product.vendorId}");
 	}
 
 	private void OnGetAllProductsSuccess(List<Product> products)
@@ -280,7 +280,7 @@ public class PurchaselyDemoController : MonoBehaviour
 		Log($"Get All Products Success. Products fetched: {products.Count}.");
 		foreach (var product in products)
 		{
-			Log($"Product ID: {product.id}");
+			LogProduct(product);
 		}
 	}
 

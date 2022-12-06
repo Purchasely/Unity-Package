@@ -140,11 +140,11 @@ namespace PurchaselyRuntime
 			_javaBridge?.Call("handleDeepLinkUrl", url);
 		}
 
-		public void GetUserSubscriptions(Action<SubscriptionData> onSuccess, Action<string> onError)
+		public void GetUserSubscriptions(Action<List<SubscriptionData>> onSuccess, Action<string> onError)
 		{
 			var successAction = new Action<string>(json =>
 			{
-				onSuccess(SerializationUtils.Deserialize<SubscriptionData>(json));
+				onSuccess(SerializationUtils.Deserialize<List<SubscriptionData>>(json));
 			});
 
 			_javaBridge?.Call("getUserSubscriptions", new JsonErrorProxy(successAction, onError));

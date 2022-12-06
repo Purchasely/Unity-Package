@@ -48,7 +48,7 @@ namespace PurchaselyRuntime
 
 		void HandleDeepLinkUrl(string url);
 
-		void GetUserSubscriptions(Action<SubscriptionData> onSuccess, Action<string> onError);
+		void GetUserSubscriptions(Action<List<SubscriptionData>> onSuccess, Action<string> onError);
 
 		void PresentSubscriptions();
 

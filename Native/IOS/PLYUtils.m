@@ -135,31 +135,30 @@
 	
 	[dict setObject:[self planAsDictionary:subscription.plan] forKey:@"plan"];
 	[dict setObject:[self productAsDictionary:subscription.product] forKey:@"product"];
-	NSMutableDictionary<NSString*, NSObject*>* subscriptionData = [NSMutableDictionary new];
 	
-	[subscriptionData setObject:subscription.contentId forKey:@"contentId"];
-	[subscriptionData setObject:subscription.storeCountry forKey:@"storeCountry"];
-	[subscriptionData setObject:@(subscription.isFamilyShared) forKey:@"isFamilyShared"];
-	[subscriptionData setObject:subscription.offerIdentifier forKey:@"offerIdentifier"];
+	[dict setObject:subscription.contentId forKey:@"contentId"];
+	[dict setObject:subscription.storeCountry forKey:@"storeCountry"];
+	[dict setObject:@(subscription.isFamilyShared) forKey:@"isFamilyShared"];
+	[dict setObject:subscription.offerIdentifier forKey:@"offerIdentifier"];
 	
-	[subscriptionData setObject:[NSNumber numberWithInteger:subscription.subscriptionSource] forKey:@"subscriptionSource"];
+	[dict setObject:[NSNumber numberWithInteger:subscription.subscriptionSource] forKey:@"subscriptionSource"];
+	[dict setObject:[NSNumber numberWithInteger:subscription.status] forKey:@"status"];
+	[dict setObject:[NSNumber numberWithInteger:subscription.offerType] forKey:@"offerType"];
 	
 	NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
 	[dateFormat setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZ"];
 	
 	if (subscription.nextRenewalDate != nil) {
-		[subscriptionData setObject:[dateFormat stringFromDate:subscription.nextRenewalDate] forKey:@"nextRenewalDate"];
+		[dict setObject:[dateFormat stringFromDate:subscription.nextRenewalDate] forKey:@"nextRenewalDate"];
 	}
 	
 	if (subscription.cancelledDate != nil) {
-		[subscriptionData setObject:[dateFormat stringFromDate:subscription.cancelledDate] forKey:@"cancelledDate"];
+		[dict setObject:[dateFormat stringFromDate:subscription.cancelledDate] forKey:@"cancelledDate"];
 	}
 	
 	if (subscription.purchasedDate != nil) {
-		[subscriptionData setObject:[dateFormat stringFromDate:subscription.purchasedDate] forKey:@"purchasedDate"];
+		[dict setObject:[dateFormat stringFromDate:subscription.purchasedDate] forKey:@"purchasedDate"];
 	}
-	
-	[dict setObject:subscriptionData forKey:@"data"];
 	
 	return dict;
 }

@@ -1,4 +1,4 @@
-﻿#if UNITY_IOS && !UNITY_EDITOR
+﻿#if UNITY_IOS
 
 using System;
 using System.Collections.Generic;
@@ -154,7 +154,7 @@ namespace PurchaselyRuntime
 			throw new NotImplementedException();
 		}
 
-		public void GetUserSubscriptions(Action<SubscriptionData> onSuccess, Action<string> onError)
+		public void GetUserSubscriptions(Action<List<SubscriptionData>> onSuccess, Action<string> onError)
 		{
 			throw new NotImplementedException();
 		}

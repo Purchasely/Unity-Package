@@ -266,7 +266,7 @@ namespace PurchaselyRuntime
 			_implementation?.HandleDeepLinkUrl(url);
 		}
 
-		public void GetUserSubscriptions(Action<SubscriptionData> onSuccess, Action<string> onError)
+		public void GetUserSubscriptions(Action<List<SubscriptionData>> onSuccess, Action<string> onError)
 		{
 			if (_implementation == null)
 			{

@@ -5,6 +5,7 @@
 		public string id;
 		public bool isVisible;
 		public bool hasIntroductoryPrice;
+		public bool isEligibleForIntroOffer;
 		public bool hasFreeTrial;
 		public int level;
 		public int amount;
@@ -18,6 +19,7 @@
 		public string period;
 		public string productId;
 		public string currencySymbol;
+		public string currencyCode;
 		public string introPeriod;
 		public string introDuration;
 		public string price;

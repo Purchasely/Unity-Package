@@ -34,5 +34,5 @@
 
 + (NSDictionary<NSString*, NSObject*>*) resultDictionaryForActionInterceptor:(PLYPresentationAction) action parameters: (PLYPresentationActionParameters* _Nullable) params presentationInfos: (PLYPresentationInfo* _Nullable) infos;
 
-+ (char*) actionToJson:(PLYPresentationAction) action parameters: (PLYPresentationActionParameters * _Nullable) params presentationInfos: (PLYPresentationInfo * _Nullable) infos;
++ (char*) actionToJson:(PLYPresentationAction) action parameters: (PLYPresentationActionParameters* _Nullable) params presentationInfos: (PLYPresentationInfo* _Nullable) infos;
 @end

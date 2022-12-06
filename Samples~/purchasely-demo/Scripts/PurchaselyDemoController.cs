@@ -248,21 +248,22 @@ public class PurchaselyDemoController : MonoBehaviour
 		Log($"Default Presentation Result: {result}.");
 	}
 
-	private void OnGetSubscriptionsSuccess(SubscriptionData subscriptionData)
+	private void OnGetSubscriptionsSuccess(List<SubscriptionData> subscriptionData)
 	{
 		Log("Get Subscription Data Success.");
 
-		var plan = subscriptionData.plan;
-		if (plan != null)
-			LogPlan(plan);
-
-		var product = subscriptionData.product;
-		if (product != null)
-			LogProduct(product);
-
-		var subscription = subscriptionData.subscription;
-		if (subscription != null)
+		foreach (var subscription in subscriptionData)
+		{
 			Log($"Subscription ID: {subscription.id}");
+			
+			var plan = subscription.plan;
+			if (plan != null)
+				LogPlan(plan);
+
+			var product = subscription.product;
+			if (product != null)
+				LogProduct(product);
+		}
 	}
 
 	private void LogPlan(Plan plan)

@@ -1,4 +1,5 @@
 #import <Purchasely/Purchasely-Swift.h>
+#include "PLYUtils.h"
 
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "OCUnusedGlobalDeclarationInspection"
@@ -10,14 +11,14 @@ typedef void(PurchaselyBoolCallbackDelegate)(void *actionPtr, bool refreshRequir
 
 typedef void(PurchaselyVoidCallbackDelegate)(void *actionPtr);
 
-typedef void(PurchaselyPresentationResultCallbackDelegate)(void *actionPtr, int result, void* plan);
+typedef void(PurchaselyPresentationResultCallbackDelegate)(void *actionPtr, int result, char* planJson);
 
-typedef void(PurchaselyEventCallbackDelegate)(void *actionPtr, const char *name, const char *propertiesJson);
+typedef void(PurchaselyStringCallbackDelegate)(void *actionPtr, const char *eventJson);
 
 // Event Delegate
 @interface PurchaselyEventDelegate : NSObject <PLYEventDelegate>
 
-@property(nonatomic, copy) void (^eventCallback)(NSString* name, NSDictionary<NSString*, id>* properties);
+@property(nonatomic, copy) void (^eventCallback)(NSDictionary<NSString*, id>* properties);
 
 @end
 
@@ -27,97 +28,41 @@ typedef void(PurchaselyEventCallbackDelegate)(void *actionPtr, const char *name,
 	if (_eventCallback == nil)
 		return;
 	
-	_eventCallback([NSString fromPLYEvent:event], properties);
+	NSMutableDictionary* dict = [[NSMutableDictionary alloc] initWithDictionary:properties];
+	dict[@"name"] = [NSString fromPLYEvent:event];
+	
+	_eventCallback(dict);
 }
 
 @end
 
 // Bridge methods
 extern "C" {
-	// String converters
-	char* cStringCopy(const char* string) {
-		char *res = (char *) malloc(strlen(string) + 1);
-		strcpy(res, string);
-		return res;
-	}
-	
-	char* createCStringFrom(NSString* string) {
-		if (!string) {
-			string = @"";
-		}
-		
-		return cStringCopy([string UTF8String]);
-	}
-
-	NSString* createNSStringFrom(const char* cstring) {
-		return [NSString stringWithUTF8String:(cstring ?: "")];
-	}
-
-	NSString* serializeDictionary(NSDictionary* dictionary) {
-		NSError *error;
-		NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dictionary
-														options:NSJSONWritingOptions()
-															error:&error];
-		return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-	}
-
-	// SDK methods
-	PLYRunningMode parseRunningMode(int mode) {
-		if (mode == 0) {
-			return PLYRunningModeObserver;
-		}
-		if (mode == 1) {
-			return PLYRunningModePaywallObserver;
-		}
-		if (mode == 2) {
-			return PLYRunningModePaywallOnly;
-		}
-		if (mode == 3) {
-			return PLYRunningModeTransactionOnly;
-		}
-		
-		return PLYRunningModeFull;
-	}
-	
-	LogLevel parseLogLevel(int level) {
-		if (level == 0) {
-			return LogLevelDebug;
-		}
-		if (level == 2) {
-			return LogLevelWarn;
-		}
-		if (level == 3) {
-			return LogLevelError;
-		}
-		
-		return LogLevelInfo;
-	}
-
 	PurchaselyEventDelegate* _eventDelegate;
 	
 	void _purchaselyStart(const char* apiKey, const char* userId, bool readyToPurchase, int logLevel, int runningMode,
 						  PurchaselyStartCallbackDelegate startCallback, void* startCallbackPtr,
-						  PurchaselyEventCallbackDelegate eventCallback, void* eventCallbackPtr) {
+						  PurchaselyStringCallbackDelegate eventCallback, void* eventCallbackPtr) {
 		_eventDelegate = [PurchaselyEventDelegate new];
-		_eventDelegate.eventCallback = ^(NSString* name, NSDictionary<NSString*, id>* properties) {
-			eventCallback(eventCallbackPtr, createCStringFrom(name), createCStringFrom(serializeDictionary(properties)));
+		_eventDelegate.eventCallback = ^(NSDictionary<NSString*, id>* properties) {
+			eventCallback(eventCallbackPtr, [PLYUtils createCStringFrom:[PLYUtils serializeDictionary:properties]]);
 		};
 		
-		[Purchasely startWithAPIKey:createNSStringFrom(apiKey)
-						  appUserId:createNSStringFrom(userId)
-						runningMode:parseRunningMode(runningMode)
+		[Purchasely startWithAPIKey:[PLYUtils createNSStringFrom:apiKey]
+						  appUserId:[PLYUtils createNSStringFrom:userId]
+						runningMode:[PLYUtils parseRunningMode:runningMode]
 					  eventDelegate:_eventDelegate
 						 uiDelegate:nil
 		  paywallActionsInterceptor:nil
-						   logLevel:parseLogLevel(logLevel)
+						   logLevel:[PLYUtils parseLogLevel:logLevel]
 						initialized:^(BOOL success, NSError * _Nullable error) {
 			NSString* errorString = error == nil ? @"" : [error localizedDescription];
-			startCallback(startCallbackPtr, success, createCStringFrom(errorString));
+			startCallback(startCallbackPtr, success, [PLYUtils createCStringFrom:errorString]);
 		}];
 	}
 
 	void _purchaselyUserLogin(const char* userId, PurchaselyBoolCallbackDelegate onUserLogin, void* onUserLoginPtr) {
-		[Purchasely userLoginWith:createNSStringFrom(userId) shouldRefresh:^(BOOL shouldRefresh) {
+		[Purchasely userLoginWith:[PLYUtils createNSStringFrom:userId] shouldRefresh:^(BOOL shouldRefresh) {
 			onUserLogin(onUserLoginPtr, shouldRefresh);
 		}];
 	}
@@ -136,29 +81,31 @@ extern "C" {
 	}
 
 	void _purchaselyShowContentForPlacement(const char* placementId, const char* contentId, PurchaselyBoolCallbackDelegate loadCallback, void* loadCallbackPtr, PurchaselyVoidCallbackDelegate closeCallback, void* closeCallbackPtr, 	PurchaselyPresentationResultCallbackDelegate presentationResultCallback, void* presentationResultCallbackPtr) {
-		NSString* contentIdString = createNSStringFrom(placementId);
+		NSString* contentIdString = [PLYUtils createNSStringFrom:placementId];
 		
 		UIViewController * presentationView;
+		
+		NSString* placementIdStr = [PLYUtils createNSStringFrom:placementId];
 	
 		if (contentIdString.length < 1) {
-			presentationView = [Purchasely presentationControllerFor:createNSStringFrom(placementId) contentId:contentIdString loaded:^(PLYPresentationViewController * _Nullable constroller, BOOL loaded, NSError * _Nullable error) {
+			presentationView = [Purchasely presentationControllerFor:placementIdStr contentId:contentIdString loaded:^(PLYPresentationViewController * _Nullable constroller, BOOL loaded, NSError * _Nullable error) {
 					if (error != nil) {
 						NSLog(@"%@", [error localizedDescription]);
 					}
 					
 					loadCallback(loadCallbackPtr, loaded);
 				} completion:^(enum PLYProductViewControllerResult result, PLYPlan * _Nullable plan) {
-					presentationResultCallback(presentationResultCallbackPtr, parseProductViewResult(result), (void *) CFBridgingRetain(plan));
+					presentationResultCallback(presentationResultCallbackPtr, parseProductViewResult(result), [PLYUtils planAsJson:plan]);
 			}];
 		} else {
-			presentationView = [Purchasely presentationControllerFor:createNSStringFrom(placementId) loaded:^(PLYPresentationViewController * _Nullable constroller, BOOL loaded, NSError * _Nullable error) {
+			presentationView = [Purchasely presentationControllerFor:placementIdStr loaded:^(PLYPresentationViewController * _Nullable constroller, BOOL loaded, NSError * _Nullable error) {
 				if (error != nil) {
 					   NSLog(@"%@", [error localizedDescription]);
 				   }
 				   
 				   loadCallback(loadCallbackPtr, loaded);
 			   } completion:^(enum PLYProductViewControllerResult result, PLYPlan * _Nullable plan) {
-				   presentationResultCallback(presentationResultCallbackPtr, parseProductViewResult(result), (void *) CFBridgingRetain(plan));
+				   presentationResultCallback(presentationResultCallbackPtr, parseProductViewResult(result), [PLYUtils planAsJson:plan]);
 			}];
 		}
 		

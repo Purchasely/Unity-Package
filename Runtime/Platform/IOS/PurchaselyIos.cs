@@ -1,6 +1,7 @@
 ﻿#if UNITY_IOS && !UNITY_EDITOR
 
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace PurchaselyRuntime
@@ -8,18 +9,18 @@ namespace PurchaselyRuntime
 	public class PurchaselyIos : IPurchasely
 	{
 		public void Init(string apiKey, string userId, bool readyToPurchase, int logLevel,
-			int runningMode, Action<bool, string> onStartCompleted, Action<PurchaselyEvent> onEventReceived)
+			int runningMode, Action<bool, string> onStartCompleted, Action<Event> onEventReceived)
 		{
 			var startCallback = new Action<bool, string>((success, error) =>
 			{
 				AsyncCallbackHelper.Instance.Queue(() => { onStartCompleted(success, error); });
 			});
 
-			var eventCallback = new Action<string, string>((name, propertiesJson) =>
+			var eventCallback = new Action<string>((propertiesJson) =>
 			{
 				AsyncCallbackHelper.Instance.Queue(() =>
 				{
-					onEventReceived(new PurchaselyEvent(name, propertiesJson));
+					onEventReceived(SerializationUtils.Deserialize<Event>(propertiesJson));
 				});
 			});
 
@@ -43,14 +44,14 @@ namespace PurchaselyRuntime
 			_purchaselySetIsReadyToPurchase(ready);
 		}
 
-		public void PresentContentForPlacement(string placementId, Action<ProductViewResult, PurchaselyPlan> onResult, 
+		public void PresentContentForPlacement(string placementId, Action<ProductViewResult, Plan> onResult, 
 			Action<bool> onContentLoaded, Action onCloseButtonClicked, string contentId)
 		{
-			var resultCallback = new Action<int, IntPtr>((resultInt, planPointer) =>
+			var resultCallback = new Action<int, string>((resultInt, planJson) =>
 			{
 				AsyncCallbackHelper.Instance.Queue(() =>
 				{
-					onResult((ProductViewResult) resultInt, new PurchaselyPlan(planPointer));
+					onResult((ProductViewResult) resultInt, SerializationUtils.Deserialize<Plan>(planJson));
 				});
 			});
 
@@ -73,6 +74,139 @@ namespace PurchaselyRuntime
 				IosUtils.BoolCallback, contentLoadCallback.GetPointer(),
 				IosUtils.VoidCallback, closeButtonCallback.GetPointer(),
 				IosUtils.PresentationResultCallback, resultCallback.GetPointer());
+		}
+
+		public void PresentContentForPresentation(string presentationId, Action<ProductViewResult, Plan> onResult, Action<bool> onContentLoaded,
+			Action onCloseButtonClicked, string contentId)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void PresentContentForProduct(string productId, Action<ProductViewResult, Plan> onResult, Action<bool> onContentLoaded, Action onCloseButtonClicked,
+			string contentId, string presentationId)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void PresentContentForPlan(string planId, Action<ProductViewResult, Plan> onResult, Action<bool> onContentLoaded, Action onCloseButtonClicked,
+			string contentId, string presentationId)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void SetPaywallActionInterceptor(Action<PaywallAction> onAction)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void ProcessPaywallAction(bool process)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void RestoreAllProducts(bool silent, Action<Plan> onSuccess, Action<string> onError)
+		{
+			throw new NotImplementedException();
+		}
+
+		public string GetAnonymousUserId()
+		{
+			throw new NotImplementedException();
+		}
+
+		public void SetLanguage(string language)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void UserLogout()
+		{
+			throw new NotImplementedException();
+		}
+
+		public void SetDefaultPresentationResultHandler(Action<ProductViewResult, Plan> onResult)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void ProductWithIdentifier(string productId, Action<Product> onSuccess, Action<string> onError)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void PlanWithIdentifier(string planId, Action<Plan> onSuccess, Action<string> onError)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void AllProducts(Action<List<Product>> onSuccess, Action<string> onError)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void PurchaseWithPlanId(string planId, Action<Plan> onSuccess, Action<string> onError, string contentId)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void HandleDeepLinkUrl(string url)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void GetUserSubscriptions(Action<SubscriptionData> onSuccess, Action<string> onError)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void PresentSubscriptions()
+		{
+			throw new NotImplementedException();
+		}
+
+		public void SetUserAttribute(string key, string value)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void SetUserAttribute(string key, int value)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void SetUserAttribute(string key, float value)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void SetUserAttribute(string key, bool value)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void SetUserAttribute(string key, DateTime value)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void ClearUserAttribute(string key)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void ClearUserAttributes()
+		{
+			throw new NotImplementedException();
+		}
+
+		public string GetUserAttribute(string key)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void UserDidConsumeSubscriptionContent()
+		{
+			throw new NotImplementedException();
 		}
 
 		[DllImport("__Internal")]

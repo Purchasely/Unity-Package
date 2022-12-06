@@ -1,4 +1,4 @@
-#include "PLYUtils.h"
+#import "PLYUtils.h"
 #import <Foundation/Foundation.h>
 
 @implementation PLYUtils
@@ -24,8 +24,16 @@
 + (NSString*) serializeDictionary:(NSDictionary*) dictionary {
 	NSError *error;
 	NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dictionary
-													options:NSJSONWritingOptions()
-														error:&error];
+													   options:kNilOptions
+														 error:&error];
+	return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+}
+
++ (NSString*) serializeArray:(NSArray*) array {
+	NSError *error;
+	NSData *jsonData = [NSJSONSerialization dataWithJSONObject:array
+													   options:kNilOptions
+														 error:&error];
 	return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
 }
 
@@ -103,6 +111,59 @@
 	return dict;
 }
 
++ (NSDictionary*) productAsDictionary:(PLYProduct*) product {
+	NSMutableDictionary<NSString *, NSObject *> *dict = [NSMutableDictionary new];
+	
+	[dict setObject:product.vendorId forKey:@"vendorId"];
+	
+	NSMutableArray *plansArray = [NSMutableArray new];
+	for (PLYPlan *plan in product.plans) {
+		[plansArray addObject:[self planAsDictionary:plan]];
+	}
+	
+	[dict setObject:plansArray forKey:@"plans"];
+	
+	if (product.name != nil) {
+		[dict setObject:product.name forKey:@"name"];
+	}
+	
+	return dict;
+}
+
++ (NSDictionary*) subscriptionAsDictionary:(PLYSubscription*) subscription {
+	NSMutableDictionary<NSString*, NSObject*>* dict = [NSMutableDictionary new];
+	
+	[dict setObject:[self planAsDictionary:subscription.plan] forKey:@"plan"];
+	[dict setObject:[self productAsDictionary:subscription.product] forKey:@"product"];
+	NSMutableDictionary<NSString*, NSObject*>* subscriptionData = [NSMutableDictionary new];
+	
+	[subscriptionData setObject:subscription.contentId forKey:@"contentId"];
+	[subscriptionData setObject:subscription.storeCountry forKey:@"storeCountry"];
+	[subscriptionData setObject:@(subscription.isFamilyShared) forKey:@"isFamilyShared"];
+	[subscriptionData setObject:subscription.offerIdentifier forKey:@"offerIdentifier"];
+	
+	[subscriptionData setObject:[NSNumber numberWithInteger:subscription.subscriptionSource] forKey:@"subscriptionSource"];
+	
+	NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+	[dateFormat setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZ"];
+	
+	if (subscription.nextRenewalDate != nil) {
+		[subscriptionData setObject:[dateFormat stringFromDate:subscription.nextRenewalDate] forKey:@"nextRenewalDate"];
+	}
+	
+	if (subscription.cancelledDate != nil) {
+		[subscriptionData setObject:[dateFormat stringFromDate:subscription.cancelledDate] forKey:@"cancelledDate"];
+	}
+	
+	if (subscription.purchasedDate != nil) {
+		[subscriptionData setObject:[dateFormat stringFromDate:subscription.purchasedDate] forKey:@"purchasedDate"];
+	}
+	
+	[dict setObject:subscriptionData forKey:@"data"];
+	
+	return dict;
+}
+
 + (PLYRunningMode) parseRunningMode:(int) mode {
 	if (mode == 0) {
 		return PLYRunningModeObserver;
@@ -136,6 +197,120 @@
 
 + (char*) planAsJson:(PLYPlan*) plan {
 	return [self createCStringFrom:[self serializeDictionary:[self planAsDictionary:plan]]];
+}
+
++ (char*) productAsJson:(PLYProduct*) product {
+	return [self createCStringFrom:[self serializeDictionary:[self productAsDictionary:product]]];
+}
+
++ (char*) productsAsJson:(NSArray<PLYProduct*>*) products {
+	NSMutableArray *productsArray = [NSMutableArray array];
+	
+	for (PLYProduct *product in products) {
+		if (product != nil) {
+			[productsArray addObject: [self productAsDictionary:product]];
+		}
+	}
+	
+	return [self createCStringFrom:[self serializeArray:productsArray]];
+}
+
++ (char*) susbscriptionsAsJson:(NSArray<PLYSubscription*>*) subscriptions {
+	NSMutableArray *subscriptionsArray = [NSMutableArray array];
+	
+	for (PLYSubscription *subscription in subscriptions) {
+		if (subscription != nil) {
+			[subscriptionsArray addObject:[self subscriptionAsDictionary:subscription]];
+		}
+	}
+	
+	return [self createCStringFrom:[self serializeArray:subscriptionsArray]];
+}
+
++ (int) parseProductViewResult:(PLYProductViewControllerResult) result {
+	if (result == PLYProductViewControllerResultPurchased)
+		return 0;
+	if (result == PLYProductViewControllerResultRestored)
+		return 1;
+	
+	return 2;
+}
+
++ (NSDictionary<NSString *, NSObject *> *) resultDictionaryForActionInterceptor:(PLYPresentationAction) action parameters: (PLYPresentationActionParameters * _Nullable) params presentationInfos: (PLYPresentationInfo * _Nullable) infos {
+	NSMutableDictionary<NSString*, NSObject*>* actionInterceptorResult = [NSMutableDictionary new];
+
+	NSString* actionString;
+
+	switch (action) {
+		case PLYPresentationActionLogin:
+			actionString = @"login";
+			break;
+		case PLYPresentationActionPurchase:
+			actionString = @"purchase";
+			break;
+		case PLYPresentationActionClose:
+			actionString = @"close";
+			break;
+		case PLYPresentationActionRestore:
+			actionString = @"restore";
+			break;
+		case PLYPresentationActionNavigate:
+			actionString = @"navigate";
+			break;
+		case PLYPresentationActionPromoCode:
+			actionString = @"promo_code";
+			break;
+		case PLYPresentationActionOpenPresentation:
+			actionString = @"open_presentation";
+			break;
+	}
+
+	[actionInterceptorResult setObject:actionString forKey:@"action"];
+
+	if (infos != nil) {
+		NSMutableDictionary<NSString*, NSObject*>* infosResult = [NSMutableDictionary new];
+		if (infos.contentId != nil) {
+			[infosResult setObject:infos.contentId forKey:@"contentId"];
+		}
+		if (infos.presentationId != nil) {
+			[infosResult setObject:infos.presentationId forKey:@"presentationId"];
+		}
+		if (infos.placementId != nil) {
+			[infosResult setObject:infos.placementId forKey:@"placementId"];
+		}
+		if (infos.abTestId != nil) {
+			[infosResult setObject:infos.abTestId forKey:@"abTestId"];
+		}
+		if (infos.abTestVariantId != nil) {
+			[infosResult setObject:infos.abTestVariantId forKey:@"abTestVariantId"];
+		}
+
+		[actionInterceptorResult setObject:infosResult forKey:@"info"];
+	}
+	if (params != nil) {
+		NSMutableDictionary<NSString*, NSObject*>* paramsResult = [NSMutableDictionary new];
+		if (params.url != nil) {
+			[paramsResult setObject:params.url.absoluteString forKey:@"url"];
+		}
+		if (params.plan != nil) {
+			[paramsResult setObject:[self planAsDictionary:params.plan] forKey:@"plan"];
+		}
+		if (params.title != nil) {
+			[paramsResult setObject:params.title forKey:@"title"];
+		}
+		if (params.presentation != nil) {
+			[paramsResult setObject:params.presentation forKey:@"presentation"];
+		}
+		[actionInterceptorResult setObject:paramsResult forKey:@"parameters"];
+	}
+
+	return actionInterceptorResult;
+}
+
++ (char*) actionToJson:(PLYPresentationAction) action parameters: (PLYPresentationActionParameters * _Nullable) params presentationInfos: (PLYPresentationInfo * _Nullable) infos {
+	return [self createCStringFrom:
+			[self serializeDictionary:
+			 [self resultDictionaryForActionInterceptor:action parameters:params presentationInfos:infos]]];
 }
 
 @end

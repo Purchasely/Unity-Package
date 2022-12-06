@@ -175,7 +175,7 @@ namespace PurchaselyRuntime
 		/// Setup a callback to intercept user actions in the native view.
 		/// Make sure to call <see cref="ProcessPaywallAction"/> after executing your logic to go back to the native view.
 		/// </summary>
-		/// <param name="onActionJson"> Callback with the serialized action options.
+		/// <param name="onAction"> Callback with the action options.
 		/// If you don't handle every action, you HAVE TO call ProcessPaywallAction(true) otherwise
 		/// the button will keep spinning and nothing will happen.</param>
 		public void SetPaywallActionInterceptor(Action<PaywallAction> onAction)

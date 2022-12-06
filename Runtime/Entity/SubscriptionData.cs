@@ -2,7 +2,7 @@ namespace PurchaselyRuntime
 {
 	public class SubscriptionData
 	{
-		public Subscription subscription;
+		public Subscription data;
 		public Plan plan;
 		public Product product;
 

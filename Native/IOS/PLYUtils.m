@@ -40,7 +40,6 @@
 + (NSDictionary*) planAsDictionary:(PLYPlan*) plan {
 	NSMutableDictionary<NSString *, NSObject *> *dict = [NSMutableDictionary new];
 	
-	[dict setObject:plan.vendorId forKey:@"vendorId"];
 	[dict setObject:@(plan.hasIntroductoryPrice) forKey:@"hasIntroductoryPrice"];
 	[dict setObject:@([plan type]) forKey:@"type"];
 	[dict setObject:@([plan isEligibleForIntroOffer]) forKey:@"isEligibleForIntroOffer"];
@@ -48,6 +47,10 @@
 	if (plan.hasIntroductoryPrice && [[plan introAmount] intValue] == 0) {
 		[dict setObject:@(YES) forKey:@"hasFreeTrial"];
 		[dict removeObjectForKey:@"hasIntroductoryPrice"];
+	}
+	
+	if (plan.vendorId != nil) {
+		[dict setObject:plan.vendorId forKey:@"vendorId"];
 	}
 	
 	if (plan.name != nil) {

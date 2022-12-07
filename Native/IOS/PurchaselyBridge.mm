@@ -41,6 +41,8 @@ extern "C" {
 	PurchaselyEventDelegate* _eventDelegate;
 	UINavigationController* presentedPresentationViewController;
 	void (^onProcessActionHandler)(BOOL proceed);
+
+	void (^interceptorFunction)(enum PLYPresentationAction action, PLYPresentationActionParameters * _Nullable parameters, PLYPresentationInfo * _Nullable infos, void (^ _Nonnull onProcessActionHandler)(BOOL));
 	
 	void _purchaselyStart(const char* apiKey, const char* userId, bool readyToPurchase, int logLevel, int runningMode,
 						  PurchaselyStartCallbackDelegate startCallback, void* startCallbackPtr,
@@ -316,11 +318,14 @@ extern "C" {
 	}
 	
 	void _purchaselySetPaywallActionInterceptor(PurchaselyStringCallbackDelegate actionCallback, void* actionCallbackPtr) {
-		[Purchasely setPaywallActionsInterceptor:^(enum PLYPresentationAction action, PLYPresentationActionParameters * _Nullable parameters, 	PLYPresentationInfo * _Nullable infos, void (^ _Nonnull onProcessActionHandler)(BOOL)) {
-	
+		interceptorFunction = ^(enum PLYPresentationAction action, PLYPresentationActionParameters * _Nullable parameters, 	PLYPresentationInfo * _Nullable infos, void (^ _Nonnull actionHandler)(BOOL)) {
+			
+			onProcessActionHandler = actionHandler;
 			closePaywall();
 			actionCallback(actionCallbackPtr, [PLYUtils actionToJson:action parameters:parameters presentationInfos:infos]);
-		}];
+		};
+		
+		[Purchasely setPaywallActionsInterceptor:interceptorFunction];
 	}
 	
 	void _purchaselyProcessAction(bool process) {

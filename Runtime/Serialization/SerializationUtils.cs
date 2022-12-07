@@ -44,7 +44,7 @@ namespace PurchaselyRuntime
 
 		public static string ToIso8601Format(this DateTime dateTime)
 		{
-			return dateTime.ToUniversalTime().ToString("u").Replace(" ", "T");
+			return dateTime.ToUniversalTime().ToString("yyyy-MM-dd'T'HH:mm:ssZ");
 		}
 
 		public static DateTime FromIso8601Format(this string dateTimeString)

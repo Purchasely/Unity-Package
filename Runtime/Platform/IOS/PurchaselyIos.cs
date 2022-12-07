@@ -16,7 +16,7 @@ namespace PurchaselyRuntime
 				AsyncCallbackHelper.Instance.Queue(() => { onStartCompleted(success, error); });
 			});
 
-			var eventCallback = new Action<string>((propertiesJson) =>
+			var eventCallback = new Action<string>(propertiesJson =>
 			{
 				AsyncCallbackHelper.Instance.Queue(() =>
 				{
@@ -26,7 +26,7 @@ namespace PurchaselyRuntime
 
 			_purchaselyStart(apiKey, userId, readyToPurchase, logLevel, runningMode,
 				IosUtils.StartCallback, startCallback.GetPointer(),
-				IosUtils.EventCallback, eventCallback.GetPointer());
+				IosUtils.StringCallback, eventCallback.GetPointer());
 		}
 
 		public void UserLogin(string userId, Action<bool> onCompleted)
@@ -44,7 +44,7 @@ namespace PurchaselyRuntime
 			_purchaselySetIsReadyToPurchase(ready);
 		}
 
-		public void PresentContentForPlacement(string placementId, Action<ProductViewResult, Plan> onResult, 
+		public void PresentContentForPlacement(string placementId, Action<ProductViewResult, Plan> onResult,
 			Action<bool> onContentLoaded, Action onCloseButtonClicked, string contentId)
 		{
 			var resultCallback = new Action<int, string>((resultInt, planJson) =>
@@ -67,152 +67,292 @@ namespace PurchaselyRuntime
 					AsyncCallbackHelper.Instance.Queue(onCloseButtonClicked);
 			});
 
-			if (contentId == null)
-				contentId = string.Empty;
-
 			_purchaselyShowContentForPlacement(placementId, contentId,
 				IosUtils.BoolCallback, contentLoadCallback.GetPointer(),
 				IosUtils.VoidCallback, closeButtonCallback.GetPointer(),
 				IosUtils.PresentationResultCallback, resultCallback.GetPointer());
 		}
 
-		public void PresentContentForPresentation(string presentationId, Action<ProductViewResult, Plan> onResult, Action<bool> onContentLoaded,
+		public void PresentContentForPresentation(string presentationId, Action<ProductViewResult, Plan> onResult,
+			Action<bool> onContentLoaded,
 			Action onCloseButtonClicked, string contentId)
 		{
-			throw new NotImplementedException();
+			var resultCallback = new Action<int, string>((resultInt, planJson) =>
+			{
+				AsyncCallbackHelper.Instance.Queue(() =>
+				{
+					onResult((ProductViewResult) resultInt, SerializationUtils.Deserialize<Plan>(planJson));
+				});
+			});
+
+			var contentLoadCallback = new Action<bool>(isLoaded =>
+			{
+				if (onContentLoaded != null)
+					AsyncCallbackHelper.Instance.Queue(() => { onContentLoaded(isLoaded); });
+			});
+
+			var closeButtonCallback = new Action(() =>
+			{
+				if (onCloseButtonClicked != null)
+					AsyncCallbackHelper.Instance.Queue(onCloseButtonClicked);
+			});
+
+			_purchaselyShowContentForPresentation(presentationId, contentId,
+				IosUtils.BoolCallback, contentLoadCallback.GetPointer(),
+				IosUtils.VoidCallback, closeButtonCallback.GetPointer(),
+				IosUtils.PresentationResultCallback, resultCallback.GetPointer());
 		}
 
-		public void PresentContentForProduct(string productId, Action<ProductViewResult, Plan> onResult, Action<bool> onContentLoaded, Action onCloseButtonClicked,
+		public void PresentContentForProduct(string productId, Action<ProductViewResult, Plan> onResult,
+			Action<bool> onContentLoaded, Action onCloseButtonClicked,
 			string contentId, string presentationId)
 		{
-			throw new NotImplementedException();
+			var resultCallback = new Action<int, string>((resultInt, planJson) =>
+			{
+				AsyncCallbackHelper.Instance.Queue(() =>
+				{
+					onResult((ProductViewResult) resultInt, SerializationUtils.Deserialize<Plan>(planJson));
+				});
+			});
+
+			var contentLoadCallback = new Action<bool>(isLoaded =>
+			{
+				if (onContentLoaded != null)
+					AsyncCallbackHelper.Instance.Queue(() => { onContentLoaded(isLoaded); });
+			});
+
+			var closeButtonCallback = new Action(() =>
+			{
+				if (onCloseButtonClicked != null)
+					AsyncCallbackHelper.Instance.Queue(onCloseButtonClicked);
+			});
+
+			_purchaselyShowContentForProduct(productId, presentationId, contentId,
+				IosUtils.BoolCallback, contentLoadCallback.GetPointer(),
+				IosUtils.VoidCallback, closeButtonCallback.GetPointer(),
+				IosUtils.PresentationResultCallback, resultCallback.GetPointer());
 		}
 
-		public void PresentContentForPlan(string planId, Action<ProductViewResult, Plan> onResult, Action<bool> onContentLoaded, Action onCloseButtonClicked,
+		public void PresentContentForPlan(string planId, Action<ProductViewResult, Plan> onResult,
+			Action<bool> onContentLoaded, Action onCloseButtonClicked,
 			string contentId, string presentationId)
 		{
-			throw new NotImplementedException();
+			var resultCallback = new Action<int, string>((resultInt, planJson) =>
+			{
+				AsyncCallbackHelper.Instance.Queue(() =>
+				{
+					onResult((ProductViewResult) resultInt, SerializationUtils.Deserialize<Plan>(planJson));
+				});
+			});
+
+			var contentLoadCallback = new Action<bool>(isLoaded =>
+			{
+				if (onContentLoaded != null)
+					AsyncCallbackHelper.Instance.Queue(() => { onContentLoaded(isLoaded); });
+			});
+
+			var closeButtonCallback = new Action(() =>
+			{
+				if (onCloseButtonClicked != null)
+					AsyncCallbackHelper.Instance.Queue(onCloseButtonClicked);
+			});
+
+			_purchaselyShowContentForPlan(planId, presentationId, contentId,
+				IosUtils.BoolCallback, contentLoadCallback.GetPointer(),
+				IosUtils.VoidCallback, closeButtonCallback.GetPointer(),
+				IosUtils.PresentationResultCallback, resultCallback.GetPointer());
 		}
 
 		public void SetPaywallActionInterceptor(Action<PaywallAction> onAction)
 		{
-			throw new NotImplementedException();
+			var actionCallback = new Action<string>(actionJson =>
+			{
+				AsyncCallbackHelper.Instance.Queue(() =>
+				{
+					onAction(SerializationUtils.Deserialize<PaywallAction>(actionJson));
+				});
+			});
+
+			_purchaselySetPaywallActionInterceptor(IosUtils.StringCallback, actionCallback.GetPointer());
 		}
 
 		public void ProcessPaywallAction(bool process)
 		{
-			throw new NotImplementedException();
+			_purchaselyProcessAction(process);
 		}
 
 		public void RestoreAllProducts(bool silent, Action<Plan> onSuccess, Action<string> onError)
 		{
-			throw new NotImplementedException();
+			var planCallback = new Action<string>(planJson =>
+			{
+				AsyncCallbackHelper.Instance.Queue(() =>
+				{
+					onSuccess(SerializationUtils.Deserialize<Plan>(planJson));
+				});
+			});
+
+			_purchaselyRestoreAllProducts(silent, IosUtils.StringCallback, planCallback.GetPointer(),
+				IosUtils.StringCallback, onError.GetPointer());
 		}
 
 		public string GetAnonymousUserId()
 		{
-			throw new NotImplementedException();
+			return _purchaselyGetAnonymousUserId();
 		}
 
 		public void SetLanguage(string language)
 		{
-			throw new NotImplementedException();
+			_purchaselySetLanguage(language);
 		}
 
 		public void UserLogout()
 		{
-			throw new NotImplementedException();
+			_purchaselyUserLogout();
 		}
 
 		public void SetDefaultPresentationResultHandler(Action<ProductViewResult, Plan> onResult)
 		{
-			throw new NotImplementedException();
+			var resultCallback = new Action<int, string>((resultInt, planJson) =>
+			{
+				AsyncCallbackHelper.Instance.Queue(() =>
+				{
+					onResult((ProductViewResult) resultInt, SerializationUtils.Deserialize<Plan>(planJson));
+				});
+			});
+
+			_purchaselySetDefaultPresentationResultHandler(IosUtils.PresentationResultCallback,
+				resultCallback.GetPointer());
 		}
 
 		public void ProductWithIdentifier(string productId, Action<Product> onSuccess, Action<string> onError)
 		{
-			throw new NotImplementedException();
+			var productCallback = new Action<string>(productJson =>
+			{
+				AsyncCallbackHelper.Instance.Queue(() =>
+				{
+					onSuccess(SerializationUtils.Deserialize<Product>(productJson));
+				});
+			});
+
+			_purchaselyGetProduct(productId, IosUtils.StringCallback, productCallback.GetPointer(),
+				IosUtils.StringCallback, onError.GetPointer());
 		}
 
 		public void PlanWithIdentifier(string planId, Action<Plan> onSuccess, Action<string> onError)
 		{
-			throw new NotImplementedException();
+			var planCallback = new Action<string>(planJson =>
+			{
+				AsyncCallbackHelper.Instance.Queue(() =>
+				{
+					onSuccess(SerializationUtils.Deserialize<Plan>(planJson));
+				});
+			});
+
+			_purchaselyGetPlan(planId, IosUtils.StringCallback, planCallback.GetPointer(),
+				IosUtils.StringCallback, onError.GetPointer());
 		}
 
 		public void AllProducts(Action<List<Product>> onSuccess, Action<string> onError)
 		{
-			throw new NotImplementedException();
+			var productsCallback = new Action<string>(productsJson =>
+			{
+				AsyncCallbackHelper.Instance.Queue(() =>
+				{
+					onSuccess(SerializationUtils.Deserialize<List<Product>>(productsJson));
+				});
+			});
+
+			_purchaselyGetAllProducts(IosUtils.StringCallback, productsCallback.GetPointer(),
+				IosUtils.StringCallback, onError.GetPointer());
 		}
 
 		public void PurchaseWithPlanId(string planId, Action<Plan> onSuccess, Action<string> onError, string contentId)
 		{
-			throw new NotImplementedException();
+			var planCallback = new Action<string>(planJson =>
+			{
+				AsyncCallbackHelper.Instance.Queue(() =>
+				{
+					onSuccess(SerializationUtils.Deserialize<Plan>(planJson));
+				});
+			});
+
+			_purchaselyPurchase(planId, IosUtils.StringCallback, planCallback.GetPointer(),
+				IosUtils.StringCallback, onError.GetPointer());
 		}
 
-		public void HandleDeepLinkUrl(string url)
+		public bool HandleDeepLinkUrl(string url)
 		{
-			throw new NotImplementedException();
+			return _purchaselyHandleUrl(url);
 		}
 
 		public void GetUserSubscriptions(Action<List<SubscriptionData>> onSuccess, Action<string> onError)
 		{
-			throw new NotImplementedException();
+			var subscriptionsCallback = new Action<string>(productsJson =>
+			{
+				AsyncCallbackHelper.Instance.Queue(() =>
+				{
+					onSuccess(SerializationUtils.Deserialize<List<SubscriptionData>>(productsJson));
+				});
+			});
+
+			_purchaselyGetUserSubscriptions(IosUtils.StringCallback, subscriptionsCallback.GetPointer(),
+				IosUtils.StringCallback, onError.GetPointer());
 		}
 
 		public void PresentSubscriptions()
 		{
-			throw new NotImplementedException();
+			_purchaselyPresentSubscriptions();
 		}
 
 		public void SetUserAttribute(string key, string value)
 		{
-			throw new NotImplementedException();
+			_purchaselySetStringAttribute(key, value);
 		}
 
 		public void SetUserAttribute(string key, int value)
 		{
-			throw new NotImplementedException();
+			_purchaselySetIntAttribute(key, value);
 		}
 
 		public void SetUserAttribute(string key, float value)
 		{
-			throw new NotImplementedException();
+			_purchaselySetFloatAttribute(key, value);
 		}
 
 		public void SetUserAttribute(string key, bool value)
 		{
-			throw new NotImplementedException();
+			_purchaselySetBoolAttribute(key, value);
 		}
 
 		public void SetUserAttribute(string key, DateTime value)
 		{
-			throw new NotImplementedException();
+			_purchaselySetDateAttribute(key, value.ToIso8601Format());
 		}
 
 		public void ClearUserAttribute(string key)
 		{
-			throw new NotImplementedException();
+			_purchaselyClearAttribute(key);
 		}
 
 		public void ClearUserAttributes()
 		{
-			throw new NotImplementedException();
+			_purchaselyClearAttributes();
 		}
 
 		public string GetUserAttribute(string key)
 		{
-			throw new NotImplementedException();
+			return _purchaselyGetUserAttribute(key);
 		}
 
 		public void UserDidConsumeSubscriptionContent()
 		{
-			throw new NotImplementedException();
+			_purchaselyUserDidConsumeSubscriptionContent();
 		}
 
 		[DllImport("__Internal")]
 		static extern void _purchaselyStart(string apiKey, string userId, bool readyToPurchase, int logLevel,
 			int runningMode, IosUtils.StartCallbackDelegate startCallback, IntPtr startCallbackPtr,
-			IosUtils.EventCallbackDelegate eventCallback, IntPtr eventCallbackPtr);
+			IosUtils.StringCallbackDelegate eventCallback, IntPtr eventCallbackPtr);
 
 		[DllImport("__Internal")]
 		static extern void _purchaselyUserLogin(string userId, IosUtils.BoolCallbackDelegate onUserLogin,
@@ -222,11 +362,113 @@ namespace PurchaselyRuntime
 		static extern void _purchaselySetIsReadyToPurchase(bool ready);
 
 		[DllImport("__Internal")]
+		static extern void _purchaselyShowContentForPresentation(string presentationId, string
+				contentId, IosUtils.BoolCallbackDelegate loadCallback, IntPtr
+				loadCallbackPtr, IosUtils.VoidCallbackDelegate closeCallback, IntPtr closeCallbackPtr,
+			IosUtils.PresentationResultCallbackDelegate presentationResultCallback, IntPtr
+				presentationResultCallbackPtr);
+
+		[DllImport("__Internal")]
 		static extern void _purchaselyShowContentForPlacement(string placementId, string contentId,
 			IosUtils.BoolCallbackDelegate loadCallback, IntPtr loadCallbackPtr,
 			IosUtils.VoidCallbackDelegate closeCallback, IntPtr closeCallbackPtr,
 			IosUtils.PresentationResultCallbackDelegate presentationResultCallback,
 			IntPtr presentationResultCallbackPtr);
+
+		[DllImport("__Internal")]
+		static extern void _purchaselyShowContentForPlan(string planId, string presentationId, string
+				contentId, IosUtils.BoolCallbackDelegate loadCallback, IntPtr
+				loadCallbackPtr, IosUtils.VoidCallbackDelegate closeCallback, IntPtr closeCallbackPtr,
+			IosUtils.PresentationResultCallbackDelegate presentationResultCallback, IntPtr
+				presentationResultCallbackPtr);
+
+		[DllImport("__Internal")]
+		static extern void _purchaselyShowContentForProduct(string productId, string presentationId, string
+				contentId, IosUtils.BoolCallbackDelegate loadCallback, IntPtr
+				loadCallbackPtr, IosUtils.VoidCallbackDelegate closeCallback, IntPtr closeCallbackPtr,
+			IosUtils.PresentationResultCallbackDelegate presentationResultCallback, IntPtr
+				presentationResultCallbackPtr);
+
+		[DllImport("__Internal")]
+		static extern void _purchaselyPresentSubscriptions();
+
+		[DllImport("__Internal")]
+		static extern void _purchaselyPurchase(string planId, IosUtils.StringCallbackDelegate successCallback, IntPtr
+			successCallbackPtr, IosUtils.StringCallbackDelegate errorCallback, IntPtr errorCallbackPtr);
+
+		[DllImport("__Internal")]
+		static extern void _purchaselyRestoreAllProducts(bool isSilent, IosUtils.StringCallbackDelegate successCallback,
+			IntPtr successCallbackPtr, IosUtils.StringCallbackDelegate errorCallback, IntPtr errorCallbackPtr);
+
+		[DllImport("__Internal")]
+		static extern void _purchaselyGetAllProducts(IosUtils.StringCallbackDelegate successCallback,
+			IntPtr successCallbackPtr,
+			IosUtils.StringCallbackDelegate errorCallback, IntPtr errorCallbackPtr);
+
+		[DllImport("__Internal")]
+		static extern void _purchaselyGetProduct(string productId, IosUtils.StringCallbackDelegate successCallback,
+			IntPtr
+				successCallbackPtr, IosUtils.StringCallbackDelegate errorCallback, IntPtr errorCallbackPtr);
+
+		[DllImport("__Internal")]
+		static extern void _purchaselyGetPlan(string planId, IosUtils.StringCallbackDelegate successCallback, IntPtr
+			successCallbackPtr, IosUtils.StringCallbackDelegate errorCallback, IntPtr errorCallbackPtr);
+
+		[DllImport("__Internal")]
+		static extern void _purchaselyGetUserSubscriptions(IosUtils.StringCallbackDelegate successCallback,
+			IntPtr successCallbackPtr,
+			IosUtils.StringCallbackDelegate errorCallback, IntPtr errorCallbackPtr);
+
+		[DllImport("__Internal")]
+		static extern bool _purchaselyHandleUrl(string urlString);
+
+		[DllImport("__Internal")]
+		static extern void _purchaselySetLanguage(string language);
+
+		[DllImport("__Internal")]
+		static extern void _purchaselySetPaywallActionInterceptor(IosUtils.StringCallbackDelegate actionCallback,
+			IntPtr actionCallbackPtr);
+
+		[DllImport("__Internal")]
+		static extern void _purchaselyProcessAction(bool process);
+
+		[DllImport("__Internal")]
+		static extern void _purchaselyUserDidConsumeSubscriptionContent();
+
+		[DllImport("__Internal")]
+		static extern string _purchaselyGetAnonymousUserId();
+
+		[DllImport("__Internal")]
+		static extern void _purchaselyUserLogout();
+
+		[DllImport("__Internal")]
+		static extern void _purchaselySetDefaultPresentationResultHandler(
+			IosUtils.PresentationResultCallbackDelegate presentationResultCallback,
+			IntPtr presentationResultCallbackPtr);
+
+		[DllImport("__Internal")]
+		static extern void _purchaselySetStringAttribute(string key, string value);
+
+		[DllImport("__Internal")]
+		static extern void _purchaselySetBoolAttribute(string key, bool value);
+
+		[DllImport("__Internal")]
+		static extern void _purchaselySetIntAttribute(string key, int value);
+
+		[DllImport("__Internal")]
+		static extern void _purchaselySetFloatAttribute(string key, float value);
+
+		[DllImport("__Internal")]
+		static extern void _purchaselySetDateAttribute(string key, string dateString);
+
+		[DllImport("__Internal")]
+		static extern string _purchaselyGetUserAttribute(string key);
+
+		[DllImport("__Internal")]
+		static extern void _purchaselyClearAttribute(string key);
+
+		[DllImport("__Internal")]
+		static extern void _purchaselyClearAttributes();
 	}
 }
 

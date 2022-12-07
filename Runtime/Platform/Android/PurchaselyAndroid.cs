@@ -135,9 +135,9 @@ namespace PurchaselyRuntime
 				new JsonErrorProxy(successAction, onError));
 		}
 
-		public void HandleDeepLinkUrl(string url)
+		public bool HandleDeepLinkUrl(string url)
 		{
-			_javaBridge?.Call("handleDeepLinkUrl", url);
+			return _javaBridge?.Call<bool>("handleDeepLinkUrl", url) ?? false;
 		}
 
 		public void GetUserSubscriptions(Action<List<SubscriptionData>> onSuccess, Action<string> onError)

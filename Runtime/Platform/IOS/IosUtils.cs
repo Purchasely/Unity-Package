@@ -71,33 +71,33 @@ namespace PurchaselyRuntime
 			}
 		}
 
-		internal delegate void EventCallbackDelegate(IntPtr actionPtr, string name, string propertiesJson);
+		internal delegate void StringCallbackDelegate(IntPtr actionPtr, string data);
 
-		[MonoPInvokeCallback(typeof(EventCallbackDelegate))]
-		internal static void EventCallback(IntPtr actionPtr, string name, string propertiesJson)
+		[MonoPInvokeCallback(typeof(StringCallbackDelegate))]
+		internal static void StringCallback(IntPtr actionPtr, string data)
 		{
 			if (Debug.isDebugBuild)
-				Debug.Log("EventCallback");
+				Debug.Log("StringCallback");
 
 			if (actionPtr != IntPtr.Zero)
 			{
-				var action = actionPtr.Cast<Action<string, string>>();
-				action(name, propertiesJson);
+				var action = actionPtr.Cast<Action<string>>();
+				action(data);
 			}
 		}
 
-		internal delegate void PresentationResultCallbackDelegate(IntPtr actionPtr, int result, IntPtr planPointer);
+		internal delegate void PresentationResultCallbackDelegate(IntPtr actionPtr, int result, string data);
 
 		[MonoPInvokeCallback(typeof(PresentationResultCallbackDelegate))]
-		internal static void PresentationResultCallback(IntPtr actionPtr, int result, IntPtr planPointer)
+		internal static void PresentationResultCallback(IntPtr actionPtr, int result, string data)
 		{
 			if (Debug.isDebugBuild)
 				Debug.Log("PresentationResultCallback");
 
 			if (actionPtr != IntPtr.Zero)
 			{
-				var action = actionPtr.Cast<Action<int, IntPtr>>();
-				action(result, planPointer);
+				var action = actionPtr.Cast<Action<int, string>>();
+				action(result, data);
 			}
 		}
 	}

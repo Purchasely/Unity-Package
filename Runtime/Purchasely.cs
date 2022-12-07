@@ -261,9 +261,9 @@ namespace PurchaselyRuntime
 			_implementation.PurchaseWithPlanId(planId, onSuccess, onError, contentId);
 		}
 
-		public void HandleDeepLinkUrl(string url)
+		public bool HandleDeepLinkUrl(string url)
 		{
-			_implementation?.HandleDeepLinkUrl(url);
+			return _implementation?.HandleDeepLinkUrl(url) ?? false;
 		}
 
 		public void GetUserSubscriptions(Action<List<SubscriptionData>> onSuccess, Action<string> onError)

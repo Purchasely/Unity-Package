@@ -73,7 +73,7 @@ extern "C" {
 		[Purchasely isReadyToPurchase:ready];
 	}
 	
-	void _setDefaultPresentationResultHandler(PurchaselyPresentationResultCallbackDelegate presentationResultCallback, void* 	presentationResultCallbackPtr) {
+	void _purchaselySetDefaultPresentationResultHandler(PurchaselyPresentationResultCallbackDelegate presentationResultCallback, void* 	presentationResultCallbackPtr) {
 		[Purchasely setDefaultPresentationResultHandler:^(enum PLYProductViewControllerResult result, PLYPlan * _Nullable plan) {
 			presentationResultCallback(presentationResultCallbackPtr, [PLYUtils parseProductViewResult:result], [PLYUtils planAsJson:plan]);
 		}];
@@ -244,7 +244,7 @@ extern "C" {
 		}];
 	}
 	
-	void _purchaselyRestoreAllProducts(const char* planId, bool isSilent, PurchaselyStringCallbackDelegate successCallback, void* successCallbackPtr, 	PurchaselyStringCallbackDelegate errorCallback, void* errorCallbackPtr) {
+	void _purchaselyRestoreAllProducts(bool isSilent, PurchaselyStringCallbackDelegate successCallback, void* successCallbackPtr, 	PurchaselyStringCallbackDelegate errorCallback, void* errorCallbackPtr) {
 	
 		auto successAction = ^{
 			successCallback(successCallbackPtr, [PLYUtils createCStringFrom:@"{}"]);
@@ -287,7 +287,7 @@ extern "C" {
 		}];
 	}
 	
-	void _purchesalyGetUserSubscriptions(PurchaselyStringCallbackDelegate successCallback, void* successCallbackPtr, PurchaselyStringCallbackDelegate 	errorCallback, void* errorCallbackPtr) {
+	void _purchaselyGetUserSubscriptions(PurchaselyStringCallbackDelegate successCallback, void* successCallbackPtr, PurchaselyStringCallbackDelegate 	errorCallback, void* errorCallbackPtr) {
 		[Purchasely userSubscriptionsWithSuccess:^(NSArray<PLYSubscription*>* _Nullable subscriptions) {
 			successCallback(successCallbackPtr, [PLYUtils susbscriptionsAsJson:subscriptions]);
 		} failure:^(NSError * _Nonnull error) {
@@ -304,20 +304,7 @@ extern "C" {
 		NSLocale *locale = [NSLocale localeWithLocaleIdentifier:[PLYUtils createNSStringFrom:language]];
 		[Purchasely setLanguageFrom:locale];
 	}
-	
-	void _purchaselySetPaywallActionInterceptor(PurchaselyStringCallbackDelegate actionCallback, void* actionCallbackPtr) {
-		[Purchasely setPaywallActionsInterceptor:^(enum PLYPresentationAction action, PLYPresentationActionParameters * _Nullable parameters, 	PLYPresentationInfo * _Nullable infos, void (^ _Nonnull onProcessActionHandler)(BOOL)) {
-	
-			actionCallback(actionCallbackPtr, [PLYUtils actionToJson:action parameters:parameters presentationInfos:infos]);
-		}];
-	}
-	
-	void _purchaselyProcessAction(bool process) {
-		if (onProcessActionHandler != nil) {
-			onProcessActionHandler(process);
-		}
-	}
-	
+
 	void closePaywall() {
 		if (presentedPresentationViewController != nil) {
 			dispatch_async(dispatch_get_main_queue(), ^{
@@ -328,7 +315,71 @@ extern "C" {
 		}
 	}
 	
+	void _purchaselySetPaywallActionInterceptor(PurchaselyStringCallbackDelegate actionCallback, void* actionCallbackPtr) {
+		[Purchasely setPaywallActionsInterceptor:^(enum PLYPresentationAction action, PLYPresentationActionParameters * _Nullable parameters, 	PLYPresentationInfo * _Nullable infos, void (^ _Nonnull onProcessActionHandler)(BOOL)) {
+	
+			closePaywall();
+			actionCallback(actionCallbackPtr, [PLYUtils actionToJson:action parameters:parameters presentationInfos:infos]);
+		}];
+	}
+	
+	void _purchaselyProcessAction(bool process) {
+		if (onProcessActionHandler != nil) {
+			onProcessActionHandler(process);
+		}
+	}
+	
 	void _purchaselyUserDidConsumeSubscriptionContent() {
 		[Purchasely userDidConsumeSubscriptionContent];
+	}
+
+	char* _purchaselyGetAnonymousUserId() {
+		return [PLYUtils createCStringFrom:[Purchasely anonymousUserId]];
+	}
+
+	void _purchaselyUserLogout() {
+		[Purchasely userLogout];
+	}
+
+	void _purchaselySetStringAttribute(const char* key, const char* value) {
+		[Purchasely setUserAttributeWithStringValue:[PLYUtils createNSStringFrom:value] forKey:[PLYUtils createNSStringFrom:key]];
+	}
+	
+	void _purchaselySetBoolAttribute(const char* key, bool value) {
+		[Purchasely setUserAttributeWithBoolValue:value forKey:[PLYUtils createNSStringFrom:key]];
+	}
+	
+	void _purchaselySetIntAttribute(const char* key, int value) {
+		[Purchasely setUserAttributeWithIntValue:value forKey:[PLYUtils createNSStringFrom:key]];
+	}
+	
+	void _purchaselySetFloatAttribute(const char* key, float value) {
+		[Purchasely setUserAttributeWithDoubleValue:value forKey:[PLYUtils createNSStringFrom:key]];
+	}
+	
+	void _purchaselySetDateAttribute(const char* key, const char* dateString) {
+		NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+		[dateFormat setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZ"];
+		
+		NSDate* date = [dateFormat dateFromString:[PLYUtils createNSStringFrom:dateString]];
+		[Purchasely setUserAttributeWithDateValue:date forKey:[PLYUtils createNSStringFrom:key]];
+	}
+	
+	char* _purchaselyGetUserAttribute(const char* key) {
+		id attribute = [Purchasely getUserAttributeFor:[PLYUtils createNSStringFrom:key]];
+		NSString* result = @"";
+		if (attribute == nil)
+			return [PLYUtils createCStringFrom: result];
+		
+		result = [NSString stringWithFormat:@"%@", attribute];
+		return [PLYUtils createCStringFrom: result];
+	}
+	
+	void _purchaselyClearAttribute(const char* key) {
+		[Purchasely clearUserAttributeForKey:[PLYUtils createNSStringFrom:key]];
+	}
+	
+	void _purchaselyClearAttributes() {
+		[Purchasely clearUserAttributes];
 	}
 }

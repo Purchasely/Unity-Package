@@ -36,13 +36,28 @@ typedef void(PurchaselyStringCallbackDelegate)(void *actionPtr, const char *even
 
 @end
 
+// Paywall Interceptor Delegate
+@interface PurchaselyInterceptorDelegate : NSObject
+
+@property(nonatomic, copy) void (^actionCallback)(char* actionJson);
+
+@end
+
+@implementation PurchaselyInterceptorDelegate
+
+@end
+
 // Bridge methods
 extern "C" {
 	PurchaselyEventDelegate* _eventDelegate;
 	UINavigationController* presentedPresentationViewController;
 	void (^onProcessActionHandler)(BOOL proceed);
 
+	PurchaselyInterceptorDelegate* interceptorDelegate;
 	void (^interceptorFunction)(enum PLYPresentationAction action, PLYPresentationActionParameters * _Nullable parameters, PLYPresentationInfo * _Nullable infos, void (^ _Nonnull onProcessActionHandler)(BOOL));
+
+	void (actionInterceptorDelegate)(void *actionPtr, const char *eventJson);
+	void* actionInterceptorCalbackPtr;
 	
 	void _purchaselyStart(const char* apiKey, const char* userId, bool readyToPurchase, int logLevel, int runningMode,
 						  PurchaselyStartCallbackDelegate startCallback, void* startCallbackPtr,
@@ -318,11 +333,16 @@ extern "C" {
 	}
 	
 	void _purchaselySetPaywallActionInterceptor(PurchaselyStringCallbackDelegate actionCallback, void* actionCallbackPtr) {
+		interceptorDelegate = [PurchaselyInterceptorDelegate new];
+		interceptorDelegate.actionCallback = ^(char* data) {
+			actionCallback(actionCallbackPtr, data);
+		};
+		
 		interceptorFunction = ^(enum PLYPresentationAction action, PLYPresentationActionParameters * _Nullable parameters, 	PLYPresentationInfo * _Nullable infos, void (^ _Nonnull actionHandler)(BOOL)) {
 			
 			onProcessActionHandler = actionHandler;
 			closePaywall();
-			actionCallback(actionCallbackPtr, [PLYUtils actionToJson:action parameters:parameters presentationInfos:infos]);
+			interceptorDelegate.actionCallback([PLYUtils actionToJson:action parameters:parameters presentationInfos:infos]);
 		};
 		
 		[Purchasely setPaywallActionsInterceptor:interceptorFunction];

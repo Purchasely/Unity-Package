@@ -312,4 +312,43 @@
              [self resultDictionaryForActionInterceptor:action parameters:params presentationInfos:infos]]];
 }
 
++ (char*) presentationToJson:(PLYPresentation*) presentation {
+	NSMutableDictionary<NSString*, NSObject*>* dict = [NSMutableDictionary new];
+	
+	if (presentation.id != nil)
+		[dict setObject:presentation.id forKey:@"id"];
+	[dict setObject:presentation.language forKey:@"language"];
+	if (presentation.placementId != nil)
+		[dict setObject:presentation.id forKey:@"placementId"];
+	if (presentation.audienceId != nil)
+		[dict setObject:presentation.id forKey:@"audienceId"];
+	if (presentation.abTestId != nil)
+		[dict setObject:presentation.id forKey:@"abTestId"];
+	if (presentation.abTestVariantId != nil)
+		[dict setObject:presentation.id forKey:@"abTestVariantId"];
+	
+	[dict setObject:presentation.plans forKey:@"plans"];
+	
+	NSString* typeString = @"unknown";
+
+	switch (presentation.type) {
+		case PLYPresentationTypeNormal:
+			typeString = @"normal";
+			break;
+		case PLYPresentationTypeFallback:
+			typeString = @"fallback";
+			break;
+		case PLYPresentationTypeDeactivated:
+			typeString = @"deactivated";
+			break;
+		case PLYPresentationTypeClient:
+			typeString = @"client";
+			break;
+	}
+
+	[dict setObject:typeString forKey:@"type"];
+	
+	return [self createCStringFrom:[self serializeDictionary:dict]];
+}
+
 @end

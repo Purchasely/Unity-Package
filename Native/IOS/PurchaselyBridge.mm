@@ -410,4 +410,46 @@ extern "C" {
     void _purchaselyClearAttributes() {
         [Purchasely clearUserAttributes];
     }
+
+void _purchaselyFetchPresentation(const char* presentationId, const char* contentId,
+								  PurchaselyStringCallbackDelegate successCallback, void* successCallbackPtr,
+								  PurchaselyStringCallbackDelegate errorCallback, void* errorCallbackPtr) {
+	NSString* presentationIdStr = [PLYUtils createNSStringFrom:presentationId];
+	NSString* contentIdStr = [PLYUtils createNSStringFrom:contentId];
+	
+	auto fetchCompletion = ^(PLYPresentation * _Nullable presentation, NSError * _Nullable error) {
+		if (presentation != nil) {
+			successCallback(successCallbackPtr, [PLYUtils presentationToJson:presentation]);
+		} else {
+			errorCallback(errorCallbackPtr, [PLYUtils createCStringFrom:[error localizedDescription]]);
+		}
+	};
+	
+	if ([contentIdStr length] == 0) {
+		[Purchasely fetchPresentationWith:presentationIdStr fetchCompletion:fetchCompletion completion:nil];
+	} else {
+		[Purchasely fetchPresentationWith:presentationIdStr contentId:contentIdStr fetchCompletion:fetchCompletion completion:nil];
+	}
+}
+
+void _purchaselyFetchPresentationForPlacement(const char* placementId, const char* contentId,
+											  PurchaselyStringCallbackDelegate successCallback, void* successCallbackPtr,
+											  PurchaselyStringCallbackDelegate errorCallback, void* errorCallbackPtr) {
+	NSString* placementIdStr = [PLYUtils createNSStringFrom:placementId];
+	NSString* contentIdStr = [PLYUtils createNSStringFrom:contentId];
+	
+	auto fetchCompletion = ^(PLYPresentation * _Nullable presentation, NSError * _Nullable error) {
+		if (presentation != nil) {
+			successCallback(successCallbackPtr, [PLYUtils presentationToJson:presentation]);
+		} else {
+			errorCallback(errorCallbackPtr, [PLYUtils createCStringFrom:[error localizedDescription]]);
+		}
+	};
+	
+	if ([contentIdStr length] == 0) {
+		[Purchasely fetchPresentationFor:placementIdStr fetchCompletion:fetchCompletion completion:nil];
+	} else {
+		[Purchasely fetchPresentationFor:placementIdStr contentId:contentIdStr fetchCompletion:fetchCompletion completion:nil];
+	}
+}
 }

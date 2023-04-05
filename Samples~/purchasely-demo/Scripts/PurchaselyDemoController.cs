@@ -48,8 +48,15 @@ public class PurchaselyDemoController : MonoBehaviour
 	[SerializeField] private InputField planIdInputPurchase;
 	[SerializeField] private InputField contentIdInputPurchase;
 
-	[SerializeField] private Text logText;
+	[SerializeField] private Button fetchPresentationButton;
+	[SerializeField] private InputField presentationIdInputFetch;
+	[SerializeField] private InputField contentIdInputFetchPresentation;
 
+	[SerializeField] private Button fetchPresentationForPlacementButton;
+	[SerializeField] private InputField placementIdInputFetch;
+	[SerializeField] private InputField contentIdInputFetchPlacement;
+
+	[SerializeField] private Text logText;
 
 	private PurchaselyRuntime.Purchasely _purchasely;
 
@@ -87,6 +94,9 @@ public class PurchaselyDemoController : MonoBehaviour
 		getPlanButton.onClick.AddListener(OnGetPlanClicked);
 
 		purchaseButton.onClick.AddListener(OnPurchaseClicked);
+
+		fetchPresentationButton.onClick.AddListener(OnFetchPresentationClicked);
+		fetchPresentationForPlacementButton.onClick.AddListener(OnFetchPresentationForPlacementClicked);
 	}
 
 	private void OnUserActionsClicked()
@@ -203,6 +213,18 @@ public class PurchaselyDemoController : MonoBehaviour
 		_purchasely.Purchase(planIdInputPurchase.text, LogPlan, Log, contentIdInputPurchase.text);
 	}
 
+	private void OnFetchPresentationClicked()
+	{
+		_purchasely.FetchPresentation(presentationIdInputFetch.text, OnFetchPresentationSuccess, Log,
+			contentIdInputFetchPresentation.text);
+	}
+
+	private void OnFetchPresentationForPlacementClicked()
+	{
+		_purchasely.FetchPresentationForPlacement(placementIdInputFetch.text, OnFetchPresentationSuccess, Log,
+			contentIdInputFetchPlacement.text);
+	}
+
 	private void OnPurchaselyStart(bool success, string error)
 	{
 		Log($"Purchasely Start Result. Success: {success}. Error: {error}.");
@@ -255,7 +277,7 @@ public class PurchaselyDemoController : MonoBehaviour
 		foreach (var subscription in subscriptionData)
 		{
 			Log($"Subscription ID: {subscription.id}");
-			
+
 			var plan = subscription.plan;
 			if (plan != null)
 				LogPlan(plan);
@@ -283,6 +305,24 @@ public class PurchaselyDemoController : MonoBehaviour
 		{
 			LogProduct(product);
 		}
+	}
+
+	private void OnFetchPresentationSuccess(Presentation presentation)
+	{
+		Log($"Fetch Presentation Success.");
+		LogPresentation(presentation);
+		if (presentation.type == "normal")
+		{
+			_purchasely.PresentContentForPresentation(presentation.id,
+				OnPresentationResult,
+				OnPresentationContentLoaded,
+				OnPresentationContentClosed);
+		}
+	}
+
+	private void LogPresentation(Presentation presentation)
+	{
+		Log($"Presentation id: {presentation.id}. Type: {presentation.type}. ");
 	}
 
 	private void Log(string log)

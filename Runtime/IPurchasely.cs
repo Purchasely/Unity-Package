@@ -69,5 +69,11 @@ namespace PurchaselyRuntime
 		string GetUserAttribute(string key);
 
 		void UserDidConsumeSubscriptionContent();
+
+		void FetchPresentation(string presentationId, Action<Presentation> onSuccess,
+			Action<string> onError, string contentId);
+
+		void FetchPresentationForPlacement(string placementId, Action<Presentation> onSuccess,
+			Action<string> onError, string contentId);
 	}
 }

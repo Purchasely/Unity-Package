@@ -349,6 +349,38 @@ namespace PurchaselyRuntime
 			_purchaselyUserDidConsumeSubscriptionContent();
 		}
 
+		public void FetchPresentation(string presentationId, Action<Presentation> onSuccess, Action<string> onError,
+			string contentId)
+		{
+			var presentationCallback = new Action<string>(presentationJson =>
+			{
+				AsyncCallbackHelper.Instance.Queue(() =>
+				{
+					onSuccess(SerializationUtils.Deserialize<Presentation>(presentationJson));
+				});
+			});
+
+			_purchaselyFetchPresentation(presentationId, contentId, IosUtils.StringCallback,
+				presentationCallback.GetPointer(),
+				IosUtils.StringCallback, onError.GetPointer());
+		}
+
+		public void FetchPresentationForPlacement(string placementId, Action<Presentation> onSuccess,
+			Action<string> onError, string contentId)
+		{
+			var presentationCallback = new Action<string>(presentationJson =>
+			{
+				AsyncCallbackHelper.Instance.Queue(() =>
+				{
+					onSuccess(SerializationUtils.Deserialize<Presentation>(presentationJson));
+				});
+			});
+
+			_purchaselyFetchPresentationForPlacement(placementId, contentId, IosUtils.StringCallback,
+				presentationCallback.GetPointer(),
+				IosUtils.StringCallback, onError.GetPointer());
+		}
+
 		[DllImport("__Internal")]
 		static extern void _purchaselyStart(string apiKey, string userId, bool readyToPurchase, int logLevel,
 			int runningMode, IosUtils.StartCallbackDelegate startCallback, IntPtr startCallbackPtr,
@@ -469,6 +501,16 @@ namespace PurchaselyRuntime
 
 		[DllImport("__Internal")]
 		static extern void _purchaselyClearAttributes();
+
+		[DllImport("__Internal")]
+		static extern void _purchaselyFetchPresentation(string presentationId, string contentId,
+			IosUtils.StringCallbackDelegate successCallback, IntPtr successCallbackPtr,
+			IosUtils.StringCallbackDelegate errorCallback, IntPtr errorCallbackPtr);
+
+		[DllImport("__Internal")]
+		static extern void _purchaselyFetchPresentationForPlacement(string placementId, string contentId,
+			IosUtils.StringCallbackDelegate successCallback, IntPtr successCallbackPtr,
+			IosUtils.StringCallbackDelegate errorCallback, IntPtr errorCallbackPtr);
 	}
 }
 

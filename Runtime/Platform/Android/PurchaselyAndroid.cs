@@ -198,6 +198,16 @@ namespace PurchaselyRuntime
 		{
 			_javaBridge?.Call("userDidConsumeSubscriptionContent");
 		}
+
+		public void FetchPresentation(string presentationId, Action<Presentation> onSuccess, Action<string> onError, string contentId)
+		{
+			//TODO: implement
+		}
+
+		public void FetchPresentationForPlacement(string placementId, Action<Presentation> onSuccess, Action<string> onError, string contentId)
+		{
+			//TODO: implement
+		}
 	}
 }
 

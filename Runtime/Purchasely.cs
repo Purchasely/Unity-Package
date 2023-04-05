@@ -346,6 +346,7 @@ namespace PurchaselyRuntime
 		{
 			_implementation?.SetUserAttribute(key, value);
 		}
+
 		/// <summary>
 		/// Set integer user attribute for Purchasely.
 		/// </summary>
@@ -408,6 +409,32 @@ namespace PurchaselyRuntime
 		public void UserDidConsumeSubscriptionContent()
 		{
 			_implementation?.UserDidConsumeSubscriptionContent();
+		}
+
+		/// <summary>
+		/// Fetch the native view content for a presentation.
+		/// </summary>
+		/// <param name="presentationId"> ID of the presentation to be fetched. </param>
+		/// <param name="onSuccess"> Callback for the successful fetch. </param>
+		/// <param name="onError"> Callback with error. </param>
+		/// <param name="contentId"> Optional content ID. </param>
+		public void FetchPresentation(string presentationId, Action<Presentation> onSuccess,
+			Action<string> onError, string contentId = "")
+		{
+			_implementation?.FetchPresentation(presentationId, onSuccess, onError, contentId);
+		}
+
+		/// <summary>
+		/// Fetch the native view content for a placement.
+		/// </summary>
+		/// <param name="placementId"> ID of the placement to be fetched. </param>
+		/// <param name="onSuccess"> Callback for the successful fetch. </param>
+		/// <param name="onError"> Callback with error. </param>
+		/// <param name="contentId"> Optional content ID. </param>
+		public void FetchPresentationForPlacement(string placementId, Action<Presentation> onSuccess,
+			Action<string> onError, string contentId = "")
+		{
+			_implementation?.FetchPresentation(placementId, onSuccess, onError, contentId);
 		}
 	}
 }

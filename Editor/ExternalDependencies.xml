@@ -16,6 +16,6 @@
 <!--    <androidPackage spec="io.purchasely:google-play:1.1.0-alpha02"> </androidPackage>-->
   </androidPackages>  
   <iosPods>
-    <iosPod name="Purchasely"/>
+    <iosPod name="Purchasely" version="3.6.2"/>
   </iosPods>
 </dependencies>

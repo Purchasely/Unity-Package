@@ -8,13 +8,16 @@ namespace PurchaselyRuntime
 		private readonly Action<Presentation> _onSuccess;
 		private readonly Action<string> _onError;
 		private readonly Action<ProductViewResult, Plan> _onResult;
+		private readonly Action _onCloseButtonClicked;
 
 		internal FetchPresentationProxy(Action<Presentation> onSuccess, Action<string> onError,
-			Action<ProductViewResult, Plan> onResult) : base("com.purchasely.unity.proxy.FetchPresentationProxy")
+			Action<ProductViewResult, Plan> onResult, Action onCloseButtonClicked) : base(
+			"com.purchasely.unity.proxy.FetchPresentationProxy")
 		{
 			_onSuccess = onSuccess;
 			_onError = onError;
 			_onResult = onResult;
+			_onCloseButtonClicked = onCloseButtonClicked;
 		}
 
 		public void onPresentationFetched(string json, AndroidJavaObject presentationAjo)
@@ -53,6 +56,19 @@ namespace PurchaselyRuntime
 					Debug.Log(planJson);
 
 				_onResult((ProductViewResult) result, SerializationUtils.Deserialize<Plan>(planJson));
+			});
+		}
+
+		void onContentLoaded(bool loaded)
+		{
+			Debug.Log("Stub.");
+		}
+
+		void onContentClosed()
+		{
+			AsyncCallbackHelper.Instance.Queue(() =>
+			{
+				_onCloseButtonClicked();
 			});
 		}
 	}

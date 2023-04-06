@@ -415,29 +415,32 @@ namespace PurchaselyRuntime
 		/// Fetch the native view content for a presentation.
 		/// </summary>
 		/// <param name="presentationId"> ID of the presentation to be fetched. </param>
-		/// <param name="onPresentationFetched"> Callback for the successful fetch. </param>
-		/// <param name="onResult"> Callback to be invoked after user action with the paywall view. </param>
+		/// <param name="onSuccess"> Callback for the successful fetch. </param>
 		/// <param name="onError"> Callback with error. </param>
+		/// <param name="onResult"> Callback to be invoked after user action with the paywall view. </param>
+		/// <param name="onCloseButtonClicked"> Optional: callback to be invoked when the user taps the close button. </param>
 		/// <param name="contentId"> Optional content ID. </param>
-		public void FetchPresentation(string presentationId, Action<Presentation> onPresentationFetched,
-			Action<ProductViewResult, Plan> onResult, Action<string> onError, string contentId = "")
+		public void FetchPresentation(string presentationId, Action<Presentation> onSuccess, Action<string> onError,
+			Action<ProductViewResult, Plan> onResult, Action onCloseButtonClicked = null, string contentId = "")
 		{
-			_implementation?.FetchPresentation(presentationId, onPresentationFetched, onResult, onError, contentId);
+			_implementation?.FetchPresentation(presentationId, onSuccess, onError, onResult, onCloseButtonClicked, 
+				contentId);
 		}
 
 		/// <summary>
 		/// Fetch the native view content for a placement.
 		/// </summary>
 		/// <param name="placementId"> ID of the placement to be fetched. </param>
-		/// <param name="onPresentationFetched"> Callback for the successful fetch. </param>
-		/// <param name="onResult"> Callback to be invoked after user action with the paywall view. </param>
+		/// <param name="onSuccess"> Callback for the successful fetch. </param>
 		/// <param name="onError"> Callback with error. </param>
+		/// <param name="onResult"> Callback to be invoked after user action with the paywall view. </param>
+		/// <param name="onCloseButtonClicked"> Optional: callback to be invoked when the user taps the close button. </param>
 		/// <param name="contentId"> Optional content ID. </param>
-		public void FetchPresentationForPlacement(string placementId, Action<Presentation> onPresentationFetched,
-			Action<ProductViewResult, Plan> onResult, Action<string> onError, string contentId = "")
+		public void FetchPresentationForPlacement(string placementId, Action<Presentation> onSuccess, Action<string> onError,
+			Action<ProductViewResult, Plan> onResult, Action onCloseButtonClicked = null, string contentId = "")
 		{
-			_implementation?.FetchPresentationForPlacement(placementId, onPresentationFetched, onResult, onError,
-				contentId);
+			_implementation?.FetchPresentationForPlacement(placementId, onSuccess, onError, onResult, 
+				onCloseButtonClicked, contentId);
 		}
 
 		/// <summary>

@@ -199,18 +199,18 @@ namespace PurchaselyRuntime
 			_javaBridge?.Call("userDidConsumeSubscriptionContent");
 		}
 
-		public void FetchPresentation(string presentationId, Action<Presentation> onPresentationFetched,
-			Action<ProductViewResult, Plan> onResult, Action<string> onError, string contentId)
+		public void FetchPresentation(string presentationId, Action<Presentation> onSuccess, Action<string> onError,
+			Action<ProductViewResult, Plan> onResult, Action onCloseButtonClicked, string contentId)
 		{
 			_javaBridge?.Call("fetchPresentation", AndroidUtils.Activity, presentationId, contentId, 
-				new FetchPresentationProxy(onPresentationFetched, onError, onResult));
+				new FetchPresentationProxy(onSuccess, onError, onResult, onCloseButtonClicked));
 		}
 
-		public void FetchPresentationForPlacement(string placementId, Action<Presentation> onPresentationFetched,
-			Action<ProductViewResult, Plan> onResult, Action<string> onError, string contentId)
+		public void FetchPresentationForPlacement(string placementId, Action<Presentation> onSuccess, Action<string> onError,
+			Action<ProductViewResult, Plan> onResult, Action onCloseButtonClicked, string contentId)
 		{
 			_javaBridge?.Call("fetchPresentationForPlacement", AndroidUtils.Activity, placementId, 
-				contentId, new FetchPresentationProxy(onPresentationFetched, onError, onResult));
+				contentId, new FetchPresentationProxy(onSuccess, onError, onResult, onCloseButtonClicked));
 		}
 
 		public void ClientPresentationOpened(Presentation presentation)

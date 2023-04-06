@@ -415,26 +415,56 @@ namespace PurchaselyRuntime
 		/// Fetch the native view content for a presentation.
 		/// </summary>
 		/// <param name="presentationId"> ID of the presentation to be fetched. </param>
-		/// <param name="onSuccess"> Callback for the successful fetch. </param>
+		/// <param name="onPresentationFetched"> Callback for the successful fetch. </param>
+		/// <param name="onResult"> Callback to be invoked after user action with the paywall view. </param>
 		/// <param name="onError"> Callback with error. </param>
 		/// <param name="contentId"> Optional content ID. </param>
-		public void FetchPresentation(string presentationId, Action<Presentation> onSuccess,
-			Action<string> onError, string contentId = "")
+		public void FetchPresentation(string presentationId, Action<Presentation> onPresentationFetched,
+			Action<ProductViewResult, Plan> onResult, Action<string> onError, string contentId = "")
 		{
-			_implementation?.FetchPresentation(presentationId, onSuccess, onError, contentId);
+			_implementation?.FetchPresentation(presentationId, onPresentationFetched, onResult, onError, contentId);
 		}
 
 		/// <summary>
 		/// Fetch the native view content for a placement.
 		/// </summary>
 		/// <param name="placementId"> ID of the placement to be fetched. </param>
-		/// <param name="onSuccess"> Callback for the successful fetch. </param>
+		/// <param name="onPresentationFetched"> Callback for the successful fetch. </param>
+		/// <param name="onResult"> Callback to be invoked after user action with the paywall view. </param>
 		/// <param name="onError"> Callback with error. </param>
 		/// <param name="contentId"> Optional content ID. </param>
-		public void FetchPresentationForPlacement(string placementId, Action<Presentation> onSuccess,
-			Action<string> onError, string contentId = "")
+		public void FetchPresentationForPlacement(string placementId, Action<Presentation> onPresentationFetched,
+			Action<ProductViewResult, Plan> onResult, Action<string> onError, string contentId = "")
 		{
-			_implementation?.FetchPresentation(placementId, onSuccess, onError, contentId);
+			_implementation?.FetchPresentationForPlacement(placementId, onPresentationFetched, onResult, onError,
+				contentId);
+		}
+
+		/// <summary>
+		/// Let SDK know that a presentation view has been shown in your app.
+		/// </summary>
+		/// <param name="presentation"> Presentation for which the content has been shown. </param>
+		public void ClientPresentationOpened(Presentation presentation)
+		{
+			_implementation?.ClientPresentationOpened(presentation);
+		}
+
+		/// <summary>
+		/// Let SDK know that a presentation view has been closed in your app.
+		/// </summary>
+		/// <param name="presentation"> Presentation for which the view has been closed. </param>
+		public void ClientPresentationClosed(Presentation presentation)
+		{
+			_implementation?.ClientPresentationClosed(presentation);
+		}
+
+		/// <summary>
+		/// Present content for previously fetched presentation. 
+		/// </summary>
+		/// <param name="presentation"></param>
+		public void PresentContentForPresentation(Presentation presentation)
+		{
+			_implementation?.PresentContentForPresentation(presentation);
 		}
 	}
 }

@@ -1,4 +1,10 @@
+#if UNITY_IOS
+using System;
+#endif
 using System.Collections.Generic;
+#if UNITY_ANDROID
+using UnityEngine;
+#endif
 
 namespace PurchaselyRuntime
 {
@@ -12,5 +18,11 @@ namespace PurchaselyRuntime
 		public string abTestVariantId;
 		public string type;
 		public List<string> plans;
+
+#if UNITY_ANDROID
+		internal AndroidJavaObject presentationAjo;
+#elif UNITY_IOS
+		internal IntPtr iosPresentation;
+#endif
 	}
 }

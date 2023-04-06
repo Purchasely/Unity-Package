@@ -199,14 +199,33 @@ namespace PurchaselyRuntime
 			_javaBridge?.Call("userDidConsumeSubscriptionContent");
 		}
 
-		public void FetchPresentation(string presentationId, Action<Presentation> onSuccess, Action<string> onError, string contentId)
+		public void FetchPresentation(string presentationId, Action<Presentation> onPresentationFetched,
+			Action<ProductViewResult, Plan> onResult, Action<string> onError, string contentId)
 		{
-			//TODO: implement
+			_javaBridge?.Call("fetchPresentation", AndroidUtils.Activity, presentationId, contentId, 
+				new FetchPresentationProxy(onPresentationFetched, onError, onResult));
 		}
 
-		public void FetchPresentationForPlacement(string placementId, Action<Presentation> onSuccess, Action<string> onError, string contentId)
+		public void FetchPresentationForPlacement(string placementId, Action<Presentation> onPresentationFetched,
+			Action<ProductViewResult, Plan> onResult, Action<string> onError, string contentId)
 		{
-			//TODO: implement
+			_javaBridge?.Call("fetchPresentationForPlacement", AndroidUtils.Activity, placementId, 
+				contentId, new FetchPresentationProxy(onPresentationFetched, onError, onResult));
+		}
+
+		public void ClientPresentationOpened(Presentation presentation)
+		{
+			_javaBridge?.Call("clientPresentationOpened", presentation.presentationAjo);
+		}
+
+		public void ClientPresentationClosed(Presentation presentation)
+		{
+			_javaBridge?.Call("clientPresentationClosed", presentation.presentationAjo);
+		}
+
+		public void PresentContentForPresentation(Presentation presentation)
+		{
+			_javaBridge?.Call("showContentForPresentation", AndroidUtils.Activity, presentation.presentationAjo);
 		}
 	}
 }

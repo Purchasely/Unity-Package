@@ -33,9 +33,9 @@ namespace PurchaselyRuntime
 					Debug.LogError("Presentation object could not be deserialized.");
 					return;
 				}
-
+#if UNITY_ANDROID
 				presentation.presentationAjo = presentationAjo;
-
+#endif
 				_onSuccess(presentation);
 			});
 		}

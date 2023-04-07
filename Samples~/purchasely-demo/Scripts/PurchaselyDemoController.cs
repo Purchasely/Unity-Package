@@ -215,14 +215,14 @@ public class PurchaselyDemoController : MonoBehaviour
 
 	private void OnFetchPresentationClicked()
 	{
-		_purchasely.FetchPresentation(presentationIdInputFetch.text, OnFetchPresentationSuccess, Log,
-			contentIdInputFetchPresentation.text);
+		_purchasely.FetchPresentation(presentationIdInputFetch.text, OnFetchPresentationSuccess, Log, 
+			OnPresentationResult, OnPresentationContentClosed, contentIdInputFetchPresentation.text);
 	}
 
 	private void OnFetchPresentationForPlacementClicked()
 	{
-		_purchasely.FetchPresentationForPlacement(placementIdInputFetch.text, OnFetchPresentationSuccess, Log,
-			contentIdInputFetchPlacement.text);
+		_purchasely.FetchPresentationForPlacement(placementIdInputFetch.text, OnFetchPresentationSuccess, Log, 
+			OnPresentationResult, OnPresentationContentClosed, contentIdInputFetchPlacement.text);
 	}
 
 	private void OnPurchaselyStart(bool success, string error)

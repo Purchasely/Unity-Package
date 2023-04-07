@@ -64,13 +64,13 @@ public class PurchaselyDemoPaywall : MonoBehaviour
 
 	private void OnPlanFetched(Plan plan)
 	{
-		if (_planButtons.ContainsKey(plan.id))
+		if (_planButtons.ContainsKey(plan.productId))
 			return;
 
 		var button = Instantiate(buttonPrefab, contentHolder);
 		button.Init(plan, PurchasePlan);
 
-		_planButtons.Add(plan.id, button);
+		_planButtons.Add(plan.productId, button);
 	}
 
 	private void PurchasePlan(Plan plan)

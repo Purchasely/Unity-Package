@@ -57,6 +57,7 @@ public class PurchaselyDemoController : MonoBehaviour
 	[SerializeField] private InputField contentIdInputFetchPlacement;
 
 	[SerializeField] private Text logText;
+	[SerializeField] private PurchaselyDemoPaywall paywall;
 
 	private PurchaselyRuntime.Purchasely _purchasely;
 
@@ -72,6 +73,8 @@ public class PurchaselyDemoController : MonoBehaviour
 			RunningMode.Full,
 			OnPurchaselyStart,
 			OnPurchaselyEvent);
+
+		paywall.Init(_purchasely);
 
 		userActionsButton.onClick.AddListener(OnUserActionsClicked);
 		userAttributesButton.onClick.AddListener(OnUserAttributesClicked);
@@ -215,13 +218,13 @@ public class PurchaselyDemoController : MonoBehaviour
 
 	private void OnFetchPresentationClicked()
 	{
-		_purchasely.FetchPresentation(presentationIdInputFetch.text, OnFetchPresentationSuccess, Log, 
+		_purchasely.FetchPresentation(presentationIdInputFetch.text, OnFetchPresentationSuccess, Log,
 			contentIdInputFetchPresentation.text);
 	}
 
 	private void OnFetchPresentationForPlacementClicked()
 	{
-		_purchasely.FetchPresentationForPlacement(placementIdInputFetch.text, OnFetchPresentationSuccess, Log, 
+		_purchasely.FetchPresentationForPlacement(placementIdInputFetch.text, OnFetchPresentationSuccess, Log,
 			contentIdInputFetchPlacement.text);
 	}
 
@@ -309,7 +312,7 @@ public class PurchaselyDemoController : MonoBehaviour
 
 	private void OnFetchPresentationSuccess(Presentation presentation)
 	{
-		Log($"Fetch Presentation Success.");
+		Log("Fetch Presentation Success.");
 		LogPresentation(presentation);
 		if (presentation.type == "normal" || presentation.type == "fallback")
 		{
@@ -317,9 +320,10 @@ public class PurchaselyDemoController : MonoBehaviour
 				OnPresentationResult,
 				OnPresentationContentLoaded,
 				OnPresentationContentClosed);
-		} else if (presentation.type == "client")
+		}
+		else if (presentation.type == "client")
 		{
-			//TODO: show unity view
+			paywall.Show(presentation);
 		}
 	}
 

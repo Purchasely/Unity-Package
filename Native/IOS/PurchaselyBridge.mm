@@ -16,6 +16,8 @@ typedef void(PurchaselyPresentationResultCallbackDelegate)(void *actionPtr, int 
 
 typedef void(PurchaselyStringCallbackDelegate)(void *actionPtr, const char *eventJson);
 
+typedef void(PurchaselyPresentationCallbackDelegate)(void *actionPtr, const char *json, void* pointer);
+
 // Event Delegate
 @interface PurchaselyEventDelegate : NSObject <PLYEventDelegate>
 
@@ -411,45 +413,101 @@ extern "C" {
         [Purchasely clearUserAttributes];
     }
 
-void _purchaselyFetchPresentation(const char* presentationId, const char* contentId,
-								  PurchaselyStringCallbackDelegate successCallback, void* successCallbackPtr,
-								  PurchaselyStringCallbackDelegate errorCallback, void* errorCallbackPtr) {
-	NSString* presentationIdStr = [PLYUtils createNSStringFrom:presentationId];
-	NSString* contentIdStr = [PLYUtils createNSStringFrom:contentId];
+	@interface PresentationViewDelegate : NSObject
 	
-	auto fetchCompletion = ^(PLYPresentation * _Nullable presentation, NSError * _Nullable error) {
-		if (presentation != nil) {
-			successCallback(successCallbackPtr, [PLYUtils presentationToJson:presentation]);
+	@property(nonatomic, copy) void (^presentationResult)(enum PLYProductViewControllerResult result, PLYPlan * _Nullable plan);
+	
+	@end
+	
+	@implementation PresentationViewDelegate {} @end
+	
+	PresentationViewDelegate* _presentationViewDelegate;
+	
+	void _purchaselyFetchPresentation(const char* presentationId, const char* contentId,
+									  PurchaselyPresentationCallbackDelegate successCallback, void* successCallbackPtr,
+									  PurchaselyStringCallbackDelegate errorCallback, void* errorCallbackPtr) {
+		NSString* presentationIdStr = [PLYUtils createNSStringFrom:presentationId];
+		NSString* contentIdStr = [PLYUtils createNSStringFrom:contentId];
+	
+		auto fetchCompletion = ^(PLYPresentation * _Nullable presentation, NSError * _Nullable error) {
+			if (presentation != nil) {
+				successCallback(successCallbackPtr, [PLYUtils presentationToJson:presentation], (void *) CFBridgingRetain(presentation));
+			} else {
+				errorCallback(errorCallbackPtr, [PLYUtils createCStringFrom:[error localizedDescription]]);
+			}
+		};
+	
+		auto completionFunction = ^(enum PLYProductViewControllerResult result, PLYPlan * _Nullable plan) {
+			if (_presentationViewDelegate == nil)
+				return;
+	
+			_presentationViewDelegate.presentationResult(result, plan);
+		};
+	
+		if ([contentIdStr length] == 0) {
+			[Purchasely fetchPresentationWith:presentationIdStr fetchCompletion:fetchCompletion completion:completionFunction];
 		} else {
-			errorCallback(errorCallbackPtr, [PLYUtils createCStringFrom:[error localizedDescription]]);
+			[Purchasely fetchPresentationWith:presentationIdStr contentId:contentIdStr fetchCompletion:fetchCompletion completion:completionFunction];
 		}
-	};
-	
-	if ([contentIdStr length] == 0) {
-		[Purchasely fetchPresentationWith:presentationIdStr fetchCompletion:fetchCompletion completion:nil];
-	} else {
-		[Purchasely fetchPresentationWith:presentationIdStr contentId:contentIdStr fetchCompletion:fetchCompletion completion:nil];
 	}
-}
-
-void _purchaselyFetchPresentationForPlacement(const char* placementId, const char* contentId,
-											  PurchaselyStringCallbackDelegate successCallback, void* successCallbackPtr,
-											  PurchaselyStringCallbackDelegate errorCallback, void* errorCallbackPtr) {
-	NSString* placementIdStr = [PLYUtils createNSStringFrom:placementId];
-	NSString* contentIdStr = [PLYUtils createNSStringFrom:contentId];
 	
-	auto fetchCompletion = ^(PLYPresentation * _Nullable presentation, NSError * _Nullable error) {
-		if (presentation != nil) {
-			successCallback(successCallbackPtr, [PLYUtils presentationToJson:presentation]);
+	void _purchaselyFetchPresentationForPlacement(const char* placementId, const char* contentId,
+												  PurchaselyPresentationCallbackDelegate successCallback, void* successCallbackPtr,
+												  PurchaselyStringCallbackDelegate errorCallback, void* errorCallbackPtr) {
+		NSString* placementIdStr = [PLYUtils createNSStringFrom:placementId];
+		NSString* contentIdStr = [PLYUtils createNSStringFrom:contentId];
+	
+		auto fetchCompletion = ^(PLYPresentation * _Nullable presentation, NSError * _Nullable error) {
+			if (presentation != nil) {
+				successCallback(successCallbackPtr, [PLYUtils presentationToJson:presentation], (void *) CFBridgingRetain(presentation));
+			} else {
+				errorCallback(errorCallbackPtr, [PLYUtils createCStringFrom:[error localizedDescription]]);
+			}
+		};
+	
+		auto completionFunction = ^(enum PLYProductViewControllerResult result, PLYPlan * _Nullable plan) {
+			if (_presentationViewDelegate == nil)
+				return;
+	
+			_presentationViewDelegate.presentationResult(result, plan);
+		};
+	
+		if ([contentIdStr length] == 0) {
+			[Purchasely fetchPresentationFor:placementIdStr fetchCompletion:fetchCompletion completion:completionFunction];
 		} else {
-			errorCallback(errorCallbackPtr, [PLYUtils createCStringFrom:[error localizedDescription]]);
+			[Purchasely fetchPresentationFor:placementIdStr contentId:contentIdStr fetchCompletion:fetchCompletion completion:completionFunction];
 		}
-	};
-	
-	if ([contentIdStr length] == 0) {
-		[Purchasely fetchPresentationFor:placementIdStr fetchCompletion:fetchCompletion completion:nil];
-	} else {
-		[Purchasely fetchPresentationFor:placementIdStr contentId:contentIdStr fetchCompletion:fetchCompletion completion:nil];
 	}
-}
+	
+	void _purchaselyShowContentForPresentationObject(void* presentationPtr, PurchaselyVoidCallbackDelegate closeCallback, void* closeCallbackPtr, 	PurchaselyPresentationResultCallbackDelegate presentationResultCallback, void* presentationResultCallbackPtr) {
+	
+		_presentationViewDelegate = [PresentationViewDelegate new];
+		_presentationViewDelegate.presentationResult = ^(enum PLYProductViewControllerResult result, PLYPlan * _Nullable plan) {
+			presentationResultCallback(presentationResultCallbackPtr, [PLYUtils parseProductViewResult:result], [PLYUtils planAsJson:plan]);
+		};
+	
+		PLYPresentation* presentation = (__bridge PLYPresentation *) (presentationPtr);
+	
+		if (presentation != nil) {
+			showNavigationControllerForView(presentation.controller);
+		} else {
+			NSLog(@"Purchasely Presentation is not valid. Will not show.");
+		}
+	}
+	
+	void _purchaselyClientPresentationOpened(void* presentationPtr) {
+		PLYPresentation* presentation = (__bridge PLYPresentation *) (presentationPtr);
+	
+		if (presentation != nil) {
+			[Purchasely clientPresentationOpenedWith:presentation];
+		}
+	}
+	
+	void _purchaselyClientPresentationClosed(void* presentationPtr) {
+		PLYPresentation* presentation = (__bridge PLYPresentation *) (presentationPtr);
+	
+		if (presentation != nil) {
+			[Purchasely clientPresentationClosedWith:presentation];
+		}
+	}
 }

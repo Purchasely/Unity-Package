@@ -100,6 +100,21 @@ namespace PurchaselyRuntime
 				action(result, data);
 			}
 		}
+
+		internal delegate void PresentationCallbackDelegate(IntPtr actionPtr, string data, IntPtr presentationPtr);
+
+		[MonoPInvokeCallback(typeof(PresentationCallbackDelegate))]
+		internal static void PresentationCallback(IntPtr actionPtr, string data, IntPtr presentationPtr)
+		{
+			if (Debug.isDebugBuild)
+				Debug.Log("StringCallback");
+
+			if (actionPtr != IntPtr.Zero)
+			{
+				var action = actionPtr.Cast<Action<string, IntPtr>>();
+				action(data, presentationPtr);
+			}
+		}
 	}
 }
 

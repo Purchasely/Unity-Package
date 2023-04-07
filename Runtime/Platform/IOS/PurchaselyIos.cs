@@ -1,4 +1,5 @@
-﻿#if UNITY_IOS && !UNITY_EDITOR
+﻿#if UNITY_IOS 
+//&& !UNITY_EDITOR
 
 using System;
 using System.Collections.Generic;
@@ -352,15 +353,17 @@ namespace PurchaselyRuntime
 		public void FetchPresentation(string presentationId, Action<Presentation> onSuccess, Action<string> onError,
 			string contentId)
 		{
-			var presentationCallback = new Action<string>(presentationJson =>
+			var presentationCallback = new Action<string, IntPtr>((json, pointer) =>
 			{
 				AsyncCallbackHelper.Instance.Queue(() =>
 				{
-					onSuccess(SerializationUtils.Deserialize<Presentation>(presentationJson));
+					var presentation = SerializationUtils.Deserialize<Presentation>(json);
+					presentation.iosPresentation = pointer;
+					onSuccess(presentation);
 				});
 			});
 
-			_purchaselyFetchPresentation(presentationId, contentId, IosUtils.StringCallback,
+			_purchaselyFetchPresentation(presentationId, contentId, IosUtils.PresentationCallback,
 				presentationCallback.GetPointer(),
 				IosUtils.StringCallback, onError.GetPointer());
 		}
@@ -368,17 +371,59 @@ namespace PurchaselyRuntime
 		public void FetchPresentationForPlacement(string placementId, Action<Presentation> onSuccess,
 			Action<string> onError, string contentId)
 		{
-			var presentationCallback = new Action<string>(presentationJson =>
+			var presentationCallback = new Action<string, IntPtr>((json, pointer) =>
 			{
 				AsyncCallbackHelper.Instance.Queue(() =>
 				{
-					onSuccess(SerializationUtils.Deserialize<Presentation>(presentationJson));
+					var presentation = SerializationUtils.Deserialize<Presentation>(json);
+					presentation.iosPresentation = pointer;
+					onSuccess(presentation);
 				});
 			});
 
-			_purchaselyFetchPresentationForPlacement(placementId, contentId, IosUtils.StringCallback,
+			_purchaselyFetchPresentationForPlacement(placementId, contentId, IosUtils.PresentationCallback,
 				presentationCallback.GetPointer(),
 				IosUtils.StringCallback, onError.GetPointer());
+		}
+
+		public void ClientPresentationOpened(Presentation presentation)
+		{
+			_purchaselyClientPresentationOpened(presentation.iosPresentation);
+		}
+
+		public void ClientPresentationClosed(Presentation presentation)
+		{
+			_purchaselyClientPresentationClosed(presentation.iosPresentation);
+		}
+
+		public void PresentContentForPresentation(Presentation presentation, Action<ProductViewResult, Plan> onResult,
+			Action<bool> onContentLoaded = null,
+			Action onCloseButtonClicked = null)
+		{
+			var resultCallback = new Action<int, string>((resultInt, planJson) =>
+			{
+				AsyncCallbackHelper.Instance.Queue(() =>
+				{
+					onResult((ProductViewResult) resultInt, SerializationUtils.Deserialize<Plan>(planJson));
+				});
+			});
+
+			var contentLoadCallback = new Action<bool>(isLoaded =>
+			{
+				if (onContentLoaded != null)
+					AsyncCallbackHelper.Instance.Queue(() => { onContentLoaded(isLoaded); });
+			});
+
+			var closeButtonCallback = new Action(() =>
+			{
+				if (onCloseButtonClicked != null)
+					AsyncCallbackHelper.Instance.Queue(onCloseButtonClicked);
+			});
+
+			_purchaselyShowContentForPresentationObject(presentation.iosPresentation,
+				IosUtils.BoolCallback, contentLoadCallback.GetPointer(),
+				IosUtils.VoidCallback, closeButtonCallback.GetPointer(),
+				IosUtils.PresentationResultCallback, resultCallback.GetPointer());
 		}
 
 		[DllImport("__Internal")]
@@ -504,13 +549,26 @@ namespace PurchaselyRuntime
 
 		[DllImport("__Internal")]
 		static extern void _purchaselyFetchPresentation(string presentationId, string contentId,
-			IosUtils.StringCallbackDelegate successCallback, IntPtr successCallbackPtr,
+			IosUtils.PresentationCallbackDelegate successCallback, IntPtr successCallbackPtr,
 			IosUtils.StringCallbackDelegate errorCallback, IntPtr errorCallbackPtr);
 
 		[DllImport("__Internal")]
 		static extern void _purchaselyFetchPresentationForPlacement(string placementId, string contentId,
-			IosUtils.StringCallbackDelegate successCallback, IntPtr successCallbackPtr,
+			IosUtils.PresentationCallbackDelegate successCallback, IntPtr successCallbackPtr,
 			IosUtils.StringCallbackDelegate errorCallback, IntPtr errorCallbackPtr);
+
+		[DllImport("__Internal")]
+		static extern void _purchaselyClientPresentationOpened(IntPtr presentationPointer);
+
+		[DllImport("__Internal")]
+		static extern void _purchaselyClientPresentationClosed(IntPtr presentationPointer);
+		
+		[DllImport("__Internal")]
+		static extern void _purchaselyShowContentForPresentationObject(IntPtr presentationPointer, 
+			IosUtils.BoolCallbackDelegate loadCallback, IntPtr loadCallbackPtr, 
+			IosUtils.VoidCallbackDelegate closeCallback, IntPtr closeCallbackPtr,
+			IosUtils.PresentationResultCallbackDelegate presentationResultCallback, 
+			IntPtr presentationResultCallbackPtr);
 	}
 }
 

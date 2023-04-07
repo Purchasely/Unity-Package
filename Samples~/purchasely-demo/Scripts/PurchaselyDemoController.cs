@@ -311,12 +311,15 @@ public class PurchaselyDemoController : MonoBehaviour
 	{
 		Log($"Fetch Presentation Success.");
 		LogPresentation(presentation);
-		if (presentation.type == "normal")
+		if (presentation.type == "normal" || presentation.type == "fallback")
 		{
 			_purchasely.PresentContentForPresentation(presentation.id,
 				OnPresentationResult,
 				OnPresentationContentLoaded,
 				OnPresentationContentClosed);
+		} else if (presentation.type == "client")
+		{
+			//TODO: show unity view
 		}
 	}
 

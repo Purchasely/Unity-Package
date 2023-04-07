@@ -421,10 +421,9 @@ namespace PurchaselyRuntime
 		/// <param name="onCloseButtonClicked"> Optional: callback to be invoked when the user taps the close button. </param>
 		/// <param name="contentId"> Optional content ID. </param>
 		public void FetchPresentation(string presentationId, Action<Presentation> onSuccess, Action<string> onError,
-			Action<ProductViewResult, Plan> onResult, Action onCloseButtonClicked = null, string contentId = "")
+			string contentId = "")
 		{
-			_implementation?.FetchPresentation(presentationId, onSuccess, onError, onResult, onCloseButtonClicked, 
-				contentId);
+			_implementation?.FetchPresentation(presentationId, onSuccess, onError, contentId);
 		}
 
 		/// <summary>
@@ -436,11 +435,10 @@ namespace PurchaselyRuntime
 		/// <param name="onResult"> Callback to be invoked after user action with the paywall view. </param>
 		/// <param name="onCloseButtonClicked"> Optional: callback to be invoked when the user taps the close button. </param>
 		/// <param name="contentId"> Optional content ID. </param>
-		public void FetchPresentationForPlacement(string placementId, Action<Presentation> onSuccess, Action<string> onError,
-			Action<ProductViewResult, Plan> onResult, Action onCloseButtonClicked = null, string contentId = "")
+		public void FetchPresentationForPlacement(string placementId, Action<Presentation> onSuccess, 
+			Action<string> onError, string contentId = "")
 		{
-			_implementation?.FetchPresentationForPlacement(placementId, onSuccess, onError, onResult, 
-				onCloseButtonClicked, contentId);
+			_implementation?.FetchPresentationForPlacement(placementId, onSuccess, onError, contentId);
 		}
 
 		/// <summary>
@@ -465,9 +463,13 @@ namespace PurchaselyRuntime
 		/// Present content for previously fetched presentation. 
 		/// </summary>
 		/// <param name="presentation"></param>
-		public void PresentContentForPresentation(Presentation presentation)
+		/// <param name="onResult"> Callback to be invoked after user action. </param>
+		/// <param name="onContentLoaded"> Optional: callback to be invoked when the content is loaded. </param>
+		/// <param name="onCloseButtonClicked"> Optional: callback to be invoked when the user taps the close button. </param>
+		public void PresentContentForPresentation(Presentation presentation, Action<ProductViewResult, Plan> onResult, 
+			Action<bool> onContentLoaded = null, Action onCloseButtonClicked = null)
 		{
-			_implementation?.PresentContentForPresentation(presentation);
+			_implementation?.PresentContentForPresentation(presentation, onResult, onContentLoaded, onCloseButtonClicked);
 		}
 	}
 }

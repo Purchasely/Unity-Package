@@ -1,4 +1,5 @@
-﻿#if UNITY_ANDROID && !UNITY_EDITOR
+﻿#if UNITY_ANDROID
+ //&& !UNITY_EDITOR
 
 using System;
 using System.Collections.Generic;
@@ -200,17 +201,17 @@ namespace PurchaselyRuntime
 		}
 
 		public void FetchPresentation(string presentationId, Action<Presentation> onSuccess, Action<string> onError,
-			Action<ProductViewResult, Plan> onResult, Action onCloseButtonClicked, string contentId)
+			string contentId)
 		{
 			_javaBridge?.Call("fetchPresentation", AndroidUtils.Activity, presentationId, contentId, 
-				new FetchPresentationProxy(onSuccess, onError, onResult, onCloseButtonClicked));
+				new FetchPresentationProxy(onSuccess, onError));
 		}
 
-		public void FetchPresentationForPlacement(string placementId, Action<Presentation> onSuccess, Action<string> onError,
-			Action<ProductViewResult, Plan> onResult, Action onCloseButtonClicked, string contentId)
+		public void FetchPresentationForPlacement(string placementId, Action<Presentation> onSuccess, 
+			Action<string> onError, string contentId)
 		{
 			_javaBridge?.Call("fetchPresentationForPlacement", AndroidUtils.Activity, placementId, 
-				contentId, new FetchPresentationProxy(onSuccess, onError, onResult, onCloseButtonClicked));
+				contentId, new FetchPresentationProxy(onSuccess, onError));
 		}
 
 		public void ClientPresentationOpened(Presentation presentation)
@@ -223,9 +224,11 @@ namespace PurchaselyRuntime
 			_javaBridge?.Call("clientPresentationClosed", presentation.presentationAjo);
 		}
 
-		public void PresentContentForPresentation(Presentation presentation)
+		public void PresentContentForPresentation(Presentation presentation, Action<ProductViewResult, Plan> onResult, 
+			Action<bool> onContentLoaded = null, Action onCloseButtonClicked = null)
 		{
-			_javaBridge?.Call("showContentForPresentation", AndroidUtils.Activity, presentation.presentationAjo);
+			_javaBridge?.Call("showContentForPresentation", AndroidUtils.Activity, 
+				presentation.presentationAjo, new PlacementContentProxy(onContentLoaded, onCloseButtonClicked, onResult));
 		}
 	}
 }

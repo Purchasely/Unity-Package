@@ -71,15 +71,16 @@ namespace PurchaselyRuntime
 		void UserDidConsumeSubscriptionContent();
 
 		void FetchPresentation(string presentationId, Action<Presentation> onSuccess, Action<string> onError,
-			Action<ProductViewResult, Plan> onResult, Action onCloseButtonClicked, string contentId);
+			string contentId);
 
 		void FetchPresentationForPlacement(string placementId, Action<Presentation> onSuccess, Action<string> onError,
-			Action<ProductViewResult, Plan> onResult, Action onCloseButtonClicked, string contentId);
+			string contentId);
 
 		void ClientPresentationOpened(Presentation presentation);
 
 		void ClientPresentationClosed(Presentation presentation);
 
-		void PresentContentForPresentation(Presentation presentation);
+		void PresentContentForPresentation(Presentation presentation, Action<ProductViewResult, Plan> onResult, 
+			Action<bool> onContentLoaded = null, Action onCloseButtonClicked = null);
 	}
 }

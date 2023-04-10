@@ -314,22 +314,29 @@ public class PurchaselyDemoController : MonoBehaviour
 	{
 		Log("Fetch Presentation Success.");
 		LogPresentation(presentation);
-		if (presentation.type == "normal" || presentation.type == "fallback")
+
+		switch (presentation.presentationType)
 		{
-			_purchasely.PresentContentForPresentation(presentation.id,
-				OnPresentationResult,
-				OnPresentationContentLoaded,
-				OnPresentationContentClosed);
-		}
-		else if (presentation.type == "client")
-		{
-			paywall.Show(presentation);
+			case PresentationType.Normal:
+			case PresentationType.Fallback:
+				_purchasely.PresentContentForPresentation(presentation.id,
+					OnPresentationResult,
+					OnPresentationContentLoaded,
+					OnPresentationContentClosed);
+				break;
+			case PresentationType.Unknown:
+			case PresentationType.Deactivated:
+				Log($"Fetched presentation with type: {presentation.presentationType}. Will not show content.");
+				break;
+			case PresentationType.Client:
+				paywall.Show(presentation);
+				break;
 		}
 	}
 
 	private void LogPresentation(Presentation presentation)
 	{
-		Log($"Presentation id: {presentation.id}. Type: {presentation.type}. ");
+		Log($"Presentation id: {presentation.id}. Type: {presentation.presentationType}. ");
 	}
 
 	private void Log(string log)

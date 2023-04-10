@@ -1,5 +1,4 @@
-﻿#if UNITY_IOS 
-//&& !UNITY_EDITOR
+﻿#if UNITY_IOS && !UNITY_EDITOR
 
 using System;
 using System.Collections.Generic;
@@ -359,6 +358,8 @@ namespace PurchaselyRuntime
 				{
 					var presentation = SerializationUtils.Deserialize<Presentation>(json);
 					presentation.iosPresentation = pointer;
+					presentation.presentationType =
+						(PresentationType) Enum.Parse(typeof(PresentationType), presentation.type, true);
 					onSuccess(presentation);
 				});
 			});
@@ -376,6 +377,8 @@ namespace PurchaselyRuntime
 				AsyncCallbackHelper.Instance.Queue(() =>
 				{
 					var presentation = SerializationUtils.Deserialize<Presentation>(json);
+					presentation.presentationType =
+						(PresentationType) Enum.Parse(typeof(PresentationType), presentation.type, true);
 					presentation.iosPresentation = pointer;
 					onSuccess(presentation);
 				});
@@ -562,12 +565,12 @@ namespace PurchaselyRuntime
 
 		[DllImport("__Internal")]
 		static extern void _purchaselyClientPresentationClosed(IntPtr presentationPointer);
-		
+
 		[DllImport("__Internal")]
-		static extern void _purchaselyShowContentForPresentationObject(IntPtr presentationPointer, 
-			IosUtils.BoolCallbackDelegate loadCallback, IntPtr loadCallbackPtr, 
+		static extern void _purchaselyShowContentForPresentationObject(IntPtr presentationPointer,
+			IosUtils.BoolCallbackDelegate loadCallback, IntPtr loadCallbackPtr,
 			IosUtils.VoidCallbackDelegate closeCallback, IntPtr closeCallbackPtr,
-			IosUtils.PresentationResultCallbackDelegate presentationResultCallback, 
+			IosUtils.PresentationResultCallbackDelegate presentationResultCallback,
 			IntPtr presentationResultCallbackPtr);
 	}
 }

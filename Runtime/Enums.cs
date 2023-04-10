@@ -33,4 +33,13 @@ namespace PurchaselyRuntime
 		Restored = 1,
 		Cancelled = 2
 	}
+
+	public enum PresentationType
+	{
+		Unknown = 0,
+		Normal = 1,
+		Fallback = 2,
+		Deactivated = 3,
+		Client = 4
+	}
 }

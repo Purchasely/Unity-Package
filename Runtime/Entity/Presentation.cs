@@ -18,6 +18,7 @@ namespace PurchaselyRuntime
 		public string abTestVariantId;
 		public string type;
 		public List<string> plans;
+		public PresentationType presentationType = PresentationType.Unknown;
 
 #if UNITY_ANDROID
 		internal AndroidJavaObject presentationAjo;

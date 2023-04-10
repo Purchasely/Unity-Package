@@ -28,6 +28,10 @@ namespace PurchaselyRuntime
 					Debug.LogError("Presentation object could not be deserialized.");
 					return;
 				}
+
+				presentation.presentationType =
+					(PresentationType) Enum.Parse(typeof(PresentationType), presentation.type, true);
+
 #if UNITY_ANDROID
 				presentation.presentationAjo = presentationAjo;
 #endif

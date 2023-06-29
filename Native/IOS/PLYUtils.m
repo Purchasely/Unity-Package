@@ -139,10 +139,21 @@
     [dict setObject:[self planAsDictionary:subscription.plan] forKey:@"plan"];
     [dict setObject:[self productAsDictionary:subscription.product] forKey:@"product"];
     
-    [dict setObject:subscription.contentId forKey:@"contentId"];
-    [dict setObject:subscription.storeCountry forKey:@"storeCountry"];
-    [dict setObject:@(subscription.isFamilyShared) forKey:@"isFamilyShared"];
-    [dict setObject:subscription.offerIdentifier forKey:@"offerIdentifier"];
+    if (subscription.contentId != nil) {
+        [dict setObject:subscription.contentId forKey:@"contentId"];
+    }
+    
+    if (subscription.storeCountry != nil) {
+        [dict setObject:subscription.storeCountry forKey:@"storeCountry"];
+    }
+    
+    if (subscription.isFamilyShared != nil) {
+        [dict setObject:subscription.storeCountry forKey:@"isFamilyShared"];
+    }
+
+    if (subscription.isFamilyShared != nil) {
+        [dict setObject:subscription.offerIdentifier forKey:@"offerIdentifier"];
+    }
     
     [dict setObject:[NSNumber numberWithInteger:subscription.subscriptionSource] forKey:@"subscriptionSource"];
     [dict setObject:[NSNumber numberWithInteger:subscription.status] forKey:@"status"];

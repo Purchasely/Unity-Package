@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEditor.Android;
 using UnityEditor.Callbacks;
+using UnityEditor.iOS.Xcode.Extensions;
 using UnityEngine;
 #if UNITY_IOS
 using UnityEditor.iOS.Xcode;
@@ -19,20 +20,48 @@ namespace Purchasely.Editor
 			if (buildTarget == BuildTarget.iOS)
 			{
 #if UNITY_IOS
-				var projPath = PBXProject.GetPBXProjectPath(buildPath);
-				var project = new PBXProject();
-				project.ReadFromFile(projPath);
-
-				var unityFrameworkTargetGuid = project.GetUnityFrameworkTargetGuid();
-				var targetGuid = project.GetUnityMainTargetGuid();
-
-				//// Configure build settings
-				project.SetBuildProperty(unityFrameworkTargetGuid, "ENABLE_BITCODE", "NO");
-				project.SetBuildProperty(targetGuid, "ENABLE_BITCODE", "NO");
-
-				project.WriteToFile(projPath);
+				Debug.Log("Installing for iOS. Disabling Bitcode");
+				DisableBitcode(buildPath);
+				
+				Debug.Log("Installing for iOS. Adding Purchasely SDK");
+				AddPurchaselyFramework(buildPath);
 #endif
 			}
+		}
+		
+		private static void AddPurchaselyFramework(string path)
+		{
+			string projPath = PBXProject.GetPBXProjectPath(path);
+			var project = new PBXProject();
+			project.ReadFromFile(projPath);
+
+			string mainTargetGUID = project.GetUnityMainTargetGuid();
+
+			string frameworkRawName = "Purchasely";
+			string frameworkName = frameworkRawName + ".xcframework";
+			var src = Path.Combine("Pods", frameworkRawName, "Purchasely/Frameworks", frameworkName);
+			var frameworkPath = project.AddFile(src, src);
+        
+			project.AddFileToBuild(mainTargetGUID, frameworkPath);
+			project.AddFileToEmbedFrameworks(mainTargetGUID, frameworkPath);
+
+			project.WriteToFile(projPath);
+		}
+
+		private static void DisableBitcode(string buildPath)
+		{
+			var projPath = PBXProject.GetPBXProjectPath(buildPath);
+			var project = new PBXProject();
+			project.ReadFromFile(projPath);
+
+			var unityFrameworkTargetGuid = project.GetUnityFrameworkTargetGuid();
+			var targetGuid = project.GetUnityMainTargetGuid();
+
+			//// Configure build settings
+			project.SetBuildProperty(unityFrameworkTargetGuid, "ENABLE_BITCODE", "NO");
+			project.SetBuildProperty(targetGuid, "ENABLE_BITCODE", "NO");
+
+			project.WriteToFile(projPath);
 		}
 
 		public int callbackOrder => 999;

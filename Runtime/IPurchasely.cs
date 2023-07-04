@@ -15,13 +15,13 @@ namespace PurchaselyRuntime
 		void PresentContentForPlacement(string placementId, Action<ProductViewResult, Plan> onResult,
 			Action<bool> onContentLoaded, Action onCloseButtonClicked, string contentId);
 
-		void PresentContentForPresentation(string presentationId, Action<ProductViewResult, Plan> onResult,
+		void PresentPresentationWithId(string presentationId, Action<ProductViewResult, Plan> onResult,
 			Action<bool> onContentLoaded, Action onCloseButtonClicked, string contentId);
 
-		void PresentContentForProduct(string productId, Action<ProductViewResult, Plan> onResult,
+		void PresentPresentationForProduct(string productId, Action<ProductViewResult, Plan> onResult,
 			Action<bool> onContentLoaded, Action onCloseButtonClicked, string contentId, string presentationId);
 
-		void PresentContentForPlan(string planId, Action<ProductViewResult, Plan> onResult,
+		void PresentPresentationForPlan(string planId, Action<ProductViewResult, Plan> onResult,
 			Action<bool> onContentLoaded, Action onCloseButtonClicked, string contentId, string presentationId);
 
 		void SetPaywallActionInterceptor(Action<PaywallAction> onAction);

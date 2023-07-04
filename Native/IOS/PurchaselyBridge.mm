@@ -113,7 +113,7 @@ extern "C" {
         }
     }
     
-    void _purchaselyShowContentForPresentation(const char* presentationId, const char* contentId, PurchaselyBoolCallbackDelegate loadCallback, void*     loadCallbackPtr, PurchaselyVoidCallbackDelegate closeCallback, void* closeCallbackPtr, PurchaselyPresentationResultCallbackDelegate     presentationResultCallback, void* presentationResultCallbackPtr) {
+    void _purchaselyPresentPresentationWithId(const char* presentationId, const char* contentId, PurchaselyBoolCallbackDelegate loadCallback, void*     loadCallbackPtr, PurchaselyVoidCallbackDelegate closeCallback, void* closeCallbackPtr, PurchaselyPresentationResultCallbackDelegate     presentationResultCallback, void* presentationResultCallbackPtr) {
     
         auto loadedFunction = ^(PLYPresentationViewController * _Nullable constroller, BOOL loaded, NSError * _Nullable error) {
             if (error != nil) {
@@ -173,7 +173,7 @@ extern "C" {
         }
     }
     
-    void _purchaselyShowContentForPlan(const char* planId, const char* presentationId, const char* contentId, PurchaselyBoolCallbackDelegate     loadCallback, void* loadCallbackPtr, PurchaselyVoidCallbackDelegate closeCallback, void* closeCallbackPtr,     PurchaselyPresentationResultCallbackDelegate presentationResultCallback, void* presentationResultCallbackPtr) {
+    void _purchaselyPresentPresentationForPlan(const char* planId, const char* presentationId, const char* contentId, PurchaselyBoolCallbackDelegate     loadCallback, void* loadCallbackPtr, PurchaselyVoidCallbackDelegate closeCallback, void* closeCallbackPtr,     PurchaselyPresentationResultCallbackDelegate presentationResultCallback, void* presentationResultCallbackPtr) {
     
         auto loadedFunction = ^(PLYPresentationViewController * _Nullable constroller, BOOL loaded, NSError * _Nullable error) {
             if (error != nil) {
@@ -208,7 +208,7 @@ extern "C" {
         }
     }
     
-    void _purchaselyShowContentForProduct(const char* productId, const char* presentationId, const char* contentId, PurchaselyBoolCallbackDelegate     loadCallback, void* loadCallbackPtr, PurchaselyVoidCallbackDelegate closeCallback, void* closeCallbackPtr,     PurchaselyPresentationResultCallbackDelegate presentationResultCallback, void* presentationResultCallbackPtr) {
+    void _purchaselyPresentPresentationForProduct(const char* productId, const char* presentationId, const char* contentId, PurchaselyBoolCallbackDelegate     loadCallback, void* loadCallbackPtr, PurchaselyVoidCallbackDelegate closeCallback, void* closeCallbackPtr,     PurchaselyPresentationResultCallbackDelegate presentationResultCallback, void* presentationResultCallbackPtr) {
     
         auto loadedFunction = ^(PLYPresentationViewController * _Nullable constroller, BOOL loaded, NSError * _Nullable error) {
             if (error != nil) {

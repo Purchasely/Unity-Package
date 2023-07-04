@@ -73,7 +73,7 @@ namespace PurchaselyRuntime
 				IosUtils.PresentationResultCallback, resultCallback.GetPointer());
 		}
 
-		public void PresentContentForPresentation(string presentationId, Action<ProductViewResult, Plan> onResult,
+		public void PresentPresentationWithId(string presentationId, Action<ProductViewResult, Plan> onResult,
 			Action<bool> onContentLoaded,
 			Action onCloseButtonClicked, string contentId)
 		{
@@ -103,7 +103,7 @@ namespace PurchaselyRuntime
 				IosUtils.PresentationResultCallback, resultCallback.GetPointer());
 		}
 
-		public void PresentContentForProduct(string productId, Action<ProductViewResult, Plan> onResult,
+		public void PresentPresentationForProduct(string productId, Action<ProductViewResult, Plan> onResult,
 			Action<bool> onContentLoaded, Action onCloseButtonClicked,
 			string contentId, string presentationId)
 		{
@@ -127,13 +127,13 @@ namespace PurchaselyRuntime
 					AsyncCallbackHelper.Instance.Queue(onCloseButtonClicked);
 			});
 
-			_purchaselyShowContentForProduct(productId, presentationId, contentId,
+			_purchaselyPresentPresentationForProduct(productId, presentationId, contentId,
 				IosUtils.BoolCallback, contentLoadCallback.GetPointer(),
 				IosUtils.VoidCallback, closeButtonCallback.GetPointer(),
 				IosUtils.PresentationResultCallback, resultCallback.GetPointer());
 		}
 
-		public void PresentContentForPlan(string planId, Action<ProductViewResult, Plan> onResult,
+		public void PresentPresentationForPlan(string planId, Action<ProductViewResult, Plan> onResult,
 			Action<bool> onContentLoaded, Action onCloseButtonClicked,
 			string contentId, string presentationId)
 		{
@@ -157,7 +157,7 @@ namespace PurchaselyRuntime
 					AsyncCallbackHelper.Instance.Queue(onCloseButtonClicked);
 			});
 
-			_purchaselyShowContentForPlan(planId, presentationId, contentId,
+			_purchaselyPresentPresentationForPlan(planId, presentationId, contentId,
 				IosUtils.BoolCallback, contentLoadCallback.GetPointer(),
 				IosUtils.VoidCallback, closeButtonCallback.GetPointer(),
 				IosUtils.PresentationResultCallback, resultCallback.GetPointer());

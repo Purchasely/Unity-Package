@@ -97,7 +97,7 @@ namespace PurchaselyRuntime
 					AsyncCallbackHelper.Instance.Queue(onCloseButtonClicked);
 			});
 
-			_purchaselyShowContentForPresentation(presentationId, contentId,
+			_purchaselyPresentPresentationWithId(presentationId, contentId,
 				IosUtils.BoolCallback, contentLoadCallback.GetPointer(),
 				IosUtils.VoidCallback, closeButtonCallback.GetPointer(),
 				IosUtils.PresentationResultCallback, resultCallback.GetPointer());
@@ -442,7 +442,7 @@ namespace PurchaselyRuntime
 		static extern void _purchaselySetIsReadyToPurchase(bool ready);
 
 		[DllImport("__Internal")]
-		static extern void _purchaselyShowContentForPresentation(string presentationId, string
+		static extern void _purchaselyPresentPresentationWithId(string presentationId, string
 				contentId, IosUtils.BoolCallbackDelegate loadCallback, IntPtr
 				loadCallbackPtr, IosUtils.VoidCallbackDelegate closeCallback, IntPtr closeCallbackPtr,
 			IosUtils.PresentationResultCallbackDelegate presentationResultCallback, IntPtr
@@ -456,14 +456,14 @@ namespace PurchaselyRuntime
 			IntPtr presentationResultCallbackPtr);
 
 		[DllImport("__Internal")]
-		static extern void _purchaselyShowContentForPlan(string planId, string presentationId, string
+		static extern void _purchaselyPresentPresentationForPlan(string planId, string presentationId, string
 				contentId, IosUtils.BoolCallbackDelegate loadCallback, IntPtr
 				loadCallbackPtr, IosUtils.VoidCallbackDelegate closeCallback, IntPtr closeCallbackPtr,
 			IosUtils.PresentationResultCallbackDelegate presentationResultCallback, IntPtr
 				presentationResultCallbackPtr);
 
 		[DllImport("__Internal")]
-		static extern void _purchaselyShowContentForProduct(string productId, string presentationId, string
+		static extern void _purchaselyPresentPresentationForProduct(string productId, string presentationId, string
 				contentId, IosUtils.BoolCallbackDelegate loadCallback, IntPtr
 				loadCallbackPtr, IosUtils.VoidCallbackDelegate closeCallback, IntPtr closeCallbackPtr,
 			IosUtils.PresentationResultCallbackDelegate presentationResultCallback, IntPtr

@@ -154,7 +154,7 @@ public class PurchaselyDemoController : MonoBehaviour
 
 	private void OnPresentPresentationClicked()
 	{
-		_purchasely.PresentContentForPresentation(presentationIdInputPresentation.text,
+		_purchasely.PresentPresentationWithId(presentationIdInputPresentation.text,
 			OnPresentationResult,
 			OnPresentationContentLoaded,
 			OnPresentationContentClosed,
@@ -163,7 +163,7 @@ public class PurchaselyDemoController : MonoBehaviour
 
 	private void OnPresentProductClicked()
 	{
-		_purchasely.PresentContentForProduct(productIdInput.text,
+		_purchasely.PresentPresentationForProduct(productIdInput.text,
 			OnPresentationResult,
 			OnPresentationContentLoaded,
 			OnPresentationContentClosed,
@@ -173,7 +173,7 @@ public class PurchaselyDemoController : MonoBehaviour
 
 	private void OnPresentPlanClicked()
 	{
-		_purchasely.PresentContentForPlan(planIdInput.text,
+		_purchasely.PresentPresentationForPlan(planIdInput.text,
 			OnPresentationResult,
 			OnPresentationContentLoaded,
 			OnPresentationContentClosed,
@@ -319,7 +319,7 @@ public class PurchaselyDemoController : MonoBehaviour
 		{
 			case PresentationType.Normal:
 			case PresentationType.Fallback:
-				_purchasely.PresentContentForPresentation(presentation.id,
+				_purchasely.PresentPresentationWithId(presentation.id,
 					OnPresentationResult,
 					OnPresentationContentLoaded,
 					OnPresentationContentClosed);

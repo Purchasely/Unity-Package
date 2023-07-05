@@ -105,7 +105,7 @@ namespace PurchaselyRuntime
 		/// <param name="onContentLoaded"> Optional: callback to be invoked when the content is loaded. </param>
 		/// <param name="onCloseButtonClicked"> Optional: callback to be invoked when the user taps the close button. </param>
 		/// <param name="contentId"> Optional: content ID. </param>
-		public void PresentContentForPresentation(string presentationId,
+		public void PresentPresentationWithId(string presentationId,
 			Action<ProductViewResult, Plan> onResult, Action<bool> onContentLoaded = null,
 			Action onCloseButtonClicked = null, string contentId = "")
 		{
@@ -118,7 +118,7 @@ namespace PurchaselyRuntime
 				return;
 			}
 
-			_implementation.PresentContentForPresentation(presentationId, onResult, onContentLoaded,
+			_implementation.PresentPresentationWithId(presentationId, onResult, onContentLoaded,
 				onCloseButtonClicked, contentId);
 		}
 
@@ -131,7 +131,7 @@ namespace PurchaselyRuntime
 		/// <param name="onCloseButtonClicked"> Optional: callback to be invoked when the user taps the close button. </param>
 		/// <param name="contentId"> Optional: content ID. </param>
 		/// <param name="presentationId"> Optional: presentation ID. </param>
-		public void PresentContentForProduct(string productId,
+		public void PresentPresentationForProduct(string productId,
 			Action<ProductViewResult, Plan> onResult, Action<bool> onContentLoaded = null,
 			Action onCloseButtonClicked = null, string contentId = "", string presentationId = "")
 		{
@@ -144,7 +144,7 @@ namespace PurchaselyRuntime
 				return;
 			}
 
-			_implementation.PresentContentForProduct(productId, onResult, onContentLoaded,
+			_implementation.PresentPresentationForProduct(productId, onResult, onContentLoaded,
 				onCloseButtonClicked, contentId, presentationId);
 		}
 
@@ -157,7 +157,7 @@ namespace PurchaselyRuntime
 		/// <param name="onCloseButtonClicked"> Optional: callback to be invoked when the user taps the close button. </param>
 		/// <param name="contentId"> Optional: content ID. </param>
 		/// <param name="presentationId"> Optional: presentation ID. </param>
-		public void PresentContentForPlan(string planId,
+		public void PresentPresentationForPlan(string planId,
 			Action<ProductViewResult, Plan> onResult, Action<bool> onContentLoaded = null,
 			Action onCloseButtonClicked = null, string contentId = "", string presentationId = "")
 		{
@@ -170,7 +170,7 @@ namespace PurchaselyRuntime
 				return;
 			}
 
-			_implementation.PresentContentForPlan(planId, onResult, onContentLoaded,
+			_implementation.PresentPresentationForPlan(planId, onResult, onContentLoaded,
 				onCloseButtonClicked, contentId, presentationId);
 		}
 

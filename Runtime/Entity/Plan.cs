@@ -8,8 +8,8 @@
 		public bool isEligibleForIntroOffer;
 		public bool hasFreeTrial;
 		public int level;
-		public int amount;
-		public int introAmount;
+		public float amount;
+		public float introAmount;
 		public string name;
 		public string storeProductId;
 		public string type;

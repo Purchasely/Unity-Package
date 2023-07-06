@@ -145,7 +145,7 @@ public class PurchaselyDemoController : MonoBehaviour
 
 	private void OnPresentPlacementClicked()
 	{
-		_purchasely.PresentContentForPlacement(placementIdInput.text,
+		_purchasely.PresentPresentationForPlacement(placementIdInput.text,
 			OnPresentationResult,
 			OnPresentationContentLoaded,
 			OnPresentationContentClosed,

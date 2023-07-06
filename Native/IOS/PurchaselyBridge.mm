@@ -143,7 +143,7 @@ extern "C" {
         }
     }
     
-    void _purchaselyShowContentForPlacement(const char* placementId, const char* contentId, PurchaselyBoolCallbackDelegate loadCallback, void*     loadCallbackPtr, PurchaselyVoidCallbackDelegate closeCallback, void* closeCallbackPtr, PurchaselyPresentationResultCallbackDelegate     presentationResultCallback, void* presentationResultCallbackPtr) {
+    void _purchaselyPresentPresentationForPlacement(const char* placementId, const char* contentId, PurchaselyBoolCallbackDelegate loadCallback, void*     loadCallbackPtr, PurchaselyVoidCallbackDelegate closeCallback, void* closeCallbackPtr, PurchaselyPresentationResultCallbackDelegate     presentationResultCallback, void* presentationResultCallbackPtr) {
     
         auto loadedFunction = ^(PLYPresentationViewController * _Nullable constroller, BOOL loaded, NSError * _Nullable error) {
             if (error != nil) {

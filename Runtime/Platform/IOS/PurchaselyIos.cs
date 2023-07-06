@@ -44,7 +44,7 @@ namespace PurchaselyRuntime
 			_purchaselySetIsReadyToPurchase(ready);
 		}
 
-		public void PresentContentForPlacement(string placementId, Action<ProductViewResult, Plan> onResult,
+		public void PresentPresentationForPlacement(string placementId, Action<ProductViewResult, Plan> onResult,
 			Action<bool> onContentLoaded, Action onCloseButtonClicked, string contentId)
 		{
 			var resultCallback = new Action<int, string>((resultInt, planJson) =>
@@ -67,7 +67,7 @@ namespace PurchaselyRuntime
 					AsyncCallbackHelper.Instance.Queue(onCloseButtonClicked);
 			});
 
-			_purchaselyShowContentForPlacement(placementId, contentId,
+			_purchaselyPresentPresentationForPlacement(placementId, contentId,
 				IosUtils.BoolCallback, contentLoadCallback.GetPointer(),
 				IosUtils.VoidCallback, closeButtonCallback.GetPointer(),
 				IosUtils.PresentationResultCallback, resultCallback.GetPointer());
@@ -449,7 +449,7 @@ namespace PurchaselyRuntime
 				presentationResultCallbackPtr);
 
 		[DllImport("__Internal")]
-		static extern void _purchaselyShowContentForPlacement(string placementId, string contentId,
+		static extern void _purchaselyPresentPresentationForPlacement(string placementId, string contentId,
 			IosUtils.BoolCallbackDelegate loadCallback, IntPtr loadCallbackPtr,
 			IosUtils.VoidCallbackDelegate closeCallback, IntPtr closeCallbackPtr,
 			IosUtils.PresentationResultCallbackDelegate presentationResultCallback,

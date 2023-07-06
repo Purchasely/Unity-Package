@@ -12,7 +12,7 @@ namespace PurchaselyRuntime
 
 		void SetIsReadyToPurchase(bool ready);
 
-		void PresentContentForPlacement(string placementId, Action<ProductViewResult, Plan> onResult,
+		void PresentPresentationForPlacement(string placementId, Action<ProductViewResult, Plan> onResult,
 			Action<bool> onContentLoaded, Action onCloseButtonClicked, string contentId);
 
 		void PresentPresentationWithId(string presentationId, Action<ProductViewResult, Plan> onResult,

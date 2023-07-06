@@ -93,7 +93,7 @@ namespace PurchaselyRuntime
 				return;
 			}
 
-			_implementation.PresentContentForPlacement(placementId, onResult, onContentLoaded, onCloseButtonClicked,
+			_implementation.PresentPresentationForPlacement(placementId, onResult, onContentLoaded, onCloseButtonClicked,
 				contentId);
 		}
 

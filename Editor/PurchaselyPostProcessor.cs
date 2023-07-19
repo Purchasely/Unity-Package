@@ -4,7 +4,6 @@ using System.Linq;
 using UnityEditor;
 using UnityEditor.Android;
 using UnityEditor.Callbacks;
-using UnityEditor.iOS.Xcode.Extensions;
 using UnityEngine;
 #if UNITY_IOS
 using UnityEditor.iOS.Xcode;
@@ -28,7 +27,8 @@ namespace Purchasely.Editor
 #endif
 			}
 		}
-		
+
+#if UNITY_IOS
 		private static void AddPurchaselyFramework(string path)
 		{
 			string projPath = PBXProject.GetPBXProjectPath(path);
@@ -63,7 +63,7 @@ namespace Purchasely.Editor
 
 			project.WriteToFile(projPath);
 		}
-
+#endif
 		public int callbackOrder => 999;
 
 		public void OnPostGenerateGradleAndroidProject(string path)

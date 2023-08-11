@@ -35,7 +35,7 @@ namespace PurchaselyRuntime
 			_javaBridge?.Call("setIsReadyToPurchase", ready);
 		}
 
-		public void PresentContentForPlacement(string placementId, Action<ProductViewResult, Plan> onResult,
+		public void PresentPresentationForPlacement(string placementId, Action<ProductViewResult, Plan> onResult,
 			Action<bool> onContentLoaded, Action onCloseButtonClicked, string contentId)
 		{
 			_javaBridge?.Call("showContentForPlacement", AndroidUtils.Activity, placementId,
@@ -50,14 +50,14 @@ namespace PurchaselyRuntime
 				new PlacementContentProxy(onContentLoaded, onCloseButtonClicked, onResult), contentId);
 		}
 
-		public void PresentContentForProduct(string productId, Action<ProductViewResult, Plan> onResult,
+		public void PresentPresentationForProduct(string productId, Action<ProductViewResult, Plan> onResult,
 			Action<bool> onContentLoaded, Action onCloseButtonClicked, string contentId, string presentationId)
 		{
 			_javaBridge?.Call("showContentForProduct", AndroidUtils.Activity, productId,
 				new PlacementContentProxy(onContentLoaded, onCloseButtonClicked, onResult), contentId, presentationId);
 		}
 
-		public void PresentContentForPlan(string planId, Action<ProductViewResult, Plan> onResult,
+		public void PresentPresentationForPlan(string planId, Action<ProductViewResult, Plan> onResult,
 			Action<bool> onContentLoaded, Action onCloseButtonClicked, string contentId, string presentationId)
 		{
 			_javaBridge?.Call("showContentForPlan", AndroidUtils.Activity, planId,
@@ -229,7 +229,14 @@ namespace PurchaselyRuntime
 			_javaBridge?.Call("showContentForPresentation", AndroidUtils.Activity, 
 				presentation.presentationAjo, new PlacementContentProxy(onContentLoaded, onCloseButtonClicked, onResult));
 		}
-	}
+
+        public void PresentPresentationWithId(string presentationId, Action<ProductViewResult, Plan> onResult,
+			Action<bool> onContentLoaded, Action onCloseButtonClicked, string contentId)
+        {
+	        _javaBridge?.Call("showContentForPresentation", AndroidUtils.Activity, presentationId,
+		        new PlacementContentProxy(onContentLoaded, onCloseButtonClicked, onResult), contentId);
+        }
+    }
 }
 
 #endif

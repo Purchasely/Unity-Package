@@ -74,14 +74,14 @@ namespace PurchaselyRuntime
 		}
 
 		/// <summary>
-		/// Show content for a specific placement.
+		/// Show presentation for a specific placement.
 		/// </summary>
 		/// <param name="placementId"> Placement to show. </param>
 		/// <param name="onResult"> Callback to be invoked after user action. </param>
 		/// <param name="onContentLoaded"> Optional: callback to be invoked when the content is loaded. </param>
 		/// <param name="onCloseButtonClicked"> Optional: callback to be invoked when the user taps the close button. </param>
 		/// <param name="contentId"> Optional: content ID. </param>
-		public void PresentContentForPlacement(string placementId, Action<ProductViewResult, Plan> onResult,
+		public void PresentPresentationForPlacement(string placementId, Action<ProductViewResult, Plan> onResult,
 			Action<bool> onContentLoaded = null, Action onCloseButtonClicked = null, string contentId = "")
 		{
 			if (string.IsNullOrEmpty(contentId))
@@ -123,7 +123,7 @@ namespace PurchaselyRuntime
 		}
 
 		/// <summary>
-		/// Show content for a specific presentation.
+		/// Show presentation for a specific product.
 		/// </summary>
 		/// <param name="productId"> Product to show. </param>
 		/// <param name="onResult"> Callback to be invoked after user action. </param>
@@ -149,7 +149,7 @@ namespace PurchaselyRuntime
 		}
 
 		/// <summary>
-		/// Show content for a specific plan.
+		/// Show presentation for a specific plan.
 		/// </summary>
 		/// <param name="planId"> Plan to show. </param>
 		/// <param name="onResult"> Callback to be invoked after user action. </param>

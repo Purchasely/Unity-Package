@@ -4,7 +4,6 @@ using System.Linq;
 using UnityEditor;
 using UnityEditor.Android;
 using UnityEditor.Callbacks;
-using UnityEditor.iOS.Xcode.Extensions;
 using UnityEngine;
 #if UNITY_IOS
 using UnityEditor.iOS.Xcode;
@@ -28,7 +27,8 @@ namespace Purchasely.Editor
 #endif
 			}
 		}
-		
+
+#if UNITY_IOS
 		private static void AddPurchaselyFramework(string path)
 		{
 			string projPath = PBXProject.GetPBXProjectPath(path);
@@ -63,7 +63,7 @@ namespace Purchasely.Editor
 
 			project.WriteToFile(projPath);
 		}
-
+#endif
 		public int callbackOrder => 999;
 
 		public void OnPostGenerateGradleAndroidProject(string path)
@@ -88,7 +88,7 @@ namespace Purchasely.Editor
 					if (dependenciesIndex >= 0)
 					{
 						buildGradleText = buildGradleText.Insert(dependenciesIndex + DEPENDENCIES.Length,
-							"\n\timplementation \'io.purchasely:core:3.6.3\'\n\timplementation \'io.purchasely:player:3.6.3\'\n\timplementation \'io.purchasely:google-play:3.6.3\'\n");
+							"\n\timplementation \'io.purchasely:core:3.7.3\'\n\timplementation \'io.purchasely:player:3.7.3\'\n\timplementation \'io.purchasely:google-play:3.7.3\'\n");
 						File.WriteAllText(buildGradleFilePath, buildGradleText);
 						Debug.Log("Purchasely dependencies were successfully added to build.gradle file.");
 					}

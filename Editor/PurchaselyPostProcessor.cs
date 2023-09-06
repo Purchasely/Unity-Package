@@ -7,6 +7,7 @@ using UnityEditor.Callbacks;
 using UnityEngine;
 #if UNITY_IOS
 using UnityEditor.iOS.Xcode;
+using UnityEditor.iOS.Xcode.Extensions;
 #endif
 
 namespace Purchasely.Editor

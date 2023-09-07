@@ -44,7 +44,9 @@ namespace Purchasely.Editor
 			var frameworkPath = project.AddFile(src, src);
         
 			project.AddFileToBuild(mainTargetGUID, frameworkPath);
-			project.AddFileToEmbedFrameworks(mainTargetGUID, frameworkPath);
+			
+			// Appears to be useless
+			// project.AddFileToEmbedFrameworks(mainTargetGUID, frameworkPath);
 
 			project.WriteToFile(projPath);
 		}

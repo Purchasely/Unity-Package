@@ -91,7 +91,7 @@ namespace Purchasely.Editor
 					if (dependenciesIndex >= 0)
 					{
 						buildGradleText = buildGradleText.Insert(dependenciesIndex + DEPENDENCIES.Length,
-							"\n\timplementation \'io.purchasely:core:3.7.3\'\n\timplementation \'io.purchasely:google-play:3.7.3\'\n");
+							"\n\timplementation \'io.purchasely:core:3.7.5\'\n\timplementation \'io.purchasely:google-play:3.7.5\'\n");
 						File.WriteAllText(buildGradleFilePath, buildGradleText);
 						Debug.Log("Purchasely dependencies were successfully added to build.gradle file.");
 					}

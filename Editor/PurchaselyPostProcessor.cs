@@ -66,50 +66,12 @@ namespace Purchasely.Editor
 
 			project.WriteToFile(projPath);
 		}
-#endif
+#endift
 		public int callbackOrder => 999;
 
 		public void OnPostGenerateGradleAndroidProject(string path)
 		{
-			AddPurchaselyDependencies(path);
 			AddUseAndroidX(path);
-		}
-
-		private void AddPurchaselyDependencies(string builtProjectPath)
-		{
-			const string ERROR_MESSAGE = "Could not add Purchasely dependencies to build.gradle file.";
-
-			var buildGradleFilePath = Path.Combine(builtProjectPath, "build.gradle");
-			if (File.Exists(buildGradleFilePath))
-			{
-				try
-				{
-					var buildGradleText = File.ReadAllText(buildGradleFilePath);
-
-					const string DEPENDENCIES = "dependencies {";
-					var dependenciesIndex = buildGradleText.IndexOf(DEPENDENCIES, StringComparison.InvariantCulture);
-					if (dependenciesIndex >= 0)
-					{
-						buildGradleText = buildGradleText.Insert(dependenciesIndex + DEPENDENCIES.Length,
-							"\n\timplementation \'io.purchasely:core:3.7.5\'\n\timplementation \'io.purchasely:google-play:3.7.5\'\n");
-						File.WriteAllText(buildGradleFilePath, buildGradleText);
-						Debug.Log("Purchasely dependencies were successfully added to build.gradle file.");
-					}
-					else
-					{
-						Debug.LogError(ERROR_MESSAGE);
-					}
-				}
-				catch (Exception e)
-				{
-					Debug.LogError(ERROR_MESSAGE);
-					Debug.LogException(e);
-				}
-			}
-			else
-			{
-				Debug.LogError(ERROR_MESSAGE);
-			}
 		}
 
 		private void AddUseAndroidX(string builtProjectPath)

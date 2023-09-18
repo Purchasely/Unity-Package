@@ -22,34 +22,11 @@ namespace Purchasely.Editor
 #if UNITY_IOS
 				Debug.Log("Installing for iOS. Disabling Bitcode");
 				DisableBitcode(buildPath);
-				
-				Debug.Log("Installing for iOS. Adding Purchasely SDK");
-				AddPurchaselyFramework(buildPath);
 #endif
 			}
 		}
 
 #if UNITY_IOS
-		private static void AddPurchaselyFramework(string path)
-		{
-			string projPath = PBXProject.GetPBXProjectPath(path);
-			var project = new PBXProject();
-			project.ReadFromFile(projPath);
-
-			string mainTargetGUID = project.GetUnityMainTargetGuid();
-
-			string frameworkRawName = "Purchasely";
-			string frameworkName = frameworkRawName + ".xcframework";
-			var src = Path.Combine("Pods", frameworkRawName, "Purchasely/Frameworks", frameworkName);
-			var frameworkPath = project.AddFile(src, src);
-        
-			project.AddFileToBuild(mainTargetGUID, frameworkPath);
-			
-			// Appears to be useless
-			// project.AddFileToEmbedFrameworks(mainTargetGUID, frameworkPath);
-
-			project.WriteToFile(projPath);
-		}
 
 		private static void DisableBitcode(string buildPath)
 		{

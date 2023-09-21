@@ -346,7 +346,6 @@ extern "C" {
         interceptorFunction = ^(enum PLYPresentationAction action, PLYPresentationActionParameters * _Nullable parameters,     PLYPresentationInfo * _Nullable infos, void (^ _Nonnull actionHandler)(BOOL)) {
             
             onProcessActionHandler = actionHandler;
-            closePaywall();
             interceptorDelegate.actionCallback([PLYUtils actionToJson:action parameters:parameters presentationInfos:infos]);
         };
         

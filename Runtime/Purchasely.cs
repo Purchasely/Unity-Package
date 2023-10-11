@@ -27,7 +27,7 @@ namespace PurchaselyRuntime
 		/// <param name="onEventReceived"> Callback to be invoked when any events happen in the SDK. You should implement it at least to know when the purchase is successful.</param>
 		/// <exception cref="ArgumentException"> Is thrown if the SDK is not configured in the Editor. In the Unity Editor go to Window->Purchasely, then provide your API key and other required data.</exception>
 		public Purchasely(string userId, bool readyToPurchase, LogLevel logLevel, RunningMode runningMode,
-			Action<bool, string> onStartCompleted, Action<Event> onEventReceived)
+			bool storekit1, Action<bool, string> onStartCompleted, Action<Event> onEventReceived)
 		{
 #if UNITY_ANDROID && !UNITY_EDITOR
 			_implementation = new PurchaselyAndroid();
@@ -46,7 +46,7 @@ namespace PurchaselyRuntime
 			}
 
 			_implementation.Init(settings.ApiKey, userId, readyToPurchase, (int) logLevel,
-				(int) runningMode, onStartCompleted, onEventReceived);
+				(int) runningMode, storekit1, onStartCompleted, onEventReceived);
 		}
 
 		/// <summary>
@@ -68,7 +68,7 @@ namespace PurchaselyRuntime
 		/// Call this if you have previously passed `readyToPurchase = false` in constructor.
 		/// </summary>
 		/// <param name="ready"> Whether the application is ready to present the paywall and make purchases. </param>
-		public void SetReadyToPurchase(bool ready)
+		public void SetIsReadyToOpenDeeplink(bool ready)
 		{
 			_implementation?.SetIsReadyToPurchase(ready);
 		}
@@ -295,8 +295,11 @@ namespace PurchaselyRuntime
 		/// <param name="onSuccess"> Callback with the payload after successful purchase.</param>
 		/// <param name="onError"> Callback with an error. </param>
 		/// <param name="contentId"> Optional: content ID. </param>
-		public void Purchase(string planId, Action<Plan> onSuccess, Action<string> onError,
-			string contentId = "")
+		public void Purchase(string planId,
+			string offerId = "", 
+			string contentId = "",
+			Action<Plan> onSuccess,
+			Action<string> onError)
 		{
 			if (_implementation == null)
 			{
@@ -304,13 +307,13 @@ namespace PurchaselyRuntime
 				return;
 			}
 
-			_implementation.PurchaseWithPlanId(planId, onSuccess, onError, contentId);
+			_implementation.PurchaseWithPlanId(planId, offerId, contentId, onSuccess, onError);
 		}
 
 		/// <summary>
 		/// Handle the deep link URL if your application was open via URL, and you have set up the deep link interception.
 		/// </summary>
-		public bool HandleDeepLinkUrl(string url)
+		public bool IsDeeplinkHandled(string url)
 		{
 			return _implementation?.HandleDeepLinkUrl(url) ?? false;
 		}
@@ -470,6 +473,33 @@ namespace PurchaselyRuntime
 			Action<bool> onContentLoaded = null, Action onCloseButtonClicked = null)
 		{
 			_implementation?.PresentContentForPresentation(presentation, onResult, onContentLoaded, onCloseButtonClicked);
+		}
+
+		/// <summary>
+		/// Sign promotional offer using StoreKit 
+		/// </summary>
+		void SignPromotionalOffer(string storeOfferId, string storeProductId, Action<Signature> onSuccess,
+			Action<string> onError)
+		{
+			_implementation?.SignPromotionalOffer(storeOfferId, storeProductId, onSuccess, onError);
+		}
+		
+		/// <summary>
+		/// IsAnonymous
+		/// </summary>
+		void IsAnonymous(Action<bool> onSuccess,
+			Action<string> onError)
+		{
+			_implementation?.IsAnonymous(onSuccess, onError);
+		}
+
+		/// <summary>
+		/// IsEligibileForIntroOffer
+		/// </summary>
+		void IsEligibileForIntroOffer(string planVendorId, Action<bool> onSuccess,
+			Action<string> onError)
+		{
+			_implementation?.IsEligibileForIntroOffer(planVendorId, onSuccess, onError);
 		}
 	}
 }

@@ -1,4 +1,4 @@
-﻿#if UNITY_IOS && !UNITY_EDITOR
+﻿//#if UNITY_IOS && !UNITY_EDITOR
 
 using System;
 using System.Collections.Generic;
@@ -266,7 +266,11 @@ namespace PurchaselyRuntime
 				IosUtils.StringCallback, onError.GetPointer());
 		}
 
-		public void PurchaseWithPlanId(string planId, Action<Plan> onSuccess, Action<string> onError, string contentId)
+		public void PurchaseWithPlanId(string planId,
+			string offerId,
+			string contentId,
+			Action<Plan> onSuccess,
+			Action<string> onError)
 		{
 			var planCallback = new Action<string>(planJson =>
 			{
@@ -276,7 +280,7 @@ namespace PurchaselyRuntime
 				});
 			});
 
-			_purchaselyPurchase(planId, IosUtils.StringCallback, planCallback.GetPointer(),
+			_purchaselyPurchase(planId, offerId, IosUtils.StringCallback, planCallback.GetPointer(),
 				IosUtils.StringCallback, onError.GetPointer());
 		}
 

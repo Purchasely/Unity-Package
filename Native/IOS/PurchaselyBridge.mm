@@ -251,9 +251,16 @@ extern "C" {
         [Purchasely showController:navCtrl type: PLYUIControllerTypeSubscriptionList];
     }
     
-    void _purchaselyPurchase(const char* planId, PurchaselyStringCallbackDelegate successCallback, void* successCallbackPtr,     PurchaselyStringCallbackDelegate errorCallback, void* errorCallbackPtr) {
+    void _purchaselyPurchase(const char* planId, const char* offerId,
+    PurchaselyStringCallbackDelegate successCallback,
+    void* successCallbackPtr,
+    PurchaselyStringCallbackDelegate errorCallback,
+    void* errorCallbackPtr) {
+      
         NSString *planIdStr = [PLYUtils createNSStringFrom:planId];
+        NSString *offerIdStr = [PLYUtils createNSStringFrom:offerId];
     
+    // TODO
         [Purchasely planWith:planIdStr success:^(PLYPlan * _Nonnull plan) {
             [Purchasely purchaseWithPlan:plan success:^{
                 successCallback(successCallbackPtr, [PLYUtils planAsJson:plan]);

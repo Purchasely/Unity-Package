@@ -311,9 +311,14 @@
         if (params.presentation != nil) {
             [paramsResult setObject:params.presentation forKey:@"presentation"];
         }
+        if (params.promoOffer != nil) {
+            NSMutableDictionary<NSString *, NSObject *> *promoOffer = [NSMutableDictionary new];
+            [promoOffer setObject:params.promoOffer.vendorId forKey:@"vendorId"];
+            [promoOffer setObject:params.promoOffer.storeOfferId forKey:@"storeOfferId"];
+            [paramsResult setObject:promoOffer forKey:@"offer"];
+        }
         [actionInterceptorResult setObject:paramsResult forKey:@"parameters"];
     }
-
     return actionInterceptorResult;
 }
 
@@ -338,7 +343,12 @@
 	if (presentation.abTestVariantId != nil)
 		[dict setObject:presentation.id forKey:@"abTestVariantId"];
 	
+	//TO DO: PresentationPlan list
 	[dict setObject:presentation.plans forKey:@"plans"];
+	
+	//TODO: Metadata
+	if (presentation.metadata != nil)
+	    //TO stuff
 	
 	NSString* typeString = @"unknown";
 

@@ -22,7 +22,7 @@ namespace PurchaselyRuntime
 				AndroidUtils.Activity,
 				apiKey,
 				userId,
-				readyToPurchase,
+				readyToOpenDeeplink,
 				(int) Store.Google,
 				logLevel,
 				runningMode,
@@ -135,17 +135,32 @@ namespace PurchaselyRuntime
 			_javaBridge?.Call("allProducts", new JsonErrorProxy(successAction, onError));
 		}
 
-		public void PurchaseWithPlanId(string planId, Action<Plan> onSuccess, Action<string> onError, string contentId)
+		public void Purchase(string planId, Action<Plan> onSuccess, Action<string> onError, string offerId, string contentId)
 		{
 			var successAction = new Action<string>(json => { onSuccess(SerializationUtils.Deserialize<Plan>(json)); });
 
-			_javaBridge?.Call("purchaseWithPlanId", AndroidUtils.Activity, planId, contentId,
+			_javaBridge?.Call("purchase", AndroidUtils.Activity, planId, offerId, contentId,
 				new JsonErrorProxy(successAction, onError));
 		}
 
-		public bool HandleDeepLinkUrl(string url)
+		public bool IsDeeplinkHandled(string url)
 		{
-			return _javaBridge?.Call<bool>("handleDeepLinkUrl", url) ?? false;
+			return _javaBridge?.Call<bool>("isDeeplinkHandled", url) ?? false;
+		}
+
+		public bool IsAnonymous()
+		{
+			return _javaBridge?.Call<bool>("isAnonymous") ?? false;
+		}
+
+		public void SignPromotionalOffer(string storeOfferId, string storeProductId, Action<PromotionalOfferSignature> onSuccess, Action<string> onError)
+		{
+
+		}
+
+		public bool IsEligibleForIntroOffer(string planVendorId)
+		{
+			return _javaBridge?.Call<bool>("isEligibleForIntroOffer", planVendorId) ?? false;
 		}
 
 		public void GetUserSubscriptions(Action<List<SubscriptionData>> onSuccess, Action<string> onError)
@@ -211,14 +226,14 @@ namespace PurchaselyRuntime
 		public void FetchPresentation(string presentationId, Action<Presentation> onSuccess, Action<string> onError,
 			string contentId)
 		{
-			_javaBridge?.Call("fetchPresentation", AndroidUtils.Activity, presentationId, contentId, 
+			_javaBridge?.Call("fetchPresentation", presentationId, contentId,
 				new FetchPresentationProxy(onSuccess, onError));
 		}
 
 		public void FetchPresentationForPlacement(string placementId, Action<Presentation> onSuccess, 
 			Action<string> onError, string contentId)
 		{
-			_javaBridge?.Call("fetchPresentationForPlacement", AndroidUtils.Activity, placementId, 
+			_javaBridge?.Call("fetchPresentationForPlacement", placementId,
 				contentId, new FetchPresentationProxy(onSuccess, onError));
 		}
 

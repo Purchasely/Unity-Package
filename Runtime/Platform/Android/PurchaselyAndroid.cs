@@ -10,8 +10,13 @@ namespace PurchaselyRuntime
 	{
 		private AndroidJavaObject _javaBridge;
 
-		public void Init(string apiKey, string userId, bool readyToPurchase, int logLevel,
-			int runningMode, Action<bool, string> onStartCompleted, Action<Event> onEventReceived)
+		public void Init(string apiKey, string userId, bool readyToOpenDeeplink, int logLevel, int runningMode,
+			Action<bool, string> onStartCompleted, Action<Event> onEventReceived)
+		{
+
+		}
+		public void Init(string apiKey, string userId, bool readyToOpenDeeplink, int logLevel,
+			int runningMode, bool storekit1, Action<bool, string> onStartCompleted)
 		{
 			_javaBridge = new AndroidJavaObject("com.purchasely.unity.PurchaselyBridge",
 				AndroidUtils.Activity,
@@ -21,8 +26,12 @@ namespace PurchaselyRuntime
 				(int) Store.Google,
 				logLevel,
 				runningMode,
-				new StartProxy(onStartCompleted),
-				new EventProxy(onEventReceived));
+				new StartProxy(onStartCompleted));
+		}
+
+		public void SetIsReadyToOpenDeeplink(bool ready)
+		{
+
 		}
 
 		public void UserLogin(string userId, Action<bool> onCompleted)

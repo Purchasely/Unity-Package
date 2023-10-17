@@ -260,6 +260,18 @@ namespace PurchaselyRuntime
 	        _javaBridge?.Call("showContentForPresentation", AndroidUtils.Activity, presentationId,
 		        new PlacementContentProxy(onContentLoaded, onCloseButtonClicked, onResult), contentId);
         }
+
+        public void ShowPresentation() {
+            _javaBridge?.Call("showPresentation");
+        }
+
+        public void HidePresentation() {
+            _javaBridge?.Call("hidePresentation");
+        }
+
+        public void ClosePresentation() {
+            _javaBridge?.Call("closePresentation");
+        }
     }
 }
 

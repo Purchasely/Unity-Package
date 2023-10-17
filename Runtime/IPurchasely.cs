@@ -91,5 +91,12 @@ namespace PurchaselyRuntime
 		bool IsAnonymous();
 
 		bool IsEligibleForIntroOffer(string planVendorId);
+
+		void ShowPresentation();
+
+		void ClosePresentation();
+
+		void HidePresentation();
+
 	}
 }

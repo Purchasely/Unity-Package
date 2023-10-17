@@ -501,5 +501,29 @@ namespace PurchaselyRuntime
 		{
 			return _implementation?.IsEligibleForIntroOffer(planVendorId) ?? false;
 		}
+
+        /// <summary>
+        /// Show Presentation
+        /// </summary>
+        public void ShowPresentation()
+        {
+            _implementation?.ShowPresentation();
+        }
+
+        /// <summary>
+        /// Close Presentation
+        /// </summary>
+        public void ClosePresentation()
+        {
+            _implementation?.ClosePresentation();
+        }
+
+        /// <summary>
+        /// hide Presentation
+        /// </summary>
+        public void HidePresentation()
+        {
+            _implementation?.HidePresentation();
+        }
 	}
 }

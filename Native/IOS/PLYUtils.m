@@ -388,6 +388,10 @@
         dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
 	}
 	
+	//TODO: Metadata
+	if (presentation.metadata != nil)
+	    //TO stuff
+	
 	NSString* typeString = @"unknown";
 
 	switch (presentation.type) {

@@ -254,7 +254,7 @@ extern "C" {
       
         NSString *planIdStr = [PLYUtils createNSStringFrom:planId];
         NSString *offerIdStr = [PLYUtils createNSStringFrom:offerId];
- 
+
         [Purchasely planWith:planIdStr success:^(PLYPlan * _Nonnull plan) {
         
             if (@available(iOS 12.2, macOS 12.0, tvOS 15.0, watchOS 8.0, *)) {

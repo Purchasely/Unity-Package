@@ -6,8 +6,6 @@ using System.Collections.Generic;
 using UnityEngine;
 #endif
 
-using System;
-
 namespace PurchaselyRuntime
 {
 	public class Presentation

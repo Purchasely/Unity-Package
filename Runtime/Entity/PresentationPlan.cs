@@ -12,7 +12,7 @@ namespace PurchaselyRuntime
     {
         public string planVendorId = null;
         public string offerId = null;
-        public string storeProductId = null
+        public string storeProductId = null;
         public string basePlanId = null;
         
         public override string ToString()

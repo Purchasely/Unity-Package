@@ -235,8 +235,7 @@ public class PurchaselyDemoController : MonoBehaviour
 
 	private void OnFetchPresentationClicked()
 	{
-		var presentationId = presentationIdInputFetch.text != "" ? presentationIdInputFetch.text : "meta-cm";
- 		_purchasely.FetchPresentation(presentationId, OnFetchPresentationSuccess, Log, contentIdInputFetchPresentation.text);
+		_purchasely.FetchPresentation(presentationIdInputFetch.text, OnFetchPresentationSuccess, Log, contentIdInputFetchPresentation.text);
 	}
 
 	private void OnFetchPresentationForPlacementClicked()

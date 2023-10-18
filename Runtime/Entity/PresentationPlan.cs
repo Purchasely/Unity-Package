@@ -10,10 +10,10 @@ namespace PurchaselyRuntime
 {
     public class PresentationPlan
     {
-        public string planVendorId = "";
-        public string offerId = "";
-        public string storeProductId = "";
-        public string basePlanId = "";
+        public string planVendorId = null;
+        public string offerId = null;
+        public string storeProductId = null
+        public string basePlanId = null;
         
         public override string ToString()
         {

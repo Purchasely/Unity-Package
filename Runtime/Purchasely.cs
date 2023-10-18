@@ -20,11 +20,9 @@ namespace PurchaselyRuntime
 		/// Create Purchasely object, through which all of the SDK interactions are completed.
 		/// </summary>
 		/// <param name="userId"> User ID. Pass empty string if you want the SDK to be bound to the device instead of user. </param>
-		/// <param name="readyToPurchase"> Whether the application is ready to display the pay-wall. You can later change it. </param>
 		/// <param name="logLevel"> Log level of the SDK. </param>
 		/// <param name="runningMode"> Allows you to use Purchasely with another In-App purchase system to prepare a migration. More details here: https://docs.purchasely.com/quick-start-1/sdk-configuration.</param>
 		/// <param name="onStartCompleted"> Callback received with the result of the SDK initialization. Boolean parameter represents the success status with an optional error.</param>
-		/// <param name="onEventReceived"> Callback to be invoked when any events happen in the SDK. You should implement it at least to know when the purchase is successful.</param>
 		/// <exception cref="ArgumentException"> Is thrown if the SDK is not configured in the Editor. In the Unity Editor go to Window->Purchasely, then provide your API key and other required data.</exception>
 		public Purchasely(string userId = null, bool storekit1 = false, LogLevel logLevel = LogLevel.Debug, RunningMode runningMode = RunningMode.Full, Action<bool, string> onStartCompleted = null)
 		{
@@ -301,8 +299,8 @@ namespace PurchaselyRuntime
 		public void Purchase(string planId,
 			Action<Plan> onSuccess,
 			Action<string> onError,
-			string offerId = "", 
-			string contentId = "")
+			string offerId = null,
+			string contentId = null)
 		{
 			if (_implementation == null)
 			{
@@ -423,8 +421,6 @@ namespace PurchaselyRuntime
 		/// <param name="presentationId"> ID of the presentation to be fetched. </param>
 		/// <param name="onSuccess"> Callback for the successful fetch. </param>
 		/// <param name="onError"> Callback with error. </param>
-		/// <param name="onResult"> Callback to be invoked after user action with the paywall view. </param>
-		/// <param name="onCloseButtonClicked"> Optional: callback to be invoked when the user taps the close button. </param>
 		/// <param name="contentId"> Optional content ID. </param>
 		public void FetchPresentation(string presentationId, Action<Presentation> onSuccess, Action<string> onError,
 			string contentId = "")
@@ -438,8 +434,6 @@ namespace PurchaselyRuntime
 		/// <param name="placementId"> ID of the placement to be fetched. </param>
 		/// <param name="onSuccess"> Callback for the successful fetch. </param>
 		/// <param name="onError"> Callback with error. </param>
-		/// <param name="onResult"> Callback to be invoked after user action with the paywall view. </param>
-		/// <param name="onCloseButtonClicked"> Optional: callback to be invoked when the user taps the close button. </param>
 		/// <param name="contentId"> Optional content ID. </param>
 		public void FetchPresentationForPlacement(string placementId, Action<Presentation> onSuccess, 
 			Action<string> onError, string contentId = "")

@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using UnityEngine;
 #endif
 
+using System;
+
 namespace PurchaselyRuntime
 {
 	public class Presentation
@@ -26,5 +28,20 @@ namespace PurchaselyRuntime
 #elif UNITY_IOS
 		internal IntPtr iosPresentation;
 #endif
-	}
+
+        public override string ToString()
+        {
+            return $"Presentation - \n" +
+                   $"  Id: {id}\n" +
+                   $"  Language: {language}\n" +
+                   $"  PlacementId: {placementId}\n" +
+                   $"  AudienceId: {audienceId}\n" +
+                   $"  AbTestId: {abTestId}\n" +
+                   $"  AbTestVariantId: {abTestVariantId}\n" +
+                   $"  Type: {type}\n" +
+                   $"  PresentationType: {presentationType}\n" +
+                   $"  Plans: [{string.Join(",\n          ", plans)}]\n" +
+                   $"  Metadata: [{string.Join(",\n             ", metadata)}]";
+        }
+    }
 }

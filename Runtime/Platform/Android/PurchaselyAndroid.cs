@@ -10,19 +10,12 @@ namespace PurchaselyRuntime
 	{
 		private AndroidJavaObject _javaBridge;
 
-		public void Init(string apiKey, string userId, bool readyToOpenDeeplink, int logLevel, int runningMode,
-			Action<bool, string> onStartCompleted, Action<Event> onEventReceived)
-		{
-
-		}
-		public void Init(string apiKey, string userId, bool readyToOpenDeeplink, int logLevel,
-			int runningMode, bool storekit1, Action<bool, string> onStartCompleted)
+		public void Init(string apiKey, string userId, bool storekit1, int logLevel, int runningMode, Action<bool, string> onStartCompleted)
 		{
 			_javaBridge = new AndroidJavaObject("com.purchasely.unity.PurchaselyBridge",
 				AndroidUtils.Activity,
 				apiKey,
 				userId,
-				readyToOpenDeeplink,
 				(int) Store.Google,
 				logLevel,
 				runningMode,
@@ -31,17 +24,12 @@ namespace PurchaselyRuntime
 
 		public void SetIsReadyToOpenDeeplink(bool ready)
 		{
-
+            _javaBridge?.Call("setIsReadyToOpenDeeplink", ready);
 		}
 
 		public void UserLogin(string userId, Action<bool> onCompleted)
 		{
 			_javaBridge?.Call("userLogin", userId, new UserLoginProxy(onCompleted));
-		}
-
-		public void SetIsReadyToPurchase(bool ready)
-		{
-			_javaBridge?.Call("setIsReadyToPurchase", ready);
 		}
 
 		public void PresentPresentationForPlacement(string placementId, Action<ProductViewResult, Plan> onResult,
@@ -158,9 +146,9 @@ namespace PurchaselyRuntime
 
 		}
 
-		public bool IsEligibleForIntroOffer(string planVendorId)
+		public void IsEligibleForIntroOffer(string planVendorId, Action<bool> onSuccess, Action<string> onError)
 		{
-			return _javaBridge?.Call<bool>("isEligibleForIntroOffer", planVendorId) ?? false;
+			return _javaBridge?.Call<bool>("isEligibleForIntroOffer", planVendorId, new IntroOfferEligibilityProxy(onSuccess, onError));
 		}
 
 		public void GetUserSubscriptions(Action<List<SubscriptionData>> onSuccess, Action<string> onError)

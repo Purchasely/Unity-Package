@@ -5,11 +5,7 @@ namespace PurchaselyRuntime
 {
 	internal interface IPurchasely
 	{
-		void Init(string apiKey, string userId, bool readyToOpenDeeplink, int logLevel, int runningMode,
-			Action<bool, string> onStartCompleted, Action<Event> onEventReceived);
-
-		void Init(string apiKey, string userId, bool readyToOpenDeeplink, int logLevel, int runningMode,
-			bool storekit1, Action<bool, string> onStartCompleted);
+		void Init(string apiKey, string userId, bool storekit1, int logLevel, int runningMode, Action<bool, string> onStartCompleted);
 
 		void UserLogin(string userId, Action<bool> onCompleted);
 
@@ -90,7 +86,7 @@ namespace PurchaselyRuntime
 
 		bool IsAnonymous();
 
-		bool IsEligibleForIntroOffer(string planVendorId);
+		void IsEligibleForIntroOffer(string planVendorId, Action<bool> onSuccess, Action<string> onError);
 
 		void ShowPresentation();
 

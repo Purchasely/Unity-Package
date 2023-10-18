@@ -42,7 +42,6 @@
     
     [dict setObject:@(plan.hasIntroductoryPrice) forKey:@"hasIntroductoryPrice"];
     [dict setObject:@([plan type]) forKey:@"type"];
-    [dict setObject:@([plan isUserEligibleForIntroductoryOffer]) forKey:@"isEligibleForIntroOffer"];
     
     if (plan.hasIntroductoryPrice && [[plan introAmount] intValue] == 0) {
         [dict setObject:@(YES) forKey:@"hasFreeTrial"];
@@ -343,12 +342,51 @@
 	if (presentation.abTestVariantId != nil)
 		[dict setObject:presentation.id forKey:@"abTestVariantId"];
 	
-	//TO DO: PresentationPlan list
-	[dict setObject:presentation.plans forKey:@"plans"];
-	
-	//TODO: Metadata
-	if (presentation.metadata != nil)
-	    //TO stuff
+	if (presentation.plans != nil) {
+        NSMutableArray *plans = [NSMutableArray new];
+
+        for (PLYPresentationPlan *plan in presentation.plans) {
+            NSMutableDictionary<NSString *, NSObject *> *newPlan = [NSMutableDictionary new];
+            if (plan.planVendorId != nil) { [newPlan setObject:plan.planVendorId forKey:@"planVendorId"]; }
+            if (plan.storeProductId != nil) { [newPlan setObject:plan.storeProductId forKey:@"storeProductId"]; }
+            if (plan.offerId!= nil) { [newPlan setObject:plan.offerId forKey:@"offerId"]; }
+                [plans addObject:newPlan];
+        }
+        [dict setObject:plans forKey:@"plans"];
+    }
+
+    if (presentation.metadata != nil) {
+        
+        NSDictionary<NSString *,id> *rawMetadata = [presentation.metadata getRawMetadata];
+        NSMutableDictionary<NSString *,id> *resultDict = [NSMutableDictionary dictionary];
+        
+        dispatch_group_t group = dispatch_group_create();
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+
+        for (NSString *key in rawMetadata)  {
+            id value = rawMetadata[key];
+            
+            if ([value isKindOfClass: [NSString class]]) {
+                dispatch_group_enter(group); // Enter the dispatch group before making the async call
+                [presentation.metadata getStringWith:key completion:^(NSString * _Nullable result) {
+                    [resultDict setObject:result forKey:key];
+                    dispatch_group_leave(group); // Leave the dispatch group after the async call is completed
+                }];
+            } else {
+                [resultDict setObject:value forKey:key];
+            }
+        }
+
+        dispatch_group_notify(group, queue, ^{
+            // Code to execute after all async calls are completed
+            [dict setObject:resultDict forKey:@"metadata"];
+            dispatch_semaphore_signal(semaphore);
+        });
+        
+        // Wait until all async calls are completed
+        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+	}
 	
 	NSString* typeString = @"unknown";
 
@@ -369,7 +407,42 @@
 
 	[dict setObject:typeString forKey:@"type"];
 	
-	return [self createCStringFrom:[self serializeDictionary:dict]];
+    char *jsonCString = [self createCStringFrom:[self serializeDictionary:dict]];
+	
+	NSLog(@"JSON String: %s", jsonCString);
+	return jsonCString;
+}
+
++ (char*) signatureToJson:(PLYOfferSignature*) signature {
+    NSMutableDictionary<NSString *, NSObject *> *dict = [NSMutableDictionary new];
+
+    [dict setObject:signature.planVendorId forKey:@"planVendorId"];
+    [dict setObject:signature.identifier forKey:@"identifier"];
+    [dict setObject:signature.signature forKey:@"signature"];
+    [dict setObject:signature.keyIdentifier forKey:@"keyIdentifier"];
+    
+    NSString *nonceString = [signature.nonce UUIDString];
+    NSObject *nonce = (NSObject *)nonceString;
+    if (nonce != nil) {
+        [dict setObject:nonce forKey:@"nonce"];
+    }
+    
+    NSNumber *timestamp = [NSNumber numberWithDouble:signature.timestamp];
+    if (timestamp != nil) {
+        [dict setObject:timestamp forKey:@"timestamp"];
+    }
+    
+    NSError *error = nil;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&error];
+            
+    if (jsonData) {
+        // Convert JSON data to char *
+        const char *jsonCString = [[NSString stringWithUTF8String:[jsonData bytes]] UTF8String];
+        NSLog(@"JSON String: %s", jsonCString);
+    } else {
+        NSLog(@"Error converting dictionary to JSON: %@", error.localizedDescription);
+    }
+    return nil;
 }
 
 @end

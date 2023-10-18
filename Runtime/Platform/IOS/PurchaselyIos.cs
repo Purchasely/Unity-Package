@@ -1,4 +1,4 @@
-﻿//#if UNITY_IOS && !UNITY_EDITOR
+﻿#if UNITY_IOS && !UNITY_EDITOR
 
 using System;
 using System.Collections.Generic;
@@ -8,25 +8,16 @@ namespace PurchaselyRuntime
 {
 	public class PurchaselyIos : IPurchasely
 	{
-		public void Init(string apiKey, string userId, bool readyToPurchase, int logLevel,
-			int runningMode, Action<bool, string> onStartCompleted, Action<Event> onEventReceived)
+		public void Init(string apiKey, string userId, bool storekit1,
+			int logLevel, int runningMode, Action<bool, string> onStartCompleted)
 		{
 			var startCallback = new Action<bool, string>((success, error) =>
 			{
 				AsyncCallbackHelper.Instance.Queue(() => { onStartCompleted(success, error); });
 			});
 
-			var eventCallback = new Action<string>(propertiesJson =>
-			{
-				AsyncCallbackHelper.Instance.Queue(() =>
-				{
-					onEventReceived(SerializationUtils.Deserialize<Event>(propertiesJson));
-				});
-			});
-
-			_purchaselyStart(apiKey, userId, readyToPurchase, logLevel, runningMode,
-				IosUtils.StartCallback, startCallback.GetPointer(),
-				IosUtils.StringCallback, eventCallback.GetPointer());
+			_purchaselyStart(apiKey, userId, logLevel, runningMode, storekit1,
+				IosUtils.StartCallback, startCallback.GetPointer());
 		}
 
 		public void UserLogin(string userId, Action<bool> onCompleted)
@@ -39,9 +30,9 @@ namespace PurchaselyRuntime
 			_purchaselyUserLogin(userId, IosUtils.BoolCallback, completeCallback.GetPointer());
 		}
 
-		public void SetIsReadyToPurchase(bool ready)
+		public void SetIsReadyToOpenDeeplink(bool ready)
 		{
-			_purchaselySetIsReadyToPurchase(ready);
+			_purchaselySetIsReadyToOpenDeeplink(ready);
 		}
 
 		public void PresentPresentationForPlacement(string placementId, Action<ProductViewResult, Plan> onResult,
@@ -51,7 +42,7 @@ namespace PurchaselyRuntime
 			{
 				AsyncCallbackHelper.Instance.Queue(() =>
 				{
-					onResult((ProductViewResult) resultInt, SerializationUtils.Deserialize<Plan>(planJson));
+					onResult((ProductViewResult)resultInt, SerializationUtils.Deserialize<Plan>(planJson));
 				});
 			});
 
@@ -81,7 +72,7 @@ namespace PurchaselyRuntime
 			{
 				AsyncCallbackHelper.Instance.Queue(() =>
 				{
-					onResult((ProductViewResult) resultInt, SerializationUtils.Deserialize<Plan>(planJson));
+					onResult((ProductViewResult)resultInt, SerializationUtils.Deserialize<Plan>(planJson));
 				});
 			});
 
@@ -111,7 +102,7 @@ namespace PurchaselyRuntime
 			{
 				AsyncCallbackHelper.Instance.Queue(() =>
 				{
-					onResult((ProductViewResult) resultInt, SerializationUtils.Deserialize<Plan>(planJson));
+					onResult((ProductViewResult)resultInt, SerializationUtils.Deserialize<Plan>(planJson));
 				});
 			});
 
@@ -141,7 +132,7 @@ namespace PurchaselyRuntime
 			{
 				AsyncCallbackHelper.Instance.Queue(() =>
 				{
-					onResult((ProductViewResult) resultInt, SerializationUtils.Deserialize<Plan>(planJson));
+					onResult((ProductViewResult)resultInt, SerializationUtils.Deserialize<Plan>(planJson));
 				});
 			});
 
@@ -216,7 +207,7 @@ namespace PurchaselyRuntime
 			{
 				AsyncCallbackHelper.Instance.Queue(() =>
 				{
-					onResult((ProductViewResult) resultInt, SerializationUtils.Deserialize<Plan>(planJson));
+					onResult((ProductViewResult)resultInt, SerializationUtils.Deserialize<Plan>(planJson));
 				});
 			});
 
@@ -266,11 +257,11 @@ namespace PurchaselyRuntime
 				IosUtils.StringCallback, onError.GetPointer());
 		}
 
-		public void PurchaseWithPlanId(string planId,
-			string offerId,
-			string contentId,
+		public void Purchase(string planId,
 			Action<Plan> onSuccess,
-			Action<string> onError)
+			Action<string> onError,
+			string offerId,
+			string contentId)
 		{
 			var planCallback = new Action<string>(planJson =>
 			{
@@ -284,9 +275,9 @@ namespace PurchaselyRuntime
 				IosUtils.StringCallback, onError.GetPointer());
 		}
 
-		public bool HandleDeepLinkUrl(string url)
+		public bool IsDeeplinkHandled(string url)
 		{
-			return _purchaselyHandleUrl(url);
+			return _purchaselyIsDeeplinkHandled(url);
 		}
 
 		public void GetUserSubscriptions(Action<List<SubscriptionData>> onSuccess, Action<string> onError)
@@ -353,7 +344,41 @@ namespace PurchaselyRuntime
 			_purchaselyUserDidConsumeSubscriptionContent();
 		}
 
-		public void FetchPresentation(string presentationId, Action<Presentation> onSuccess, Action<string> onError,
+		public bool IsAnonymous()
+		{
+			return _purchaselyIsAnonymous();
+		}
+		
+		public void IsEligibleForIntroOffer(string planVendorId, Action<bool> onSuccess, Action<string> onError) {
+
+			var eligibilityCallback = new Action<bool>(isEligible =>
+			{
+				AsyncCallbackHelper.Instance.Queue(() => { onSuccess(isEligible); });
+			});
+
+			_purchaselyIsEligibleForIntroOffer(planVendorId,
+				IosUtils.BoolCallback, eligibilityCallback.GetPointer(),
+				IosUtils.StringCallback, onError.GetPointer());
+		}
+
+		public void SignPromotionalOffer(string storeOfferId, string storeProductId, Action<PromotionalOfferSignature> onSuccess,
+			Action<string> onError) {
+			
+			var signatureCallback = new Action<string, IntPtr>((json, pointer) =>
+			{
+				AsyncCallbackHelper.Instance.Queue(() =>
+				{
+					var signature = SerializationUtils.Deserialize<PromotionalOfferSignature>(json);
+					onSuccess(signature);
+				});
+			});
+
+			_purchaselySignPromotionalOffer(storeOfferId, storeProductId,
+				IosUtils.SignatureCallback, signatureCallback.GetPointer(),
+				IosUtils.StringCallback, onError.GetPointer());
+		}
+
+	public void FetchPresentation(string presentationId, Action<Presentation> onSuccess, Action<string> onError,
 			string contentId)
 		{
 			var presentationCallback = new Action<string, IntPtr>((json, pointer) =>
@@ -403,6 +428,21 @@ namespace PurchaselyRuntime
 			_purchaselyClientPresentationClosed(presentation.iosPresentation);
 		}
 
+		public void ClosePresentation()
+		{
+			_purchaselyClosePresentation();
+		}
+
+		public void HidePresentation()
+		{
+			_purchaselyHidePresentation();
+		}
+
+		public void ShowPresentation()
+		{
+			_purchaselyShowPresentation();
+		}
+
 		public void PresentContentForPresentation(Presentation presentation, Action<ProductViewResult, Plan> onResult,
 			Action<bool> onContentLoaded = null,
 			Action onCloseButtonClicked = null)
@@ -434,16 +474,15 @@ namespace PurchaselyRuntime
 		}
 
 		[DllImport("__Internal")]
-		static extern void _purchaselyStart(string apiKey, string userId, bool readyToPurchase, int logLevel,
-			int runningMode, IosUtils.StartCallbackDelegate startCallback, IntPtr startCallbackPtr,
-			IosUtils.StringCallbackDelegate eventCallback, IntPtr eventCallbackPtr);
+		static extern void _purchaselyStart(string apiKey, string userId, int logLevel,
+			int runningMode, bool storekit1, IosUtils.StartCallbackDelegate startCallback, IntPtr startCallbackPtr);
 
 		[DllImport("__Internal")]
 		static extern void _purchaselyUserLogin(string userId, IosUtils.BoolCallbackDelegate onUserLogin,
 			IntPtr onUserLoginPtr);
 
 		[DllImport("__Internal")]
-		static extern void _purchaselySetIsReadyToPurchase(bool ready);
+		static extern void _purchaselySetIsReadyToOpenDeeplink(bool ready);
 
 		[DllImport("__Internal")]
 		static extern void _purchaselyPresentPresentationWithId(string presentationId, string
@@ -477,7 +516,7 @@ namespace PurchaselyRuntime
 		static extern void _purchaselyPresentSubscriptions();
 
 		[DllImport("__Internal")]
-		static extern void _purchaselyPurchase(string planId, IosUtils.StringCallbackDelegate successCallback, IntPtr
+		static extern void _purchaselyPurchase(string planId, string offerId, IosUtils.StringCallbackDelegate successCallback, IntPtr
 			successCallbackPtr, IosUtils.StringCallbackDelegate errorCallback, IntPtr errorCallbackPtr);
 
 		[DllImport("__Internal")]
@@ -504,7 +543,7 @@ namespace PurchaselyRuntime
 			IosUtils.StringCallbackDelegate errorCallback, IntPtr errorCallbackPtr);
 
 		[DllImport("__Internal")]
-		static extern bool _purchaselyHandleUrl(string urlString);
+		static extern bool _purchaselyIsDeeplinkHandled(string urlString);
 
 		[DllImport("__Internal")]
 		static extern void _purchaselySetLanguage(string language);
@@ -576,6 +615,26 @@ namespace PurchaselyRuntime
 			IosUtils.VoidCallbackDelegate closeCallback, IntPtr closeCallbackPtr,
 			IosUtils.PresentationResultCallbackDelegate presentationResultCallback,
 			IntPtr presentationResultCallbackPtr);
+		
+		[DllImport("__Internal")]
+		static extern bool _purchaselyIsAnonymous();
+		
+		[DllImport("__Internal")]
+		static extern void _purchaselyIsEligibleForIntroOffer(string planVendorId, IosUtils.BoolCallbackDelegate successCallback, IntPtr successCallbackPtr,
+			IosUtils.StringCallbackDelegate errorCallback, IntPtr errorCallbackPtr);
+		
+		[DllImport("__Internal")]
+		static extern void _purchaselySignPromotionalOffer(string storeOfferId, string storeProductId, IosUtils.SignatureCallbackDelegate successCallback, IntPtr successCallbackPtr,
+			IosUtils.StringCallbackDelegate errorCallback, IntPtr errorCallbackPtr);
+
+		[DllImport("__Internal")]
+		static extern void _purchaselyClosePresentation();
+
+		[DllImport("__Internal")]
+		static extern void _purchaselyHidePresentation();
+
+		[DllImport("__Internal")]
+		static extern void _purchaselyShowPresentation();
 	}
 }
 

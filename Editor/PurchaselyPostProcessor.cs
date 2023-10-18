@@ -23,8 +23,8 @@ namespace Purchasely.Editor
 				Debug.Log("Installing for iOS. Disabling Bitcode");
 				DisableBitcode(buildPath);
 				
-				Debug.Log("Installing for iOS. Adding Purchasely SDK");
-				AddPurchaselyFramework(buildPath);
+				// Debug.Log("Installing for iOS. Adding Purchasely SDK");
+				// AddPurchaselyFramework(buildPath);
 #endif
 			}
 		}
@@ -78,7 +78,7 @@ namespace Purchasely.Editor
 		private void AddPurchaselyDependencies(string builtProjectPath)
 		{
 			const string ERROR_MESSAGE = "Could not add Purchasely dependencies to build.gradle file.";
-			const string ANDROID_SDK_VERSION = "4.1.1"
+			const string ANDROID_SDK_VERSION = "4.1.1";
 
 			var buildGradleFilePath = Path.Combine(builtProjectPath, "build.gradle");
 			if (File.Exists(buildGradleFilePath))

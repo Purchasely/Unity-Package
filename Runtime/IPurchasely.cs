@@ -5,11 +5,7 @@ namespace PurchaselyRuntime
 {
 	internal interface IPurchasely
 	{
-		void Init(string apiKey, string userId, bool readyToPurchase, int logLevel, int runningMode,
-			Action<bool, string> onStartCompleted, Action<Event> onEventReceived);
-		
-		void Init(string apiKey, string userId, bool readyToPurchase, int logLevel, int runningMode,
-			bool storekit1, Action<bool, string> onStartCompleted, Action<Event> onEventReceived);
+		void Init(string apiKey, string userId, bool storekit1, int logLevel, int runningMode, Action<bool, string> onStartCompleted);
 
 		void UserLogin(string userId, Action<bool> onCompleted);
 
@@ -46,7 +42,7 @@ namespace PurchaselyRuntime
 
 		void AllProducts(Action<List<Product>> onSuccess, Action<string> onError);
 
-		void Purchase(string planId, string offerId,  string contentId,  Action<Plan> onSuccess,  Action<string> onError);
+		void Purchase(string planId, Action<Plan> onSuccess,  Action<string> onError, string offerId,  string contentId);
 
 		bool IsDeeplinkHandled(string url);
 
@@ -85,13 +81,18 @@ namespace PurchaselyRuntime
 		void PresentContentForPresentation(Presentation presentation, Action<ProductViewResult, Plan> onResult, 
 			Action<bool> onContentLoaded = null, Action onCloseButtonClicked = null);
 
-		void SignPromotionalOffer(string storeOfferId, string storeProductId, Action<Signature> onSuccess,
+		void SignPromotionalOffer(string storeOfferId, string storeProductId, Action<PromotionalOfferSignature> onSuccess,
 			Action<string> onError);
 
-		void IsAnonymous(Action<bool> onSuccess,
-			Action<string> onError);
+		bool IsAnonymous();
 		
-		void IsEligibileForIntroOffer(string planVendorId, Action<bool> onSuccess,
+		void IsEligibleForIntroOffer(string planVendorId, Action<bool> onSuccess,
 			Action<string> onError);
+
+		void ShowPresentation();
+
+		void ClosePresentation();
+
+		void HidePresentation();
 	}
 }

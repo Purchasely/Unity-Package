@@ -1,4 +1,6 @@
-﻿namespace PurchaselyRuntime
+﻿using System.Collections.Generic;
+
+namespace PurchaselyRuntime
 {
 	public class Plan
 	{
@@ -23,5 +25,6 @@
 		public string introPeriod;
 		public string introDuration;
 		public string price;
+		public List<PromoOffer> offers;
 	}
 }

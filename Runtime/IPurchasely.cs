@@ -5,12 +5,11 @@ namespace PurchaselyRuntime
 {
 	internal interface IPurchasely
 	{
-		void Init(string apiKey, string userId, bool readyToPurchase, int logLevel, int runningMode,
-			Action<bool, string> onStartCompleted, Action<Event> onEventReceived);
+		void Init(string apiKey, string userId, bool storekit1, int logLevel, int runningMode, Action<bool, string> onStartCompleted);
 
 		void UserLogin(string userId, Action<bool> onCompleted);
 
-		void SetIsReadyToPurchase(bool ready);
+		void SetIsReadyToOpenDeeplink(bool ready);
 
 		void PresentPresentationForPlacement(string placementId, Action<ProductViewResult, Plan> onResult,
 			Action<bool> onContentLoaded, Action onCloseButtonClicked, string contentId);
@@ -43,10 +42,9 @@ namespace PurchaselyRuntime
 
 		void AllProducts(Action<List<Product>> onSuccess, Action<string> onError);
 
-		void PurchaseWithPlanId(string planId, Action<Plan> onSuccess, Action<string> onError,
-			string contentId);
+		void Purchase(string planId, Action<Plan> onSuccess,  Action<string> onError, string offerId,  string contentId);
 
-		bool HandleDeepLinkUrl(string url);
+		bool IsDeeplinkHandled(string url);
 
 		void GetUserSubscriptions(Action<List<SubscriptionData>> onSuccess, Action<string> onError);
 
@@ -82,5 +80,19 @@ namespace PurchaselyRuntime
 
 		void PresentContentForPresentation(Presentation presentation, Action<ProductViewResult, Plan> onResult, 
 			Action<bool> onContentLoaded = null, Action onCloseButtonClicked = null);
+
+		void SignPromotionalOffer(string storeOfferId, string storeProductId, Action<PromotionalOfferSignature> onSuccess,
+			Action<string> onError);
+
+		bool IsAnonymous();
+		
+		void IsEligibleForIntroOffer(string planVendorId, Action<bool> onSuccess,
+			Action<string> onError);
+
+		void ShowPresentation();
+
+		void ClosePresentation();
+
+		void HidePresentation();
 	}
 }

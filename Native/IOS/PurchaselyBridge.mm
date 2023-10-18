@@ -16,6 +16,8 @@ typedef void(PurchaselyPresentationResultCallbackDelegate)(void *actionPtr, int 
 
 typedef void(PurchaselyStringCallbackDelegate)(void *actionPtr, const char *eventJson);
 
+typedef void(PurchaselySignatureCallbackDelegate)(void *actionPtr, const char *json, void* pointer);
+
 typedef void(PurchaselyPresentationCallbackDelegate)(void *actionPtr, const char *json, void* pointer);
 
 // Event Delegate
@@ -62,21 +64,14 @@ extern "C" {
     void (actionInterceptorDelegate)(void *actionPtr, const char *eventJson);
     void* actionInterceptorCalbackPtr;
     
-    void _purchaselyStart(const char* apiKey, const char* userId, bool readyToPurchase, int logLevel, int runningMode,
-                          PurchaselyStartCallbackDelegate startCallback, void* startCallbackPtr,
-                          PurchaselyStringCallbackDelegate eventCallback, void* eventCallbackPtr) {
-        _eventDelegate = [PurchaselyEventDelegate new];
-        _eventDelegate.eventCallback = ^(NSDictionary<NSString*, id>* properties) {
-            eventCallback(eventCallbackPtr, [PLYUtils createCStringFrom:[PLYUtils serializeDictionary:properties]]);
-        };
-    
+    void _purchaselyStart(const char* apiKey, const char* userId, int logLevel, int runningMode, bool storekit1,
+                          PurchaselyStartCallbackDelegate startCallback, void* startCallbackPtr) {
+                          
         [Purchasely startWithAPIKey:[PLYUtils createNSStringFrom:apiKey]
                           appUserId:[PLYUtils createNSStringFrom:userId]
                         runningMode:[PLYUtils parseRunningMode:runningMode]
-                      eventDelegate:_eventDelegate
-                         uiDelegate:nil
           paywallActionsInterceptor:nil
-                   storekitSettings:[StorekitSettings default]
+                   storekitSettings:(storekit1 ? [StorekitSettings storeKit1]: [StorekitSettings storeKit2])
                            logLevel:[PLYUtils parseLogLevel:logLevel]
                         initialized:^(BOOL success, NSError * _Nullable error) {
             NSString* errorString = error == nil ? @"" : [error localizedDescription];
@@ -90,8 +85,8 @@ extern "C" {
         }];
     }
     
-    void _purchaselySetIsReadyToPurchase(bool ready) {
-        [Purchasely isReadyToPurchase:ready];
+    void _purchaselySetIsReadyToOpenDeeplink(bool ready) {
+        [Purchasely readyToOpenDeeplink:ready];
     }
     
     void _purchaselySetDefaultPresentationResultHandler(PurchaselyPresentationResultCallbackDelegate presentationResultCallback, void*     presentationResultCallbackPtr) {
@@ -251,15 +246,49 @@ extern "C" {
         [Purchasely showController:navCtrl type: PLYUIControllerTypeSubscriptionList];
     }
     
-    void _purchaselyPurchase(const char* planId, PurchaselyStringCallbackDelegate successCallback, void* successCallbackPtr,     PurchaselyStringCallbackDelegate errorCallback, void* errorCallbackPtr) {
+    void _purchaselyPurchase(const char* planId, const char* offerId,
+    PurchaselyStringCallbackDelegate successCallback,
+    void* successCallbackPtr,
+    PurchaselyStringCallbackDelegate errorCallback,
+    void* errorCallbackPtr) {
+      
         NSString *planIdStr = [PLYUtils createNSStringFrom:planId];
-    
+        NSString *offerIdStr = [PLYUtils createNSStringFrom:offerId];
+ 
         [Purchasely planWith:planIdStr success:^(PLYPlan * _Nonnull plan) {
-            [Purchasely purchaseWithPlan:plan success:^{
-                successCallback(successCallbackPtr, [PLYUtils planAsJson:plan]);
-            } failure:^(NSError * _Nonnull error) {
-                errorCallback(errorCallbackPtr, [PLYUtils createCStringFrom:error.localizedDescription]);
-            }];
+        
+            if (@available(iOS 12.2, macOS 12.0, tvOS 15.0, watchOS 8.0, *)) {
+            
+                NSString *storeOfferId = nil;
+                for (PLYPromoOffer *promoOffer in plan.promoOffers) {
+                    if ([promoOffer.vendorId isEqualToString:offerIdStr]) {
+                        storeOfferId = promoOffer.storeOfferId;
+                        break;
+                    }
+                }
+                if (storeOfferId) {
+                    [Purchasely purchaseWithPromotionalOfferWithPlan:plan
+                                                           contentId:nil
+                                                        storeOfferId:storeOfferId
+                                                             success:^{
+                        successCallback(successCallbackPtr, [PLYUtils planAsJson:plan]);
+                    } failure:^(NSError * _Nonnull error) {
+                        errorCallback(errorCallbackPtr, [PLYUtils createCStringFrom:error.localizedDescription]);
+                    }];
+                } else {
+                    [Purchasely purchaseWithPlan:plan success:^{
+                        successCallback(successCallbackPtr, [PLYUtils planAsJson:plan]);
+                    } failure:^(NSError * _Nonnull error) {
+                        errorCallback(errorCallbackPtr, [PLYUtils createCStringFrom:error.localizedDescription]);
+                    }];
+                }
+            } else {
+                [Purchasely purchaseWithPlan:plan success:^{
+                    successCallback(successCallbackPtr, [PLYUtils planAsJson:plan]);
+                } failure:^(NSError * _Nonnull error) {
+                    errorCallback(errorCallbackPtr, [PLYUtils createCStringFrom:error.localizedDescription]);
+                }];
+            }
         } failure:^(NSError * _Nullable error) {
             errorCallback(errorCallbackPtr, [PLYUtils createCStringFrom:error.localizedDescription]);
         }];
@@ -317,9 +346,60 @@ extern "C" {
         }];
     }
     
-    bool _purchaselyHandleUrl(const char* urlString) {
+    bool _purchaselyIsDeeplinkHandled(const char* urlString) {
         NSURL* url = [NSURL URLWithString:[PLYUtils createNSStringFrom:urlString]];
-        return [Purchasely handleWithDeeplink:url];
+        return [Purchasely isDeeplinkHandledWithDeeplink:url];
+    }
+    
+    bool _purchaselyIsAnonymous() {
+        return [Purchasely isAnonymous];
+    }
+
+    void _purchaselySignPromotionalOffer(const char* storeProductId,
+                                         const char* storeOfferId,
+                                         PurchaselySignatureCallbackDelegate successCallback,
+                                         void* successCallbackPtr,
+                                         PurchaselyStringCallbackDelegate errorCallback,
+                                         void* errorCallbackPtr) {
+        
+        NSString *storeOfferIdStr = [PLYUtils createNSStringFrom:storeOfferId];
+        NSString *storeProductIdStr = [PLYUtils createNSStringFrom:storeProductId];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            if (@available(iOS 12.2, *)) {
+                [Purchasely signPromotionalOfferWithStoreProductId:storeProductIdStr storeOfferId:storeOfferIdStr success:^(PLYOfferSignature * _Nonnull signature) {
+
+                    successCallback(successCallbackPtr, [PLYUtils signatureToJson:signature], errorCallbackPtr);
+                } failure:^(NSError * _Nullable error) {
+                    errorCallback(errorCallbackPtr, [PLYUtils createCStringFrom:error.localizedDescription]);
+                }];
+            } else {
+                errorCallback(errorCallbackPtr, nil);
+            }
+        });
+    }
+    
+    void _purchaselyIsEligibleForIntroOffer(const char* planVendorId,
+                                             PurchaselyBoolCallbackDelegate successCallback,
+                                             void* successCallbackPtr,
+                                             PurchaselyStringCallbackDelegate errorCallback,
+                                             void* errorCallbackPtr) {
+        
+        NSString *planVendorIdStr = [PLYUtils createNSStringFrom:planVendorId];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [Purchasely planWith:planVendorIdStr
+                         success:^(PLYPlan * _Nonnull plan) {
+                [plan isUserEligibleForIntroductoryOfferWithCompletion:^(BOOL isEligible) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        successCallback(successCallbackPtr, isEligible);
+                    });
+                }];
+            } failure:^(NSError * _Nullable error) {
+                errorCallback(errorCallbackPtr, [PLYUtils createCStringFrom:error.localizedDescription]);
+            }];
+        });
     }
     
     void _purchaselySetLanguage(const char* language) {
@@ -327,12 +407,28 @@ extern "C" {
         [Purchasely setLanguageFrom:locale];
     }
 
-    void closePaywall() {
+    void _purchaselyClosePresentation() {
         if (presentedPresentationViewController != nil) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [presentedPresentationViewController dismissViewControllerAnimated:true completion:^{
                     presentedPresentationViewController = nil;
                 }];
+            });
+        }
+    }
+
+    void _purchaselyHidePresentation() {
+        if (presentedPresentationViewController != nil) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [presentedPresentationViewController dismissViewControllerAnimated:true completion:^{ }];
+            });
+        }
+    }
+
+    void _purchaselyShowPresentation() {
+        if (presentedPresentationViewController != nil) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                showNavigationControllerForView(presentedPresentationViewController);
             });
         }
     }

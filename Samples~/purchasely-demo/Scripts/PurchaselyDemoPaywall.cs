@@ -33,7 +33,7 @@ public class PurchaselyDemoPaywall : MonoBehaviour
 		ClearButtons();
 		foreach (var plan in presentation.plans)
 		{
-			_purchasely.GetPlan(plan, OnPlanFetched, Debug.LogError);
+			_purchasely.GetPlan(plan.planVendorId, OnPlanFetched, Debug.LogError);
 		}
 	}
 

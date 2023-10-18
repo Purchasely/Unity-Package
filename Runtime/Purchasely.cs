@@ -26,8 +26,7 @@ namespace PurchaselyRuntime
 		/// <param name="onStartCompleted"> Callback received with the result of the SDK initialization. Boolean parameter represents the success status with an optional error.</param>
 		/// <param name="onEventReceived"> Callback to be invoked when any events happen in the SDK. You should implement it at least to know when the purchase is successful.</param>
 		/// <exception cref="ArgumentException"> Is thrown if the SDK is not configured in the Editor. In the Unity Editor go to Window->Purchasely, then provide your API key and other required data.</exception>
-		public Purchasely(string userId, bool readyToPurchase, LogLevel logLevel, RunningMode runningMode,
-			Action<bool, string> onStartCompleted, Action<Event> onEventReceived)
+		public Purchasely(string userId = null, bool storekit1 = false, LogLevel logLevel = LogLevel.Debug, RunningMode runningMode = RunningMode.Full, Action<bool, string> onStartCompleted = null)
 		{
 #if UNITY_ANDROID && !UNITY_EDITOR
 			_implementation = new PurchaselyAndroid();
@@ -45,8 +44,12 @@ namespace PurchaselyRuntime
 				return;
 			}
 
-			_implementation.Init(settings.ApiKey, userId, readyToPurchase, (int) logLevel,
-				(int) runningMode, onStartCompleted, onEventReceived);
+			_implementation.Init(settings.ApiKey,
+				userId,
+				storekit1,
+				(int) logLevel,
+				(int) runningMode,
+				onStartCompleted);
 		}
 
 		/// <summary>
@@ -68,9 +71,9 @@ namespace PurchaselyRuntime
 		/// Call this if you have previously passed `readyToPurchase = false` in constructor.
 		/// </summary>
 		/// <param name="ready"> Whether the application is ready to present the paywall and make purchases. </param>
-		public void SetReadyToPurchase(bool ready)
+		public void SetIsReadyToOpenDeeplink(bool ready)
 		{
-			_implementation?.SetIsReadyToPurchase(ready);
+			_implementation?.SetIsReadyToOpenDeeplink(ready);
 		}
 
 		/// <summary>
@@ -295,7 +298,10 @@ namespace PurchaselyRuntime
 		/// <param name="onSuccess"> Callback with the payload after successful purchase.</param>
 		/// <param name="onError"> Callback with an error. </param>
 		/// <param name="contentId"> Optional: content ID. </param>
-		public void Purchase(string planId, Action<Plan> onSuccess, Action<string> onError,
+		public void Purchase(string planId,
+			Action<Plan> onSuccess,
+			Action<string> onError,
+			string offerId = "", 
 			string contentId = "")
 		{
 			if (_implementation == null)
@@ -304,15 +310,15 @@ namespace PurchaselyRuntime
 				return;
 			}
 
-			_implementation.PurchaseWithPlanId(planId, onSuccess, onError, contentId);
+			_implementation.Purchase(planId,  onSuccess, onError, offerId, contentId);
 		}
 
 		/// <summary>
 		/// Handle the deep link URL if your application was open via URL, and you have set up the deep link interception.
 		/// </summary>
-		public bool HandleDeepLinkUrl(string url)
+		public bool IsDeeplinkHandled(string url)
 		{
-			return _implementation?.HandleDeepLinkUrl(url) ?? false;
+			return _implementation?.IsDeeplinkHandled(url) ?? false;
 		}
 
 		/// <summary>
@@ -471,5 +477,54 @@ namespace PurchaselyRuntime
 		{
 			_implementation?.PresentContentForPresentation(presentation, onResult, onContentLoaded, onCloseButtonClicked);
 		}
+
+		/// <summary>
+		/// Sign promotional offer using StoreKit 
+		/// </summary>
+		public void SignPromotionalOffer(string storeOfferId, string storeProductId, Action<PromotionalOfferSignature> onSuccess,
+			Action<string> onError)
+		{
+			_implementation?.SignPromotionalOffer(storeOfferId, storeProductId, onSuccess, onError);
+		}
+		
+		/// <summary>
+		/// IsAnonymous
+		/// </summary>
+		public bool IsAnonymous()
+		{
+			return _implementation?.IsAnonymous() ?? false;
+		}
+
+		/// <summary>
+		/// IsEligibileForIntroOffer
+		/// </summary>
+		public void IsEligibleForIntroOffer(string planVendorId, Action<bool> onSuccess, Action<string> onError)
+		{
+			_implementation?.IsEligibleForIntroOffer(planVendorId, onSuccess, onError);
+		}
+
+        /// <summary>
+        /// Show Presentation
+        /// </summary>
+        public void ShowPresentation()
+        {
+            _implementation?.ShowPresentation();
+        }
+
+        /// <summary>
+        /// Close Presentation
+        /// </summary>
+        public void ClosePresentation()
+        {
+            _implementation?.ClosePresentation();
+        }
+
+        /// <summary>
+        /// hide Presentation
+        /// </summary>
+        public void HidePresentation()
+        {
+            _implementation?.HidePresentation();
+        }
 	}
 }

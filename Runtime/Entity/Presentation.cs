@@ -17,7 +17,8 @@ namespace PurchaselyRuntime
 		public string abTestId;
 		public string abTestVariantId;
 		public string type;
-		public List<string> plans;
+		public List<PresentationPlan> plans;
+		public Dictionary<string, object> metadata;
 		public PresentationType presentationType = PresentationType.Unknown;
 
 #if UNITY_ANDROID

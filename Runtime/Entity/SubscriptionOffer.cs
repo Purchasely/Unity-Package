@@ -5,9 +5,9 @@ namespace PurchaselyRuntime
 	public class SubscriptionOffer
 	{
 		public string subscriptionId;
-		public string? basePlanId;
-		public string? offerToken;
-		public string? offerId;
+		public string basePlanId;
+		public string offerToken;
+		public string offerId;
 
 		public override string ToString()
         {

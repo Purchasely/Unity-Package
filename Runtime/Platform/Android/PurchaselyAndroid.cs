@@ -24,7 +24,7 @@ namespace PurchaselyRuntime
 
 		public void SetIsReadyToOpenDeeplink(bool ready)
 		{
-            _javaBridge?.Call("setIsReadyToOpenDeeplink", ready);
+            _javaBridge?.Call("setReadyToOpenDeeplink", ready);
 		}
 
 		public void UserLogin(string userId, Action<bool> onCompleted)
@@ -148,7 +148,7 @@ namespace PurchaselyRuntime
 
 		public void IsEligibleForIntroOffer(string planVendorId, Action<bool> onSuccess, Action<string> onError)
 		{
-			return _javaBridge?.Call<bool>("isEligibleForIntroOffer", planVendorId, new IntroOfferEligibilityProxy(onSuccess, onError));
+			_javaBridge?.Call<bool>("isEligibleForIntroOffer", planVendorId, new IntroOfferEligibilityProxy(onSuccess, onError));
 		}
 
 		public void GetUserSubscriptions(Action<List<SubscriptionData>> onSuccess, Action<string> onError)

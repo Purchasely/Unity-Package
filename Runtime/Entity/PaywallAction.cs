@@ -13,8 +13,8 @@ namespace PurchaselyRuntime
 			public string url;
 			public Plan plan;
 			public string presentation;
-			public PromoOffer offer;
-			public SubscriptionOffer subscriptionOffer;
+			public PromoOffer? offer;
+			public SubscriptionOffer? subscriptionOffer;
 		}
 
 		public class Info

@@ -4,8 +4,8 @@ namespace PurchaselyRuntime
 {
 	public class PromoOffer
 	{
-		public string vendorId;
-		public string storeOfferId;
+		public string? vendorId;
+		public string? storeOfferId;
 
 		public override string ToString()
         {

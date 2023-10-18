@@ -115,6 +115,22 @@ namespace PurchaselyRuntime
 				action(data, presentationPtr);
 			}
 		}
+		
+		
+		internal delegate void SignatureCallbackDelegate(IntPtr actionPtr, string data, IntPtr signaturePtr);
+
+		[MonoPInvokeCallback(typeof(SignatureCallbackDelegate))]
+		internal static void SignatureCallback(IntPtr actionPtr, string data, IntPtr signaturePtr)
+		{
+			if (Debug.isDebugBuild)
+				Debug.Log("SignatureCallback");
+
+			if (actionPtr != IntPtr.Zero)
+			{
+				var action = actionPtr.Cast<Action<string, IntPtr>>();
+				action(data, signaturePtr);
+			}
+		}
 	}
 }
 

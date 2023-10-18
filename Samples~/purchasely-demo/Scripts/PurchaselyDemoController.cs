@@ -42,11 +42,13 @@ public class PurchaselyDemoController : MonoBehaviour
 	[SerializeField] private InputField productIdInputGet;
 
 	[SerializeField] private Button getPlanButton;
+	[SerializeField] private Button isEligibleForIntroOfferButton;
 	[SerializeField] private InputField planIdInputGet;
 
 	[SerializeField] private Button purchaseButton;
 	[SerializeField] private InputField planIdInputPurchase;
 	[SerializeField] private InputField contentIdInputPurchase;
+	[SerializeField] private InputField offerIdInputPurchase;
 
 	[SerializeField] private Button fetchPresentationButton;
 	[SerializeField] private InputField presentationIdInputFetch;
@@ -55,6 +57,10 @@ public class PurchaselyDemoController : MonoBehaviour
 	[SerializeField] private Button fetchPresentationForPlacementButton;
 	[SerializeField] private InputField placementIdInputFetch;
 	[SerializeField] private InputField contentIdInputFetchPlacement;
+
+	[SerializeField] private Button signPromotionalOfferButton;
+	[SerializeField] private InputField planStoreIdInput;
+	[SerializeField] private InputField storePromoOfferIdInput;
 
 	[SerializeField] private Text logText;
 	[SerializeField] private PurchaselyDemoPaywall paywall;
@@ -71,8 +77,7 @@ public class PurchaselyDemoController : MonoBehaviour
 			false,
 			LogLevel.Debug,
 			RunningMode.Full,
-			OnPurchaselyStart,
-			OnPurchaselyEvent);
+			OnPurchaselyStart);
 
 		paywall.Init(_purchasely);
 
@@ -95,6 +100,8 @@ public class PurchaselyDemoController : MonoBehaviour
 
 		getProductButton.onClick.AddListener(OnGetProductClicked);
 		getPlanButton.onClick.AddListener(OnGetPlanClicked);
+		isEligibleForIntroOfferButton.onClick.AddListener(OnGetEligibilityClicked);
+		signPromotionalOfferButton.onClick.AddListener(OnSignPromotionalOfferClicked);
 
 		purchaseButton.onClick.AddListener(OnPurchaseClicked);
 
@@ -213,13 +220,22 @@ public class PurchaselyDemoController : MonoBehaviour
 
 	private void OnPurchaseClicked()
 	{
-		_purchasely.Purchase(planIdInputPurchase.text, LogPlan, Log, contentIdInputPurchase.text);
+		_purchasely.Purchase(planIdInputPurchase.text, LogPlan, Log, offerIdInputPurchase.text, contentIdInputPurchase.text);
+	}
+
+	private void OnGetEligibilityClicked()
+	{
+		_purchasely.IsEligibleForIntroOffer(planIdInputGet.text, LogEligibility, Log);
+	}
+
+	private void OnSignPromotionalOfferClicked()
+	{
+		_purchasely.SignPromotionalOffer(planStoreIdInput.text, storePromoOfferIdInput.text, LogSignature, Log);
 	}
 
 	private void OnFetchPresentationClicked()
 	{
-		_purchasely.FetchPresentation(presentationIdInputFetch.text, OnFetchPresentationSuccess, Log,
-			contentIdInputFetchPresentation.text);
+		_purchasely.FetchPresentation(presentationIdInputFetch.text, OnFetchPresentationSuccess, Log, contentIdInputFetchPresentation.text);
 	}
 
 	private void OnFetchPresentationForPlacementClicked()
@@ -232,10 +248,12 @@ public class PurchaselyDemoController : MonoBehaviour
 	{
 		Log($"Purchasely Start Result. Success: {success}. Error: {error}.");
 
-		_purchasely.SetReadyToPurchase(true);
+		_purchasely.SetIsReadyToOpenDeeplink(true);
 		_purchasely.SetLanguage("en");
 		_purchasely.SetDefaultPresentationResultHandler(OnDefaultPresentationResult);
-		_purchasely.HandleDeepLinkUrl("https://purchasely.com");
+		_purchasely.IsDeeplinkHandled("https://purchasely.com");
+		
+		Log($"Purchasely isAnonymous. {_purchasely.IsAnonymous()}");
 	}
 
 	private void OnPurchaselyEvent(Event @event)
@@ -294,6 +312,16 @@ public class PurchaselyDemoController : MonoBehaviour
 	private void LogPlan(Plan plan)
 	{
 		Log($"Plan name: {plan.name}. ID: {plan.vendorId}");
+	}
+
+	private void LogEligibility(bool isEligible)
+	{
+		Log($"Plan isEligible: {isEligible}");
+	}
+
+	private void LogSignature(PromotionalOfferSignature signature)
+	{
+		Log($"Signature: {signature}");
 	}
 
 	private void LogProduct(Product product)

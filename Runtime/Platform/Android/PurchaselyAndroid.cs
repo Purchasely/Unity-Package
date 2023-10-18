@@ -10,29 +10,26 @@ namespace PurchaselyRuntime
 	{
 		private AndroidJavaObject _javaBridge;
 
-		public void Init(string apiKey, string userId, bool readyToPurchase, int logLevel,
-			int runningMode, Action<bool, string> onStartCompleted, Action<Event> onEventReceived)
+		public void Init(string apiKey, string userId, bool storekit1, int logLevel, int runningMode, Action<bool, string> onStartCompleted)
 		{
 			_javaBridge = new AndroidJavaObject("com.purchasely.unity.PurchaselyBridge",
 				AndroidUtils.Activity,
 				apiKey,
 				userId,
-				readyToPurchase,
 				(int) Store.Google,
 				logLevel,
 				runningMode,
-				new StartProxy(onStartCompleted),
-				new EventProxy(onEventReceived));
+				new StartProxy(onStartCompleted));
+		}
+
+		public void SetIsReadyToOpenDeeplink(bool ready)
+		{
+            _javaBridge?.Call("setReadyToOpenDeeplink", ready);
 		}
 
 		public void UserLogin(string userId, Action<bool> onCompleted)
 		{
 			_javaBridge?.Call("userLogin", userId, new UserLoginProxy(onCompleted));
-		}
-
-		public void SetIsReadyToPurchase(bool ready)
-		{
-			_javaBridge?.Call("setIsReadyToPurchase", ready);
 		}
 
 		public void PresentPresentationForPlacement(string placementId, Action<ProductViewResult, Plan> onResult,
@@ -126,17 +123,32 @@ namespace PurchaselyRuntime
 			_javaBridge?.Call("allProducts", new JsonErrorProxy(successAction, onError));
 		}
 
-		public void PurchaseWithPlanId(string planId, Action<Plan> onSuccess, Action<string> onError, string contentId)
+		public void Purchase(string planId, Action<Plan> onSuccess, Action<string> onError, string offerId, string contentId)
 		{
 			var successAction = new Action<string>(json => { onSuccess(SerializationUtils.Deserialize<Plan>(json)); });
 
-			_javaBridge?.Call("purchaseWithPlanId", AndroidUtils.Activity, planId, contentId,
+			_javaBridge?.Call("purchase", AndroidUtils.Activity, planId, offerId, contentId,
 				new JsonErrorProxy(successAction, onError));
 		}
 
-		public bool HandleDeepLinkUrl(string url)
+		public bool IsDeeplinkHandled(string url)
 		{
-			return _javaBridge?.Call<bool>("handleDeepLinkUrl", url) ?? false;
+			return _javaBridge?.Call<bool>("isDeeplinkHandled", url) ?? false;
+		}
+
+		public bool IsAnonymous()
+		{
+			return _javaBridge?.Call<bool>("isAnonymous") ?? false;
+		}
+
+		public void SignPromotionalOffer(string storeOfferId, string storeProductId, Action<PromotionalOfferSignature> onSuccess, Action<string> onError)
+		{
+
+		}
+
+		public void IsEligibleForIntroOffer(string planVendorId, Action<bool> onSuccess, Action<string> onError)
+		{
+			_javaBridge?.Call<bool>("isEligibleForIntroOffer", planVendorId, new IntroOfferEligibilityProxy(onSuccess, onError));
 		}
 
 		public void GetUserSubscriptions(Action<List<SubscriptionData>> onSuccess, Action<string> onError)
@@ -202,14 +214,14 @@ namespace PurchaselyRuntime
 		public void FetchPresentation(string presentationId, Action<Presentation> onSuccess, Action<string> onError,
 			string contentId)
 		{
-			_javaBridge?.Call("fetchPresentation", AndroidUtils.Activity, presentationId, contentId, 
+			_javaBridge?.Call("fetchPresentation", presentationId, contentId,
 				new FetchPresentationProxy(onSuccess, onError));
 		}
 
 		public void FetchPresentationForPlacement(string placementId, Action<Presentation> onSuccess, 
 			Action<string> onError, string contentId)
 		{
-			_javaBridge?.Call("fetchPresentationForPlacement", AndroidUtils.Activity, placementId, 
+			_javaBridge?.Call("fetchPresentationForPlacement", placementId,
 				contentId, new FetchPresentationProxy(onSuccess, onError));
 		}
 
@@ -235,6 +247,18 @@ namespace PurchaselyRuntime
         {
 	        _javaBridge?.Call("showContentForPresentation", AndroidUtils.Activity, presentationId,
 		        new PlacementContentProxy(onContentLoaded, onCloseButtonClicked, onResult), contentId);
+        }
+
+        public void ShowPresentation() {
+            _javaBridge?.Call("showPresentation");
+        }
+
+        public void HidePresentation() {
+            _javaBridge?.Call("hidePresentation");
+        }
+
+        public void ClosePresentation() {
+            _javaBridge?.Call("closePresentation");
         }
     }
 }

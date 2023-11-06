@@ -77,6 +77,7 @@ extern "C" {
             NSString* errorString = error == nil ? @"" : [error localizedDescription];
             startCallback(startCallbackPtr, success, [PLYUtils createCStringFrom:errorString]);
         }];
+        //TODO: set AppTechnology to Unity
     }
     
     void _purchaselyUserLogin(const char* userId, PurchaselyBoolCallbackDelegate onUserLogin, void* onUserLoginPtr) {
@@ -464,6 +465,10 @@ extern "C" {
 
     void _purchaselyUserLogout() {
         [Purchasely userLogout];
+    }
+
+    void _purchaselySetAttribute(int attribute, const char* value) {
+        [Purchasely setAttribute:attribute value:value];
     }
 
     void _purchaselySetStringAttribute(const char* key, const char* value) {

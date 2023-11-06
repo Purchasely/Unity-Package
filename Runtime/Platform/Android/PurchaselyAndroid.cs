@@ -166,6 +166,11 @@ namespace PurchaselyRuntime
 			_javaBridge?.Call("presentSubscriptions", AndroidUtils.Activity);
 		}
 
+        public void SetAttribute(int attribute, string value)
+        {
+            _javaBridge?.Call("setAttribute", attribute, value);
+        }
+
 		public void SetUserAttribute(string key, string value)
 		{
 			_javaBridge?.Call("setUserAttribute", key, value);

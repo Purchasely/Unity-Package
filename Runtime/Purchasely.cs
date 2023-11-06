@@ -344,6 +344,14 @@ namespace PurchaselyRuntime
 		}
 
 		/// <summary>
+		/// Set an attribute for Purchasely.
+		/// </summary>
+		public void SetAttribute(PLYAttribute attribute, string value)
+		{
+			_implementation?.SetAttribute((int)attribute, value);
+		}
+
+		/// <summary>
 		/// Set string user attribute for Purchasely.
 		/// </summary>
 		public void SetUserAttribute(string key, string value)

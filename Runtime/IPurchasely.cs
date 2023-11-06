@@ -50,6 +50,8 @@ namespace PurchaselyRuntime
 
 		void PresentSubscriptions();
 
+		void SetAttribute(int attribute, string value);
+
 		void SetUserAttribute(string key, string value);
 
 		void SetUserAttribute(string key, int value);

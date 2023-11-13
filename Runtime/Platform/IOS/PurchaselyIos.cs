@@ -299,6 +299,11 @@ namespace PurchaselyRuntime
 			_purchaselyPresentSubscriptions();
 		}
 
+  		public void SetAttribute(int attribute, string value)
+    		{
+      			_purchaselySetAttribute(attribute, value)
+      		}
+
 		public void SetUserAttribute(string key, string value)
 		{
 			_purchaselySetStringAttribute(key, value);

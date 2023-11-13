@@ -299,6 +299,11 @@ namespace PurchaselyRuntime
 			_purchaselyPresentSubscriptions();
 		}
 
+  	public void SetAttribute(int attribute, string value)
+		{
+			_purchaselySetAttribute(attribute, value);
+		}
+
 		public void SetUserAttribute(string key, string value)
 		{
 			_purchaselySetStringAttribute(key, value);
@@ -348,7 +353,7 @@ namespace PurchaselyRuntime
 		{
 			return _purchaselyIsAnonymous();
 		}
-		
+
 		public void IsEligibleForIntroOffer(string planVendorId, Action<bool> onSuccess, Action<string> onError) {
 
 			var eligibilityCallback = new Action<bool>(isEligible =>
@@ -363,7 +368,7 @@ namespace PurchaselyRuntime
 
 		public void SignPromotionalOffer(string storeOfferId, string storeProductId, Action<PromotionalOfferSignature> onSuccess,
 			Action<string> onError) {
-			
+
 			var signatureCallback = new Action<string, IntPtr>((json, pointer) =>
 			{
 				AsyncCallbackHelper.Instance.Queue(() =>
@@ -570,6 +575,9 @@ namespace PurchaselyRuntime
 			IntPtr presentationResultCallbackPtr);
 
 		[DllImport("__Internal")]
+		static extern void _purchaselySetAttribute(int attribute, string value);
+
+		[DllImport("__Internal")]
 		static extern void _purchaselySetStringAttribute(string key, string value);
 
 		[DllImport("__Internal")]
@@ -615,14 +623,14 @@ namespace PurchaselyRuntime
 			IosUtils.VoidCallbackDelegate closeCallback, IntPtr closeCallbackPtr,
 			IosUtils.PresentationResultCallbackDelegate presentationResultCallback,
 			IntPtr presentationResultCallbackPtr);
-		
+
 		[DllImport("__Internal")]
 		static extern bool _purchaselyIsAnonymous();
-		
+
 		[DllImport("__Internal")]
 		static extern void _purchaselyIsEligibleForIntroOffer(string planVendorId, IosUtils.BoolCallbackDelegate successCallback, IntPtr successCallbackPtr,
 			IosUtils.StringCallbackDelegate errorCallback, IntPtr errorCallbackPtr);
-		
+
 		[DllImport("__Internal")]
 		static extern void _purchaselySignPromotionalOffer(string storeOfferId, string storeProductId, IosUtils.SignatureCallbackDelegate successCallback, IntPtr successCallbackPtr,
 			IosUtils.StringCallbackDelegate errorCallback, IntPtr errorCallbackPtr);

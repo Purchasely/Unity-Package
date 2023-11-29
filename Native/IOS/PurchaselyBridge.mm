@@ -468,7 +468,7 @@ extern "C" {
     }
 
     void _purchaselySetAttribute(int attribute, const char* value) {
-        [Purchasely setAttribute:attribute value:value];
+        [Purchasely setAttribute:[PLYUtils createNSStringFrom:attribute] value:[PLYUtils createNSStringFrom:value]];
     }
 
     void _purchaselySetStringAttribute(const char* key, const char* value) {

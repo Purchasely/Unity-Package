@@ -24,7 +24,7 @@ namespace Purchasely.Editor
 				DisableBitcode(buildPath);
 				
 				// Debug.Log("Installing for iOS. Adding Purchasely SDK");
-				// AddPurchaselyFramework(buildPath);
+				AddPurchaselyFramework(buildPath);
 #endif
 			}
 		}
@@ -42,11 +42,14 @@ namespace Purchasely.Editor
 			string frameworkName = frameworkRawName + ".xcframework";
 			var src = Path.Combine("Pods", frameworkRawName, "Purchasely/Frameworks", frameworkName);
 			var frameworkPath = project.AddFile(src, src);
-        
+			
 			project.AddFileToBuild(mainTargetGUID, frameworkPath);
 			
-			// Appears to be useless
-			// project.AddFileToEmbedFrameworks(mainTargetGUID, frameworkPath);
+			// Check if the framework is already present before adding to embed frameworks
+			if (!project.ContainsFileByProjectPath(frameworkPath))
+			{
+				project.AddFileToEmbedFrameworks(mainTargetGUID, frameworkPath);
+			}
 
 			project.WriteToFile(projPath);
 		}

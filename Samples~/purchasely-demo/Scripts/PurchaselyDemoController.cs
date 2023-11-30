@@ -254,6 +254,9 @@ public class PurchaselyDemoController : MonoBehaviour
 		_purchasely.IsDeeplinkHandled("https://purchasely.com");
 		
 		Log($"Purchasely isAnonymous. {_purchasely.IsAnonymous()}");
+
+		_purchasely.SetAttribute(PLYAttribute.ADJUST_ID, "test_adjust_id");
+		_purchasely.SetAttribute(PLYAttribute.APPSFLYER_ID, "test_appsflyer_id");
 	}
 
 	private void OnPurchaselyEvent(Event @event)

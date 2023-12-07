@@ -256,7 +256,9 @@ public class PurchaselyDemoController : MonoBehaviour
 		Log($"Purchasely isAnonymous. {_purchasely.IsAnonymous()}");
 
 		_purchasely.SetAttribute(PLYAttribute.ADJUST_ID, "test_adjust_id");
-		_purchasely.SetAttribute(PLYAttribute.APPSFLYER_ID, "test_appsflyer_id");
+		_purchasely.SetAttribute(PLYAttribute.BATCH_CUSTOM_USER_ID, "test_batch_custom_id");
+
+		_purchasely.SetThemeMode(ThemeMode.System);
 	}
 
 	private void OnPurchaselyEvent(Event @event)

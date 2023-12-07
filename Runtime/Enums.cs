@@ -43,6 +43,13 @@ namespace PurchaselyRuntime
 		Client = 4
 	}
 
+	public enum ThemeMode
+	{
+		Light = 0,
+		Dark = 1,
+		System = 2
+	}
+
     public enum PLYAttribute
     {
 		AMPLITUDE_USER_ID = 0,

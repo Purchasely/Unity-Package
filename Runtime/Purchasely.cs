@@ -528,5 +528,13 @@ namespace PurchaselyRuntime
         {
             _implementation?.HidePresentation();
         }
+        
+        /// <summary>
+        /// Change SDK theme (light/dark/system)
+        /// </summary>
+        public void SetThemeMode(ThemeMode mode)
+        {
+	        _implementation?.SetThemeMode(mode);
+        }
 	}
 }

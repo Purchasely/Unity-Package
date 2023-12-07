@@ -96,5 +96,7 @@ namespace PurchaselyRuntime
 		void ClosePresentation();
 
 		void HidePresentation();
+
+		void SetThemeMode(ThemeMode mode);
 	}
 }

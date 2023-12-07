@@ -77,7 +77,8 @@ extern "C" {
             NSString* errorString = error == nil ? @"" : [error localizedDescription];
             startCallback(startCallbackPtr, success, [PLYUtils createCStringFrom:errorString]);
         }];
-        //TODO: set AppTechnology to Unity
+        
+        [Purchasely setAppTechnology:PLYAppTechnologyUnity];
     }
     
     void _purchaselyUserLogin(const char* userId, PurchaselyBoolCallbackDelegate onUserLogin, void* onUserLoginPtr) {
@@ -340,7 +341,7 @@ extern "C" {
     }
     
     void _purchaselyGetUserSubscriptions(PurchaselyStringCallbackDelegate successCallback, void* successCallbackPtr, PurchaselyStringCallbackDelegate     errorCallback, void* errorCallbackPtr) {
-        [Purchasely userSubscriptionsWithSuccess:^(NSArray<PLYSubscription*>* _Nullable subscriptions) {
+        [Purchasely userSubscriptions: false success:^(NSArray<PLYSubscription*>* _Nullable subscriptions) {
             successCallback(successCallbackPtr, [PLYUtils susbscriptionsAsJson:subscriptions]);
         } failure:^(NSError * _Nonnull error) {
             errorCallback(errorCallbackPtr, [PLYUtils createCStringFrom:error.localizedDescription]);
@@ -511,6 +512,10 @@ extern "C" {
     
     void _purchaselyClearAttributes() {
         [Purchasely clearUserAttributes];
+    }
+    
+    void _purchaselySetThemeMode(int mode) {
+        [Purchasely setThemeMode:(PLYThemeMode)mode];
     }
 
 	@interface PresentationViewDelegate : NSObject

@@ -448,6 +448,11 @@ namespace PurchaselyRuntime
 			_purchaselyShowPresentation();
 		}
 
+		public void SetThemeMode(ThemeMode mode)
+		{
+			_purchaselySetThemeMode((int)mode);
+		}
+
 		public void PresentContentForPresentation(Presentation presentation, Action<ProductViewResult, Plan> onResult,
 			Action<bool> onContentLoaded = null,
 			Action onCloseButtonClicked = null)
@@ -643,6 +648,9 @@ namespace PurchaselyRuntime
 
 		[DllImport("__Internal")]
 		static extern void _purchaselyShowPresentation();
+
+		[DllImport("__Internal")]
+		static extern void _purchaselySetThemeMode(int mode);
 	}
 }
 

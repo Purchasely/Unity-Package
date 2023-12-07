@@ -81,7 +81,7 @@ namespace Purchasely.Editor
 		private void AddPurchaselyDependencies(string builtProjectPath)
 		{
 			const string ERROR_MESSAGE = "Could not add Purchasely dependencies to build.gradle file.";
-			const string ANDROID_SDK_VERSION = "4.1.1";
+			const string ANDROID_SDK_VERSION = "4.2.0";
 
 			var buildGradleFilePath = Path.Combine(builtProjectPath, "build.gradle");
 			if (File.Exists(buildGradleFilePath))

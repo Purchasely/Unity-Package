@@ -265,6 +265,10 @@ namespace PurchaselyRuntime
         public void ClosePresentation() {
             _javaBridge?.Call("closePresentation");
         }
+
+        public void SetThemeMode(ThemeMode mode) {
+            _javaBridge?.Call("setThemeMode", (int)mode);
+        }
     }
 }
 

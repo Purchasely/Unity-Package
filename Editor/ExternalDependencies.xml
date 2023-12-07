@@ -13,6 +13,6 @@
     </repositories>
   </androidPackages>  
   <iosPods>
-    <iosPod name="Purchasely" version="4.1.5"/>
+      <iosPod name="Purchasely" version="4.1.5" addToAllTargets="true"/> 
   </iosPods>
 </dependencies>

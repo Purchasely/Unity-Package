@@ -24,7 +24,7 @@ namespace Purchasely.Editor
 				DisableBitcode(buildPath);
 				
 				// Debug.Log("Installing for iOS. Adding Purchasely SDK");
-				AddPurchaselyFramework(buildPath);
+				//AddPurchaselyFramework(buildPath);
 #endif
 			}
 		}

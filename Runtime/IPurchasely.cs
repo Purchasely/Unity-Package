@@ -44,6 +44,8 @@ namespace PurchaselyRuntime
 
 		void Purchase(string planId, Action<Plan> onSuccess,  Action<string> onError, string offerId,  string contentId);
 
+		void Synchronize();
+
 		bool IsDeeplinkHandled(string url);
 
 		void GetUserSubscriptions(Action<List<SubscriptionData>> onSuccess, Action<string> onError);
@@ -80,14 +82,14 @@ namespace PurchaselyRuntime
 
 		void ClientPresentationClosed(Presentation presentation);
 
-		void PresentContentForPresentation(Presentation presentation, Action<ProductViewResult, Plan> onResult, 
+		void PresentContentForPresentation(Presentation presentation, Action<ProductViewResult, Plan> onResult,
 			Action<bool> onContentLoaded = null, Action onCloseButtonClicked = null);
 
 		void SignPromotionalOffer(string storeOfferId, string storeProductId, Action<PromotionalOfferSignature> onSuccess,
 			Action<string> onError);
 
 		bool IsAnonymous();
-		
+
 		void IsEligibleForIntroOffer(string planVendorId, Action<bool> onSuccess,
 			Action<string> onError);
 

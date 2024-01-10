@@ -275,6 +275,11 @@ namespace PurchaselyRuntime
 				IosUtils.StringCallback, onError.GetPointer());
 		}
 
+		public bool Synchronize()
+		{
+			return _purchaselySynchronize();
+		}
+
 		public bool IsDeeplinkHandled(string url)
 		{
 			return _purchaselyIsDeeplinkHandled(url);
@@ -551,6 +556,9 @@ namespace PurchaselyRuntime
 		static extern void _purchaselyGetUserSubscriptions(IosUtils.StringCallbackDelegate successCallback,
 			IntPtr successCallbackPtr,
 			IosUtils.StringCallbackDelegate errorCallback, IntPtr errorCallbackPtr);
+
+		[DllImport("__Internal")]
+		static extern void _purchaselySynchronize();
 
 		[DllImport("__Internal")]
 		static extern bool _purchaselyIsDeeplinkHandled(string urlString);

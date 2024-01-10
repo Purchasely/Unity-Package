@@ -252,7 +252,7 @@ public class PurchaselyDemoController : MonoBehaviour
 		_purchasely.SetLanguage("en");
 		_purchasely.SetDefaultPresentationResultHandler(OnDefaultPresentationResult);
 		_purchasely.IsDeeplinkHandled("https://purchasely.com");
-		
+
 		Log($"Purchasely isAnonymous. {_purchasely.IsAnonymous()}");
 
 		_purchasely.SetAttribute(PLYAttribute.ADJUST_ID, "test_adjust_id");
@@ -303,6 +303,14 @@ public class PurchaselyDemoController : MonoBehaviour
 		foreach (var subscription in subscriptionData)
 		{
 			Log($"Subscription ID: {subscription.id}");
+
+			Log($"Store Type: {subscription.storeType}");
+
+			Log($"Status: {subscription.status}");
+
+			Log($"originalPurchasedAt: {subscription.originalPurchasedAt}");
+
+			Log($"nextRenewalDate: {subscription.nextRenewalDate}");
 
 			var plan = subscription.plan;
 			if (plan != null)

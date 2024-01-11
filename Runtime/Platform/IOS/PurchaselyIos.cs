@@ -275,9 +275,9 @@ namespace PurchaselyRuntime
 				IosUtils.StringCallback, onError.GetPointer());
 		}
 
-		public bool Synchronize()
+		public void Synchronize()
 		{
-			return _purchaselySynchronize();
+			_purchaselySynchronize();
 		}
 
 		public bool IsDeeplinkHandled(string url)

@@ -53,7 +53,7 @@ namespace PurchaselyRuntime
 		/// <summary>
 		/// Once your user is logged in and you can send us a userId, please do it otherwise the purchase will be tied to the device and your user won't be able to enjoy from another device.
 		/// Setting it will allow you to tie a purchase to a user to use it on other devices.
-		/// This ID will be passed to the Web-hook so that your backend can identify the user and unlock the access. 
+		/// This ID will be passed to the Web-hook so that your backend can identify the user and unlock the access.
 		/// </summary>
 		/// <param name="userId"> User ID to pass to the SDK. </param>
 		/// <param name="onCompleted"> If our backend made a migration of user purchases and notified your backend, we will set the refresh variable in the callback to true. </param>
@@ -312,6 +312,14 @@ namespace PurchaselyRuntime
 		}
 
 		/// <summary>
+		/// Synchronize purchases with the Purchasely backend.
+		/// </summary>
+		public void Synchronize()
+		{
+			_implementation?.Synchronize();
+		}
+
+		/// <summary>
 		/// Handle the deep link URL if your application was open via URL, and you have set up the deep link interception.
 		/// </summary>
 		public bool IsDeeplinkHandled(string url)
@@ -443,7 +451,7 @@ namespace PurchaselyRuntime
 		/// <param name="onSuccess"> Callback for the successful fetch. </param>
 		/// <param name="onError"> Callback with error. </param>
 		/// <param name="contentId"> Optional content ID. </param>
-		public void FetchPresentationForPlacement(string placementId, Action<Presentation> onSuccess, 
+		public void FetchPresentationForPlacement(string placementId, Action<Presentation> onSuccess,
 			Action<string> onError, string contentId = "")
 		{
 			_implementation?.FetchPresentationForPlacement(placementId, onSuccess, onError, contentId);
@@ -468,27 +476,27 @@ namespace PurchaselyRuntime
 		}
 
 		/// <summary>
-		/// Present content for previously fetched presentation. 
+		/// Present content for previously fetched presentation.
 		/// </summary>
 		/// <param name="presentation"></param>
 		/// <param name="onResult"> Callback to be invoked after user action. </param>
 		/// <param name="onContentLoaded"> Optional: callback to be invoked when the content is loaded. </param>
 		/// <param name="onCloseButtonClicked"> Optional: callback to be invoked when the user taps the close button. </param>
-		public void PresentContentForPresentation(Presentation presentation, Action<ProductViewResult, Plan> onResult, 
+		public void PresentContentForPresentation(Presentation presentation, Action<ProductViewResult, Plan> onResult,
 			Action<bool> onContentLoaded = null, Action onCloseButtonClicked = null)
 		{
 			_implementation?.PresentContentForPresentation(presentation, onResult, onContentLoaded, onCloseButtonClicked);
 		}
 
 		/// <summary>
-		/// Sign promotional offer using StoreKit 
+		/// Sign promotional offer using StoreKit
 		/// </summary>
 		public void SignPromotionalOffer(string storeOfferId, string storeProductId, Action<PromotionalOfferSignature> onSuccess,
 			Action<string> onError)
 		{
 			_implementation?.SignPromotionalOffer(storeOfferId, storeProductId, onSuccess, onError);
 		}
-		
+
 		/// <summary>
 		/// IsAnonymous
 		/// </summary>
@@ -528,7 +536,7 @@ namespace PurchaselyRuntime
         {
             _implementation?.HidePresentation();
         }
-        
+
         /// <summary>
         /// Change SDK theme (light/dark/system)
         /// </summary>

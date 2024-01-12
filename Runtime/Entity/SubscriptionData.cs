@@ -9,14 +9,14 @@ namespace PurchaselyRuntime
 		public string id;
 		public bool isFamilyShared;
 		public string offerIdentifier;
-		public int offerType;
+		public SubscriptionOfferType offerType;
 		public string originalPurchasedAt;
 		public string purchaseToken;
 		public string purchasedDate;
 		public string nextRenewalDate;
 		public string cancelledDate;
 		public string storeCountry;
-		public string storeType;
-		public int status;
+		public StoreType storeType;
+		public SubscriptionStatus status;
 	}
 }

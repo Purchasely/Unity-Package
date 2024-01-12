@@ -22,7 +22,7 @@ namespace Purchasely.Editor
 #if UNITY_IOS
 				Debug.Log("Installing for iOS. Disabling Bitcode");
 				DisableBitcode(buildPath);
-				
+
 				// Debug.Log("Installing for iOS. Adding Purchasely SDK");
 				//AddPurchaselyFramework(buildPath);
 #endif
@@ -42,9 +42,9 @@ namespace Purchasely.Editor
 			string frameworkName = frameworkRawName + ".xcframework";
 			var src = Path.Combine("Pods", frameworkRawName, "Purchasely/Frameworks", frameworkName);
 			var frameworkPath = project.AddFile(src, src);
-			
+
 			project.AddFileToBuild(mainTargetGUID, frameworkPath);
-			
+
 			// Check if the framework is already present before adding to embed frameworks
 			if (!project.ContainsFileByProjectPath(frameworkPath))
 			{
@@ -74,14 +74,14 @@ namespace Purchasely.Editor
 
 		public void OnPostGenerateGradleAndroidProject(string path)
 		{
-			AddPurchaselyDependencies(path);
+			//AddPurchaselyDependencies(path);
 			AddUseAndroidX(path);
 		}
 
 		private void AddPurchaselyDependencies(string builtProjectPath)
 		{
 			const string ERROR_MESSAGE = "Could not add Purchasely dependencies to build.gradle file.";
-			const string ANDROID_SDK_VERSION = "4.2.0";
+			const string ANDROID_SDK_VERSION = "4.2.2";
 
 			var buildGradleFilePath = Path.Combine(builtProjectPath, "build.gradle");
 			if (File.Exists(buildGradleFilePath))

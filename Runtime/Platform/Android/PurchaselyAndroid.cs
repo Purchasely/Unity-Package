@@ -131,6 +131,11 @@ namespace PurchaselyRuntime
 				new JsonErrorProxy(successAction, onError));
 		}
 
+		public void Synchronize()
+		{
+			_javaBridge?.Call("synchronize");
+		}
+
 		public bool IsDeeplinkHandled(string url)
 		{
 			return _javaBridge?.Call<bool>("isDeeplinkHandled", url) ?? false;
@@ -223,7 +228,7 @@ namespace PurchaselyRuntime
 				new FetchPresentationProxy(onSuccess, onError));
 		}
 
-		public void FetchPresentationForPlacement(string placementId, Action<Presentation> onSuccess, 
+		public void FetchPresentationForPlacement(string placementId, Action<Presentation> onSuccess,
 			Action<string> onError, string contentId)
 		{
 			_javaBridge?.Call("fetchPresentationForPlacement", placementId,
@@ -240,10 +245,10 @@ namespace PurchaselyRuntime
 			_javaBridge?.Call("clientPresentationClosed", presentation.presentationAjo);
 		}
 
-		public void PresentContentForPresentation(Presentation presentation, Action<ProductViewResult, Plan> onResult, 
+		public void PresentContentForPresentation(Presentation presentation, Action<ProductViewResult, Plan> onResult,
 			Action<bool> onContentLoaded = null, Action onCloseButtonClicked = null)
 		{
-			_javaBridge?.Call("showContentForPresentation", AndroidUtils.Activity, 
+			_javaBridge?.Call("showContentForPresentation", AndroidUtils.Activity,
 				presentation.presentationAjo, new PlacementContentProxy(onContentLoaded, onCloseButtonClicked, onResult));
 		}
 

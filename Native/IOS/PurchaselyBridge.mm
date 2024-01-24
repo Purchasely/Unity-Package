@@ -99,13 +99,18 @@ extern "C" {
 
     void showNavigationControllerForView(UIViewController* controller) {
         if (controller != nil) {
-            presentedPresentationViewController = [[UINavigationController alloc] initWithRootViewController:controller];
-            [presentedPresentationViewController.navigationBar setTranslucent:YES];
-            [presentedPresentationViewController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
-            [presentedPresentationViewController.navigationBar setShadowImage: [UIImage new]];
-            [presentedPresentationViewController.navigationBar setTintColor: [UIColor whiteColor]];
-            presentedPresentationViewController.modalPresentationStyle = UIModalPresentationFullScreen;
-
+            if ([controller isKindOfClass:[UINavigationController class]]) {
+                if (controller != presentedPresentationViewController) {
+                    presentedPresentationViewController = (UINavigationController *)controller;
+                }
+            } else {
+                presentedPresentationViewController = [[UINavigationController alloc] initWithRootViewController:controller];
+                [presentedPresentationViewController.navigationBar setTranslucent:YES];
+                [presentedPresentationViewController.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
+                [presentedPresentationViewController.navigationBar setShadowImage: [UIImage new]];
+                [presentedPresentationViewController.navigationBar setTintColor: [UIColor whiteColor]];
+                presentedPresentationViewController.modalPresentationStyle = UIModalPresentationFullScreen;
+            }
             [Purchasely showController:presentedPresentationViewController type: PLYUIControllerTypeProductPage];
         }
     }

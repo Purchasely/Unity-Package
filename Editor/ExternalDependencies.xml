@@ -11,7 +11,7 @@
       <repository>https://repo.maven.apache.org/maven2</repository>
       <repository>https://maven.google.com</repository>
     </repositories>
-    <androidPackage spec="io.purchasely:unity-android:4.3.0-alpha1" />
+    <androidPackage spec="io.purchasely:unity-android:4.3.0" />
   </androidPackages>
   <iosPods>
       <iosPod name="Purchasely" version="4.3.0" addToAllTargets="true"/>

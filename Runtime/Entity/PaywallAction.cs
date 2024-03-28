@@ -15,6 +15,9 @@ namespace PurchaselyRuntime
 			public string presentation;
 			public PromoOffer? offer;
 			public SubscriptionOffer? subscriptionOffer;
+
+			public Parameters(){
+			}
 		}
 
 		public class Info
@@ -24,6 +27,9 @@ namespace PurchaselyRuntime
 			public string placementId;
 			public string abTestId;
 			public string abTestVariantId;
+
+			public Info(){
+			}
 		}
 	}
 }

@@ -10,9 +10,16 @@ namespace PurchaselyRuntime
 	{
 		private AndroidJavaObject _javaBridge;
 
-		public void Init(string apiKey, string userId, bool storekit1, int logLevel, int runningMode, Action<bool, string> onStartCompleted)
+		public void Init(
+		    string apiKey,
+		    string userId,
+		    bool storekit1,
+		    int logLevel,
+		    int runningMode,
+		    Action<bool, string> onStartCompleted)
 		{
-			_javaBridge = new AndroidJavaObject("com.purchasely.unity.PurchaselyBridge",
+			_javaBridge = new AndroidJavaObject(
+			    "com.purchasely.unity.PurchaselyBridge",
 				AndroidUtils.Activity,
 				apiKey,
 				userId,
@@ -32,34 +39,115 @@ namespace PurchaselyRuntime
 			_javaBridge?.Call("userLogin", userId, new UserLoginProxy(onCompleted));
 		}
 
-		public void PresentPresentationForPlacement(string placementId, Action<ProductViewResult, Plan> onResult,
-			Action<bool> onContentLoaded, Action onCloseButtonClicked, string contentId)
+		public void PresentPresentationForPlacement(
+		    string placementId,
+		    Action<ProductViewResult, Plan> onResult,
+			Action<bool> onContentLoaded,
+			Action onCloseButtonClicked,
+			string contentId,
+			bool fullScreen)
 		{
-			_javaBridge?.Call("showContentForPlacement", AndroidUtils.Activity, placementId,
-				new PlacementContentProxy(onContentLoaded, onCloseButtonClicked, onResult), contentId);
+			_javaBridge?.Call(
+			    "showContentForPlacement",
+			    AndroidUtils.Activity,
+			    placementId,
+				new PlacementContentProxy(onContentLoaded, onCloseButtonClicked, onResult),
+				contentId,
+				fullScreen
+			);
 		}
 
-		public void PresentContentForPresentation(string presentationId,
-			Action<ProductViewResult, Plan> onResult, Action<bool> onContentLoaded,
-			Action onCloseButtonClicked, string contentId)
+		public void PresentContentForPresentation(
+		    string presentationId,
+			Action<ProductViewResult, Plan> onResult,
+			Action<bool> onContentLoaded,
+			Action onCloseButtonClicked,
+			string contentId,
+			bool fullScreen)
 		{
-			_javaBridge?.Call("showContentForPresentation", AndroidUtils.Activity, presentationId,
-				new PlacementContentProxy(onContentLoaded, onCloseButtonClicked, onResult), contentId);
+			_javaBridge?.Call(
+			    "showContentForPresentation",
+			    AndroidUtils.Activity,
+			    presentationId,
+				new PlacementContentProxy(onContentLoaded, onCloseButtonClicked, onResult),
+				contentId,
+				fullScreen
+			);
 		}
 
-		public void PresentPresentationForProduct(string productId, Action<ProductViewResult, Plan> onResult,
-			Action<bool> onContentLoaded, Action onCloseButtonClicked, string contentId, string presentationId)
+		public void PresentPresentationForProduct(
+		    string productId,
+		    Action<ProductViewResult, Plan> onResult,
+			Action<bool> onContentLoaded,
+			Action onCloseButtonClicked,
+			string contentId,
+			string presentationId,
+			bool fullScreen)
 		{
-			_javaBridge?.Call("showContentForProduct", AndroidUtils.Activity, productId,
-				new PlacementContentProxy(onContentLoaded, onCloseButtonClicked, onResult), contentId, presentationId);
+			_javaBridge?.Call(
+			    "showContentForProduct",
+			    AndroidUtils.Activity,
+			    productId,
+				new PlacementContentProxy(onContentLoaded, onCloseButtonClicked, onResult),
+				contentId,
+				presentationId,
+				fullScreen
+			);
 		}
 
-		public void PresentPresentationForPlan(string planId, Action<ProductViewResult, Plan> onResult,
-			Action<bool> onContentLoaded, Action onCloseButtonClicked, string contentId, string presentationId)
+		public void PresentPresentationForPlan(
+		    string planId,
+		    Action<ProductViewResult, Plan> onResult,
+			Action<bool> onContentLoaded,
+			Action onCloseButtonClicked,
+			string contentId,
+			string presentationId,
+			bool fullScreen)
 		{
-			_javaBridge?.Call("showContentForPlan", AndroidUtils.Activity, planId,
-				new PlacementContentProxy(onContentLoaded, onCloseButtonClicked, onResult), contentId, presentationId);
+			_javaBridge?.Call(
+			    "showContentForPlan",
+			    AndroidUtils.Activity,
+			    planId,
+				new PlacementContentProxy(onContentLoaded, onCloseButtonClicked, onResult),
+				contentId,
+				presentationId,
+				fullScreen
+			);
 		}
+
+        public void PresentContentForPresentation(
+            Presentation presentation,
+            Action<ProductViewResult, Plan> onResult,
+            Action<bool> onContentLoaded,
+            Action onCloseButtonClicked,
+            bool fullScreen)
+        {
+            _javaBridge?.Call(
+                "showContentForPresentation",
+                AndroidUtils.Activity,
+                presentation.presentationAjo,
+                new PlacementContentProxy(onContentLoaded, onCloseButtonClicked, onResult),
+                fullScreen
+            );
+        }
+
+        public void PresentPresentationWithId(
+            string presentationId,
+            Action<ProductViewResult, Plan> onResult,
+            Action<bool> onContentLoaded,
+            Action onCloseButtonClicked,
+            string contentId,
+            bool fullScreen)
+        {
+            _javaBridge?.Call(
+                "showContentForPresentation",
+                AndroidUtils.Activity,
+                presentationId,
+                new PlacementContentProxy(onContentLoaded, onCloseButtonClicked, onResult),
+                contentId,
+                fullScreen
+            );
+        }
 
 		public void SetPaywallActionInterceptor(Action<PaywallAction> onAction)
 		{
@@ -221,15 +309,24 @@ namespace PurchaselyRuntime
 			_javaBridge?.Call("userDidConsumeSubscriptionContent");
 		}
 
-		public void FetchPresentation(string presentationId, Action<Presentation> onSuccess, Action<string> onError,
+		public void FetchPresentation(
+		    string presentationId,
+		    Action<Presentation> onSuccess,
+		    Action<string> onError,
 			string contentId)
 		{
-			_javaBridge?.Call("fetchPresentation", presentationId, contentId,
-				new FetchPresentationProxy(onSuccess, onError));
+			_javaBridge?.Call(
+			    "fetchPresentation",
+			    presentationId, contentId,
+				new FetchPresentationProxy(onSuccess, onError)
+			);
 		}
 
-		public void FetchPresentationForPlacement(string placementId, Action<Presentation> onSuccess,
-			Action<string> onError, string contentId)
+		public void FetchPresentationForPlacement(
+		    string placementId,
+		    Action<Presentation> onSuccess,
+			Action<string> onError,
+			string contentId)
 		{
 			_javaBridge?.Call("fetchPresentationForPlacement", placementId,
 				contentId, new FetchPresentationProxy(onSuccess, onError));
@@ -244,20 +341,6 @@ namespace PurchaselyRuntime
 		{
 			_javaBridge?.Call("clientPresentationClosed", presentation.presentationAjo);
 		}
-
-		public void PresentContentForPresentation(Presentation presentation, Action<ProductViewResult, Plan> onResult,
-			Action<bool> onContentLoaded = null, Action onCloseButtonClicked = null)
-		{
-			_javaBridge?.Call("showContentForPresentation", AndroidUtils.Activity,
-				presentation.presentationAjo, new PlacementContentProxy(onContentLoaded, onCloseButtonClicked, onResult));
-		}
-
-        public void PresentPresentationWithId(string presentationId, Action<ProductViewResult, Plan> onResult,
-			Action<bool> onContentLoaded, Action onCloseButtonClicked, string contentId)
-        {
-	        _javaBridge?.Call("showContentForPresentation", AndroidUtils.Activity, presentationId,
-		        new PlacementContentProxy(onContentLoaded, onCloseButtonClicked, onResult), contentId);
-        }
 
         public void ShowPresentation() {
             _javaBridge?.Call("showPresentation");

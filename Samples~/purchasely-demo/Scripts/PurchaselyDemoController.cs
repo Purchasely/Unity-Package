@@ -156,7 +156,8 @@ public class PurchaselyDemoController : MonoBehaviour
 			OnPresentationResult,
 			OnPresentationContentLoaded,
 			OnPresentationContentClosed,
-			contentIdInputPlacement.text);
+			contentIdInputPlacement.text,
+			true);
 	}
 
 	private void OnPresentPresentationClicked()
@@ -165,7 +166,8 @@ public class PurchaselyDemoController : MonoBehaviour
 			OnPresentationResult,
 			OnPresentationContentLoaded,
 			OnPresentationContentClosed,
-			contentIdInputPresentation.text);
+			contentIdInputPresentation.text,
+			true);
 	}
 
 	private void OnPresentProductClicked()
@@ -175,7 +177,8 @@ public class PurchaselyDemoController : MonoBehaviour
 			OnPresentationContentLoaded,
 			OnPresentationContentClosed,
 			contentIdInputProduct.text,
-			presentationIdInputProduct.text);
+			presentationIdInputProduct.text,
+			true);
 	}
 
 	private void OnPresentPlanClicked()
@@ -185,7 +188,8 @@ public class PurchaselyDemoController : MonoBehaviour
 			OnPresentationContentLoaded,
 			OnPresentationContentClosed,
 			contentIdInputPlan.text,
-			presentationIdInputPlan.text);
+			presentationIdInputPlan.text,
+			true);
 	}
 
 	private void OnListSubscriptionsClicked()
@@ -363,7 +367,9 @@ public class PurchaselyDemoController : MonoBehaviour
 				_purchasely.PresentPresentationWithId(presentation.id,
 					OnPresentationResult,
 					OnPresentationContentLoaded,
-					OnPresentationContentClosed);
+					OnPresentationContentClosed,
+					contentIdInputFetchPresentation.text,
+					true);
 				break;
 			case PresentationType.Unknown:
 			case PresentationType.Deactivated:

@@ -1,27 +1,68 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 
 namespace PurchaselyRuntime
 {
 	internal interface IPurchasely
 	{
-		void Init(string apiKey, string userId, bool storekit1, int logLevel, int runningMode, Action<bool, string> onStartCompleted);
+		void Init(
+			string apiKey, 
+			string userId, 
+			bool storekit1, 
+			int logLevel, 
+			int runningMode, 
+			Action<bool, string> onStartCompleted
+		);
 
 		void UserLogin(string userId, Action<bool> onCompleted);
 
 		void SetIsReadyToOpenDeeplink(bool ready);
 
-		void PresentPresentationForPlacement(string placementId, Action<ProductViewResult, Plan> onResult,
-			Action<bool> onContentLoaded, Action onCloseButtonClicked, string contentId);
+		void PresentPresentationForPlacement(
+			string placementId,
+			Action<ProductViewResult, Plan> onResult,
+			Action<bool> onContentLoaded,
+			Action onCloseButtonClicked,
+			string contentId,
+			bool fullScreen
+		);
 
-		void PresentPresentationWithId(string presentationId, Action<ProductViewResult, Plan> onResult,
-			Action<bool> onContentLoaded, Action onCloseButtonClicked, string contentId);
+		void PresentPresentationWithId(
+			string presentationId,
+			Action<ProductViewResult, Plan> onResult,
+			Action<bool> onContentLoaded,
+			Action onCloseButtonClicked,
+			string contentId,
+			bool fullScreen
+		);
 
-		void PresentPresentationForProduct(string productId, Action<ProductViewResult, Plan> onResult,
-			Action<bool> onContentLoaded, Action onCloseButtonClicked, string contentId, string presentationId);
+		void PresentPresentationForProduct(
+			string productId,
+			Action<ProductViewResult, Plan> onResult,
+			Action<bool> onContentLoaded,
+			Action onCloseButtonClicked,
+			string contentId,
+			string presentationId,
+			bool fullScreen
+		);
 
-		void PresentPresentationForPlan(string planId, Action<ProductViewResult, Plan> onResult,
-			Action<bool> onContentLoaded, Action onCloseButtonClicked, string contentId, string presentationId);
+		void PresentPresentationForPlan(
+			string planId,
+			Action<ProductViewResult, Plan> onResult,
+			Action<bool> onContentLoaded,
+			Action onCloseButtonClicked,
+			string contentId,
+			string presentationId,
+			bool fullScreen
+		);
+
+        void PresentContentForPresentation(
+			Presentation presentation,
+			Action<ProductViewResult, Plan> onResult,
+            Action<bool> onContentLoaded,
+			Action onCloseButtonClicked,
+			bool fullScreen
+		);
 
 		void SetPaywallActionInterceptor(Action<PaywallAction> onAction);
 		void ProcessPaywallAction(bool process);
@@ -42,7 +83,13 @@ namespace PurchaselyRuntime
 
 		void AllProducts(Action<List<Product>> onSuccess, Action<string> onError);
 
-		void Purchase(string planId, Action<Plan> onSuccess,  Action<string> onError, string offerId,  string contentId);
+		void Purchase(
+			string planId, 
+			Action<Plan> onSuccess,  
+			Action<string> onError, 
+			string offerId,  
+			string contentId
+		);
 
 		void Synchronize();
 
@@ -72,21 +119,30 @@ namespace PurchaselyRuntime
 
 		void UserDidConsumeSubscriptionContent();
 
-		void FetchPresentation(string presentationId, Action<Presentation> onSuccess, Action<string> onError,
-			string contentId);
+		void FetchPresentation(
+			string presentationId, 
+			Action<Presentation> onSuccess, 
+			Action<string> onError,
+			string contentId
+		);
 
-		void FetchPresentationForPlacement(string placementId, Action<Presentation> onSuccess, Action<string> onError,
-			string contentId);
+		void FetchPresentationForPlacement(
+			string placementId, 
+			Action<Presentation> onSuccess, 
+			Action<string> onError,
+			string contentId
+		);
 
 		void ClientPresentationOpened(Presentation presentation);
 
 		void ClientPresentationClosed(Presentation presentation);
 
-		void PresentContentForPresentation(Presentation presentation, Action<ProductViewResult, Plan> onResult,
-			Action<bool> onContentLoaded = null, Action onCloseButtonClicked = null);
-
-		void SignPromotionalOffer(string storeOfferId, string storeProductId, Action<PromotionalOfferSignature> onSuccess,
-			Action<string> onError);
+		void SignPromotionalOffer(
+			string storeOfferId, 
+			string storeProductId,
+			Action<PromotionalOfferSignature> onSuccess,
+			Action<string> onError
+		);
 
 		bool IsAnonymous();
 

@@ -24,8 +24,13 @@ namespace PurchaselyRuntime
 		/// <param name="runningMode"> Allows you to use Purchasely with another In-App purchase system to prepare a migration. More details here: https://docs.purchasely.com/quick-start-1/sdk-configuration.</param>
 		/// <param name="onStartCompleted"> Callback received with the result of the SDK initialization. Boolean parameter represents the success status with an optional error.</param>
 		/// <exception cref="ArgumentException"> Is thrown if the SDK is not configured in the Editor. In the Unity Editor go to Window->Purchasely, then provide your API key and other required data.</exception>
-		public Purchasely(string userId = null, bool storekit1 = false, LogLevel logLevel = LogLevel.Debug, RunningMode runningMode = RunningMode.Full, Action<bool, string> onStartCompleted = null)
-		{
+		public Purchasely(
+			string userId = null, 
+			bool storekit1 = false, 
+			LogLevel logLevel = LogLevel.Debug, 
+			RunningMode runningMode = RunningMode.Full, 
+			Action<bool, string> onStartCompleted = null
+		){
 #if UNITY_ANDROID && !UNITY_EDITOR
 			_implementation = new PurchaselyAndroid();
 #elif UNITY_IOS && !UNITY_EDITOR
@@ -42,12 +47,14 @@ namespace PurchaselyRuntime
 				return;
 			}
 
-			_implementation.Init(settings.ApiKey,
+			_implementation.Init(
+				settings.ApiKey,
 				userId,
 				storekit1,
 				(int) logLevel,
 				(int) runningMode,
-				onStartCompleted);
+				onStartCompleted
+			);
 		}
 
 		/// <summary>
@@ -82,9 +89,15 @@ namespace PurchaselyRuntime
 		/// <param name="onContentLoaded"> Optional: callback to be invoked when the content is loaded. </param>
 		/// <param name="onCloseButtonClicked"> Optional: callback to be invoked when the user taps the close button. </param>
 		/// <param name="contentId"> Optional: content ID. </param>
-		public void PresentPresentationForPlacement(string placementId, Action<ProductViewResult, Plan> onResult,
-			Action<bool> onContentLoaded = null, Action onCloseButtonClicked = null, string contentId = "")
-		{
+		/// <param name="fullScreen"> Optional: whether the presentation should be full screen. </param>
+		public void PresentPresentationForPlacement(
+			string placementId,
+			Action<ProductViewResult, Plan> onResult,
+			Action<bool> onContentLoaded = null,
+			Action onCloseButtonClicked = null,
+			string contentId = "",
+			bool fullScreen = false
+		){
 			if (string.IsNullOrEmpty(contentId))
 				contentId = string.Empty;
 
@@ -94,8 +107,14 @@ namespace PurchaselyRuntime
 				return;
 			}
 
-			_implementation.PresentPresentationForPlacement(placementId, onResult, onContentLoaded, onCloseButtonClicked,
-				contentId);
+			_implementation.PresentPresentationForPlacement(
+				placementId, 
+				onResult, 
+				onContentLoaded, 
+				onCloseButtonClicked,
+				contentId,
+				fullScreen
+			);
 		}
 
 		/// <summary>
@@ -106,10 +125,15 @@ namespace PurchaselyRuntime
 		/// <param name="onContentLoaded"> Optional: callback to be invoked when the content is loaded. </param>
 		/// <param name="onCloseButtonClicked"> Optional: callback to be invoked when the user taps the close button. </param>
 		/// <param name="contentId"> Optional: content ID. </param>
-		public void PresentPresentationWithId(string presentationId,
-			Action<ProductViewResult, Plan> onResult, Action<bool> onContentLoaded = null,
-			Action onCloseButtonClicked = null, string contentId = "")
-		{
+		/// <param name="fullScreen"> Optional: whether the presentation should be full screen. </param>
+		public void PresentPresentationWithId(
+			string presentationId,
+			Action<ProductViewResult, Plan> onResult,
+			Action<bool> onContentLoaded = null,
+			Action onCloseButtonClicked = null, 
+			string contentId = "",
+			bool fullScreen = false
+		){
 			if (string.IsNullOrEmpty(contentId))
 				contentId = string.Empty;
 
@@ -119,8 +143,14 @@ namespace PurchaselyRuntime
 				return;
 			}
 
-			_implementation.PresentPresentationWithId(presentationId, onResult, onContentLoaded,
-				onCloseButtonClicked, contentId);
+			_implementation.PresentPresentationWithId(
+			    presentationId,
+			    onResult,
+			    onContentLoaded,
+				onCloseButtonClicked,
+				contentId,
+				fullScreen
+			);
 		}
 
 		/// <summary>
@@ -132,10 +162,16 @@ namespace PurchaselyRuntime
 		/// <param name="onCloseButtonClicked"> Optional: callback to be invoked when the user taps the close button. </param>
 		/// <param name="contentId"> Optional: content ID. </param>
 		/// <param name="presentationId"> Optional: presentation ID. </param>
-		public void PresentPresentationForProduct(string productId,
-			Action<ProductViewResult, Plan> onResult, Action<bool> onContentLoaded = null,
-			Action onCloseButtonClicked = null, string contentId = "", string presentationId = "")
-		{
+		/// <param name="fullScreen"> Optional: whether the presentation should be full screen. </param>
+		public void PresentPresentationForProduct(
+			string productId,
+			Action<ProductViewResult, Plan> onResult, 
+			Action<bool> onContentLoaded = null,
+			Action onCloseButtonClicked = null, 
+			string contentId = "", 
+			string presentationId = "",
+			bool fullScreen = false
+	    ){
 			if (string.IsNullOrEmpty(contentId))
 				contentId = string.Empty;
 
@@ -145,8 +181,15 @@ namespace PurchaselyRuntime
 				return;
 			}
 
-			_implementation.PresentPresentationForProduct(productId, onResult, onContentLoaded,
-				onCloseButtonClicked, contentId, presentationId);
+			_implementation.PresentPresentationForProduct(
+			    productId,
+			    onResult,
+			    onContentLoaded,
+				onCloseButtonClicked,
+				contentId,
+				presentationId,
+				fullScreen
+			);
 		}
 
 		/// <summary>
@@ -158,10 +201,16 @@ namespace PurchaselyRuntime
 		/// <param name="onCloseButtonClicked"> Optional: callback to be invoked when the user taps the close button. </param>
 		/// <param name="contentId"> Optional: content ID. </param>
 		/// <param name="presentationId"> Optional: presentation ID. </param>
-		public void PresentPresentationForPlan(string planId,
-			Action<ProductViewResult, Plan> onResult, Action<bool> onContentLoaded = null,
-			Action onCloseButtonClicked = null, string contentId = "", string presentationId = "")
-		{
+		/// <param name="fullScreen"> Optional: whether the presentation should be full screen. </param>
+		public void PresentPresentationForPlan(
+		    string planId,
+			Action<ProductViewResult, Plan> onResult,
+			Action<bool> onContentLoaded = null,
+			Action onCloseButtonClicked = null,
+			string contentId = "",
+			string presentationId = "",
+			bool fullScreen = false
+		){
 			if (string.IsNullOrEmpty(contentId))
 				contentId = string.Empty;
 
@@ -171,9 +220,40 @@ namespace PurchaselyRuntime
 				return;
 			}
 
-			_implementation.PresentPresentationForPlan(planId, onResult, onContentLoaded,
-				onCloseButtonClicked, contentId, presentationId);
+			_implementation.PresentPresentationForPlan(
+			    planId,
+			    onResult,
+			    onContentLoaded,
+				onCloseButtonClicked,
+				contentId,
+				presentationId,
+				fullScreen
+			);
 		}
+
+        /// <summary>
+        /// Present content for previously fetched presentation.
+        /// </summary>
+        /// <param name="presentation"></param>
+        /// <param name="onResult"> Callback to be invoked after user action. </param>
+        /// <param name="onContentLoaded"> Optional: callback to be invoked when the content is loaded. </param>
+        /// <param name="onCloseButtonClicked"> Optional: callback to be invoked when the user taps the close button. </param>
+        /// <param name="fullScreen"> Optional: whether the presentation should be full screen. </param>
+        public void PresentContentForPresentation(
+            Presentation presentation,
+            Action<ProductViewResult, Plan> onResult,
+            Action<bool> onContentLoaded = null,
+            Action onCloseButtonClicked = null,
+            bool fullScreen = false
+        ){
+            _implementation?.PresentContentForPresentation(
+                presentation,
+                onResult,
+                onContentLoaded,
+                onCloseButtonClicked,
+                fullScreen
+            );
+        }
 
 		/// <summary>
 		/// Setup a callback to intercept user actions in the native view.
@@ -473,19 +553,6 @@ namespace PurchaselyRuntime
 		public void ClientPresentationClosed(Presentation presentation)
 		{
 			_implementation?.ClientPresentationClosed(presentation);
-		}
-
-		/// <summary>
-		/// Present content for previously fetched presentation.
-		/// </summary>
-		/// <param name="presentation"></param>
-		/// <param name="onResult"> Callback to be invoked after user action. </param>
-		/// <param name="onContentLoaded"> Optional: callback to be invoked when the content is loaded. </param>
-		/// <param name="onCloseButtonClicked"> Optional: callback to be invoked when the user taps the close button. </param>
-		public void PresentContentForPresentation(Presentation presentation, Action<ProductViewResult, Plan> onResult,
-			Action<bool> onContentLoaded = null, Action onCloseButtonClicked = null)
-		{
-			_implementation?.PresentContentForPresentation(presentation, onResult, onContentLoaded, onCloseButtonClicked);
 		}
 
 		/// <summary>

@@ -8,8 +8,13 @@ namespace PurchaselyRuntime
 {
 	public class PurchaselyIos : IPurchasely
 	{
-		public void Init(string apiKey, string userId, bool storekit1,
-			int logLevel, int runningMode, Action<bool, string> onStartCompleted)
+		public void Init(
+		    string apiKey,
+		    string userId,
+		    bool storekit1,
+			int logLevel,
+			int runningMode,
+			Action<bool, string> onStartCompleted)
 		{
 			var startCallback = new Action<bool, string>((success, error) =>
 			{
@@ -35,25 +40,26 @@ namespace PurchaselyRuntime
 			_purchaselySetIsReadyToOpenDeeplink(ready);
 		}
 
-		public void PresentPresentationForPlacement(string placementId, Action<ProductViewResult, Plan> onResult,
-			Action<bool> onContentLoaded, Action onCloseButtonClicked, string contentId)
-		{
-			var resultCallback = new Action<int, string>((resultInt, planJson) =>
-			{
-				AsyncCallbackHelper.Instance.Queue(() =>
-				{
+		public void PresentPresentationForPlacement(
+		    string placementId,
+		    Action<ProductViewResult, Plan> onResult,
+		    Action<bool> onContentLoaded,
+	        Action onCloseButtonClicked,
+	        string contentId,
+	        bool fullScreen)
+	    {
+			var resultCallback = new Action<int, string>((resultInt, planJson) => {
+				AsyncCallbackHelper.Instance.Queue(() => {
 					onResult((ProductViewResult)resultInt, SerializationUtils.Deserialize<Plan>(planJson));
 				});
 			});
 
-			var contentLoadCallback = new Action<bool>(isLoaded =>
-			{
+			var contentLoadCallback = new Action<bool>(isLoaded =>{
 				if (onContentLoaded != null)
 					AsyncCallbackHelper.Instance.Queue(() => { onContentLoaded(isLoaded); });
 			});
 
-			var closeButtonCallback = new Action(() =>
-			{
+			var closeButtonCallback = new Action(() => {
 				if (onCloseButtonClicked != null)
 					AsyncCallbackHelper.Instance.Queue(onCloseButtonClicked);
 			});
@@ -64,9 +70,13 @@ namespace PurchaselyRuntime
 				IosUtils.PresentationResultCallback, resultCallback.GetPointer());
 		}
 
-		public void PresentPresentationWithId(string presentationId, Action<ProductViewResult, Plan> onResult,
+		public void PresentPresentationWithId(
+		    string presentationId,
+		    Action<ProductViewResult, Plan> onResult,
 			Action<bool> onContentLoaded,
-			Action onCloseButtonClicked, string contentId)
+			Action onCloseButtonClicked,
+			string contentId,
+			bool fullScreen)
 		{
 			var resultCallback = new Action<int, string>((resultInt, planJson) =>
 			{
@@ -94,9 +104,14 @@ namespace PurchaselyRuntime
 				IosUtils.PresentationResultCallback, resultCallback.GetPointer());
 		}
 
-		public void PresentPresentationForProduct(string productId, Action<ProductViewResult, Plan> onResult,
-			Action<bool> onContentLoaded, Action onCloseButtonClicked,
-			string contentId, string presentationId)
+		public void PresentPresentationForProduct(
+		    string productId,
+		    Action<ProductViewResult, Plan> onResult,
+			Action<bool> onContentLoaded,
+			Action onCloseButtonClicked,
+			string contentId,
+			string presentationId,
+			bool fullScreen)
 		{
 			var resultCallback = new Action<int, string>((resultInt, planJson) =>
 			{
@@ -124,9 +139,14 @@ namespace PurchaselyRuntime
 				IosUtils.PresentationResultCallback, resultCallback.GetPointer());
 		}
 
-		public void PresentPresentationForPlan(string planId, Action<ProductViewResult, Plan> onResult,
-			Action<bool> onContentLoaded, Action onCloseButtonClicked,
-			string contentId, string presentationId)
+		public void PresentPresentationForPlan(
+		    string planId,
+		    Action<ProductViewResult, Plan> onResult,
+			Action<bool> onContentLoaded,
+			Action onCloseButtonClicked,
+			string contentId,
+			string presentationId,
+			bool fullScreen)
 		{
 			var resultCallback = new Action<int, string>((resultInt, planJson) =>
 			{
@@ -153,6 +173,39 @@ namespace PurchaselyRuntime
 				IosUtils.VoidCallback, closeButtonCallback.GetPointer(),
 				IosUtils.PresentationResultCallback, resultCallback.GetPointer());
 		}
+
+        public void PresentContentForPresentation(
+            Presentation presentation,
+            Action<ProductViewResult, Plan> onResult,
+            Action<bool> onContentLoaded,
+            Action onCloseButtonClicked,
+            bool fullScreen)
+        {
+            var resultCallback = new Action<int, string>((resultInt, planJson) =>
+            {
+                AsyncCallbackHelper.Instance.Queue(() =>
+                {
+                    onResult((ProductViewResult) resultInt, SerializationUtils.Deserialize<Plan>(planJson));
+                });
+            });
+
+            var contentLoadCallback = new Action<bool>(isLoaded =>
+            {
+                if (onContentLoaded != null)
+                    AsyncCallbackHelper.Instance.Queue(() => { onContentLoaded(isLoaded); });
+            });
+
+            var closeButtonCallback = new Action(() =>
+            {
+                if (onCloseButtonClicked != null)
+                    AsyncCallbackHelper.Instance.Queue(onCloseButtonClicked);
+            });
+
+            _purchaselyShowContentForPresentationObject(presentation.iosPresentation,
+                IosUtils.BoolCallback, contentLoadCallback.GetPointer(),
+                IosUtils.VoidCallback, closeButtonCallback.GetPointer(),
+                IosUtils.PresentationResultCallback, resultCallback.GetPointer());
+        }
 
 		public void SetPaywallActionInterceptor(Action<PaywallAction> onAction)
 		{
@@ -456,36 +509,6 @@ namespace PurchaselyRuntime
 		public void SetThemeMode(ThemeMode mode)
 		{
 			_purchaselySetThemeMode((int)mode);
-		}
-
-		public void PresentContentForPresentation(Presentation presentation, Action<ProductViewResult, Plan> onResult,
-			Action<bool> onContentLoaded = null,
-			Action onCloseButtonClicked = null)
-		{
-			var resultCallback = new Action<int, string>((resultInt, planJson) =>
-			{
-				AsyncCallbackHelper.Instance.Queue(() =>
-				{
-					onResult((ProductViewResult) resultInt, SerializationUtils.Deserialize<Plan>(planJson));
-				});
-			});
-
-			var contentLoadCallback = new Action<bool>(isLoaded =>
-			{
-				if (onContentLoaded != null)
-					AsyncCallbackHelper.Instance.Queue(() => { onContentLoaded(isLoaded); });
-			});
-
-			var closeButtonCallback = new Action(() =>
-			{
-				if (onCloseButtonClicked != null)
-					AsyncCallbackHelper.Instance.Queue(onCloseButtonClicked);
-			});
-
-			_purchaselyShowContentForPresentationObject(presentation.iosPresentation,
-				IosUtils.BoolCallback, contentLoadCallback.GetPointer(),
-				IosUtils.VoidCallback, closeButtonCallback.GetPointer(),
-				IosUtils.PresentationResultCallback, resultCallback.GetPointer());
 		}
 
 		[DllImport("__Internal")]
